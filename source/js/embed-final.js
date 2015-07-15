@@ -2052,7 +2052,7 @@ function event(a) {
 				return http.get('http://10.14.85.116/php/proxy.php?url='+url);
 			}
 		}
-	}]).service('paint', [function(){
+	}]).service('paint'/*画布*/, [function(){
 		var paint = {
 			init: function(canvas) {
 				if(canvas.inited){
@@ -2168,7 +2168,7 @@ function event(a) {
 			}
 		};
 		return paint;
-	}]).service('imgs', ['proxy', 'maps', '$rootScope', function(proxy, map, rootScope){
+	}]).service('imgs'/*图片播放相关*/, ['proxy', 'maps', '$rootScope', function(proxy, map, rootScope){
 		var runTT;
 	    var imageOverlays = [];
 	    var currentIndex = 0;
