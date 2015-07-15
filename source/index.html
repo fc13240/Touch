@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+	<title>蓝π蚂蚁触屏系统</title>
+
+	<base href="http://10.14.85.116/nodejs_project/CWTV/source/" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+	<!-- STYLESHEETS -->
+	<link href="./css/embed-styles.css" rel="stylesheet" type="text/css"/> 
+	<link href="./css/index.css" rel="stylesheet" type="text/css"/> 
+	<!-- 3rd party libs 
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.7/angular.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script> 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bower-angular-translate/2.5.2/angular-translate.min.js"></script>
+	-->
+	<script src="./js/externaljs2.js?angular=134"></script> 
+	<script src="./js/leaflet.js"></script> 
+
+	<script src="./js/embed-final.js?timestamp=0845"></script>
+</head>
+<body id="body">
+
+
+<!-- WINDYTY CONTROLLER -->
+<div ng-controller="WindytyCtrl" ng-init="show_mask = true">
+
+	<!-- LEAFLET MAPS -->
+	<div id="map_container"><div id="map_canvas"></div></div> 
+	<div id="mask" ng-show="show_mask">
+		<canvas id="canvas_brush"  style="width:100%;height: 100%" ng-show="paint_can_use"></canvas>
+	</div>
+	<!-- COLOR LEGNED -->
+	<div id="legend" ng-if="legend.desc" ng-click="cycleLegend()">	
+		<div style="background-color: {{legend.data[0].color}};">{{legend.desc}}</div>
+		<div ng-repeat="item in legend.data" style="background-color: {{item.color}};">{{item.desc}}</div>
+	</div>
+	<div class="box box_title" ng-show="productname">{{abc}}
+		<img ng-src="./img/title_{{productname}}.png"/>
+		<div class="time" ng-show="showtime">
+			<span id="time_top"></span>
+			<span id="time_bottom"></span>
+		</div>
+	</div>
+	<ul class="box box_tool">
+		<li class="tool_top">
+			<div class="tool_btn tool_brush" ng-class="{on:show_mask && paint_can_use}" ng-click="initPaint()"></div>
+			<div class="tool_btn tool_hand" ng-class="{on:!show_mask}" ng-click="show_mask = !show_mask"></div>
+		</li>
+		<li class="tool_btn tool_btn_pro tool_radar" ng-click="changeProduct('radar', $event)"><span></span></li>
+		<li class="tool_btn tool_btn_pro tool_cloud" ng-click="changeProduct('cloud', $event)"><span></span></li>
+		<li class="tool_btn tool_btn_pro tool_wind" ng-click="changeProduct('wind', $event)"></li>
+	</ul>
+	<!-- <div id="buts">
+		<input type="button" value="radar" ng-click="changeProduct('radar')"/>
+		<input type="button" value="wind" ng-click="changeProduct('wind')"/>
+	</div> -->
+</div> <!-- END of WINDYTY CONTROLLER -->
+
+
+<!-- small note 
+<div id="note"><span ng-if="message">{{ 'E_MESSAGE' | translate }} </span><a href="https://www.windyty.com/?{{url}}" target="wind">www.windyty.com</a></div>	-->
+
+
+
+<!-- hidden progress Bar DIVs for progressBar service -->
+<div id="progress-bar" style="visibility:hidden;"><div id="progress"><div id="progress-inset">
+	<div id="progress-line" class="played"></div>
+	<div id="ghost-timecode"><div id="ghost-box" class="box"></div></div>
+	<div id="timecode"><div id="timecode-box" class="box"></div></div>
+</div></div></div>
+
+</body>	
+</html>
+
+
+
+
+ 

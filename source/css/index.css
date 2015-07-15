@@ -1,0 +1,125 @@
+#buts{
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 9999;
+}
+
+.box{
+	position: absolute;
+	z-index: 100;
+	background-color: rgba(46, 46, 65, 0.8);
+	border: 1px solid rgba(255, 255, 255, 0.6);
+}
+.box_title{
+	padding: 30px 50px;
+	overflow: hidden;
+	left: 50%;
+	margin-left: -25%;
+	margin-top: 20px;
+}
+.box_title img{
+	height: 80px;
+	float: left;
+}
+.box_title .time{
+	float: left;
+	margin-left: 40px;
+}
+.box_title .time span{
+	text-align: right;
+	display: block;
+	font-size: 30px;
+}
+.box_title .time span:first-child{
+	font-size: 44px;
+}
+
+.box_tool{
+	left: 10px;
+	top: 10px;
+	list-style: none;
+}
+.box_tool li span{
+	position: absolute;
+	bottom: 0;
+	width: 90%;
+	left: 5%;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.6)
+}
+.tool_brush,
+.tool_hand,
+.tool_radar, 
+.tool_cloud,
+.tool_wind{
+	background-size: cover;
+	background-position: center center;
+	background-repeat: no-repeat;
+	width: 200px;
+	height: 100px;
+	position: relative;
+	padding: 10px 0;
+}
+.tool_radar{
+	background-image: url(../img/tool_radar.png);
+}
+.tool_cloud{
+	background-image: url(../img/tool_cloud.png);
+}
+.tool_wind{
+	background-image: url(../img/tool_wind.png);
+}
+.tool_radar.on{
+	background-image: url(../img/tool_radar_on.png);
+}
+.tool_cloud.on{
+	background-image: url(../img/tool_cloud_on.png);
+}
+.tool_wind.on{
+	background-image: url(../img/tool_wind_on.png);
+}
+.tool_top{
+	overflow: hidden;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+}
+.tool_brush,
+.tool_hand{
+	float: left;
+	position: relative;
+	width: 50%;
+	padding: 0;
+}
+.tool_brush{
+	background-image: url(../img/tool_brush.png);
+}
+.tool_brush.on{
+	background-image: url(../img/tool_brush_on.png);
+}
+.tool_brush:after{
+	content: '';
+	position: absolute;
+	right: -1px;
+	top: 0;
+	width: 1px;
+	height: 92%;
+	top: 4%;
+	background-color: rgba(255, 255, 255, 0.6);
+}
+.tool_hand{
+	background-image: url(../img/tool_hand.png);
+}
+.tool_hand.on{
+	background-image: url(../img/tool_hand_on.png);
+}
+
+#map_container{
+	z-index: 1;
+}
+#mask{
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
+	z-index: 10;
+}
