@@ -22,6 +22,8 @@
 	left: auto;
 	right: 50%;
 	margin-top: 20px;
+	float: left;
+	position: relative;/*相对自身宽度*/
 }
 .box_title img{
 	height: 80px;

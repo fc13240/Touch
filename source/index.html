@@ -38,14 +38,14 @@
 		<div style="background-color: {{legend.data[0].color}};">{{legend.desc}}</div>
 		<div ng-repeat="item in legend.data" style="background-color: {{item.color}};">{{item.desc}}</div>
 	</div>
-	<div class="box_title_container">
-	<div class="box box_title" ng-show="productname">{{abc}}
-		<img ng-src="./img/title_{{productname}}.png"/>
-		<div class="time" ng-show="showtime">
-			<span id="time_top"></span>
-			<span id="time_bottom"></span>
+	<div class="box_title_container" ng-show="productname">
+		<div class="box box_title" ng-style="position:relative;">
+			<img ng-src="./img/title_{{productname}}.png"/>
+			<div class="time" ng-show="showtime">
+				<span id="time_top"></span>
+				<span id="time_bottom"></span>
+			</div>
 		</div>
-	</div>
 	</div>
 	<ul class="box box_tool">
 		<li class="tool_top">
