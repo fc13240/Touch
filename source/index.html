@@ -3,8 +3,8 @@
 <html lang="en" ng-app="myApp">
 <head>
 	<title>蓝π蚂蚁触屏系统</title>
-
-	<base href="http://10.14.85.116/nodejs_project/CWTV/source/" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- <base href="http://10.14.85.116/nodejs_project/CWTV/source/" /> -->
 
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -34,10 +34,10 @@
 		<canvas id="canvas_brush"  style="width:100%;height: 100%" ng-show="paint_can_use"></canvas>
 	</div>
 	<!-- COLOR LEGNED -->
-	<div id="legend" ng-if="legend.desc" ng-click="cycleLegend()">	
+	<!-- <div id="legend" ng-if="legend.desc" ng-click="cycleLegend()">	
 		<div style="background-color: {{legend.data[0].color}};">{{legend.desc}}</div>
 		<div ng-repeat="item in legend.data" style="background-color: {{item.color}};">{{item.desc}}</div>
-	</div>
+	</div> -->
 	<div class="box_title_container" ng-show="productname">
 		<div class="box box_title">
 			<img ng-src="./img/title_{{productname}}.png"/>
@@ -47,19 +47,35 @@
 			</div>
 		</div>
 	</div>
+	<div class="preload" ng-hide="1">
+		<div class="tool_btn tool_brush on"></div>
+		<div class="tool_btn tool_hand on"></div>
+		<li class="tool_btn tool_btn_pro tool_radar on"></li>
+		<li class="tool_btn tool_btn_pro tool_cloud on"></li>
+		<li class="tool_btn tool_btn_pro tool_wind on"></li>
+		<img ng-src="./img/legend_wind.png"/>
+		<img ng-src="./img/legend_radar.png"/>
+	</div>
 	<ul class="box box_tool">
 		<li class="tool_top">
 			<div class="tool_btn tool_brush" ng-class="{on:show_mask && paint_can_use}" ng-click="initPaint()"></div>
-			<div class="tool_btn tool_hand" ng-class="{on:!show_mask}" ng-click="show_mask = !show_mask"></div>
+			<div class="tool_btn tool_hand" ng-class="{on:!show_mask}" ng-click="changeMask()"></div>
 		</li>
 		<li class="tool_btn tool_btn_pro tool_radar" ng-click="changeProduct('radar', $event)"><span></span></li>
 		<li class="tool_btn tool_btn_pro tool_cloud" ng-click="changeProduct('cloud', $event)"><span></span></li>
 		<li class="tool_btn tool_btn_pro tool_wind" ng-click="changeProduct('wind', $event)"></li>
 	</ul>
-	<!-- <div id="buts">
-		<input type="button" value="radar" ng-click="changeProduct('radar')"/>
-		<input type="button" value="wind" ng-click="changeProduct('wind')"/>
-	</div> -->
+	<div class="box box_player" ng-show="show_player">
+		<div class="player_btn" ng-class="{playing:playing}"></div>
+		<div class="player_progressbar_wrap">
+			<div class="player_progressbar">
+				<div class="player_progressbar_progress">
+					<div class="player_progressbar_flag"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="legend" ng-show="legend_name"><img ng-src="./img/{{legend_name}}.png"/></div>
 </div> <!-- END of WINDYTY CONTROLLER -->
 
 

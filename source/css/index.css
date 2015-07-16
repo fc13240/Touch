@@ -130,3 +130,63 @@
 	top: 0;
 	z-index: 10;
 }
+
+.box_player{
+	bottom: 10px;
+	left: 10px;
+	overflow: hidden;
+	background-color: transparent;
+}
+.player_btn{
+	width: 100px;
+	height: 100px;
+	float: left;
+	border-right: 1px solid rgba(255, 255, 255, 0.6);
+	background: rgba(46, 46, 65, 0.8) url(../img/btn_play.png) center center no-repeat;
+	background-size: cover;
+}
+.player_btn.playing{
+	background-image: url(../img/btn_pause.png);
+}
+.player_progressbar_wrap{
+	float: left;
+	width: 800px;
+}
+.player_progressbar{
+	width: 90%;
+	height: 20px;
+	margin: 0px auto;
+	margin-top: 40px;
+	background-color: rgba(255, 255, 255, 0.3);
+	position: relative;
+	border-radius: 10px;
+}
+.player_progressbar_progress{
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 30%;
+	height: 100%;
+	background-color: rgba(45, 146, 209, 0.7);
+	border-radius: 10px;
+}
+.player_progressbar_flag{
+	position: absolute;
+	right: -30px;
+	top: -20px;
+	width: 60px;
+	height: 60px;
+	background: url(../img/btn_play_flag.png) no-repeat;
+	background-size: cover;
+}
+
+.legend{
+	position: absolute;
+	right: 0px;
+	bottom: 0px;
+	z-index: 102;
+	font-size: 0;
+}
+.legend img{
+	zoom: 0.5;
+}

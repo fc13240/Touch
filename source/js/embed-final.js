@@ -122,8 +122,8 @@ function event(a) {
 	window.onerror = function(a, b, c, d, e) {
 		event("Version:" + global.version + " Error:" + a + " url:" + b + " line:" + c + " column:" + d + " error:" + e + " UA:" + navigator.userAgent)
 	};
-	var myApp = angular.module("myApp", ["pascalprecht.translate"]).config(["$locationProvider", "transProvider", "$compileProvider", function(a, b, c) {
-		a.html5Mode(!0), c.debugInfoEnabled(!1), b.init()
+	var myApp = angular.module("myApp", ["pascalprecht.translate"]).config(["transProvider", "$compileProvider", function(b, c) {
+		c.debugInfoEnabled(!1), b.init()
 	}]).run(["$rootScope", "$location", "$http", "$translate", "trans", "maps", "proxy", function(a, b, c, d, e, f, proxy) {
 		{
 			var g, h = b.search();
@@ -147,8 +147,6 @@ function event(a) {
 		// 		zoom: 5
 		// 	})
 		// }) : f.center(a.sharedCoords), !a.ip && a.marker && L.marker([a.sharedCoords.lat, a.sharedCoords.lon]).addTo(f), d.use(h.lang ? h.lang : d.preferredLanguage()), a.$emit("$translateChangeSuccess")
-
-		
 	}]);
 	myApp.service("conversions", [function() {
 		function a(a, b, c, d) {
@@ -646,7 +644,7 @@ function event(a) {
 		a.initCoords = b.get("initCoords") || {
 			lat: 30,
 			lon: 0 > c ? -c : -180 + c,
-			zoom: 3
+			zoom: 4
 		};
 		var d, e = {
 			hereterrain: "https://{s}.aerial.maps.cit.api.here.com/maptile/2.1/maptile/newest/terrain.day/{z}/{x}/{y}/256/png8?app_id=2yTlzUbMV1TBRGbV4gku&app_code=TZTnvk1XubIKNT35MCbYgQ",
@@ -656,8 +654,10 @@ function event(a) {
 		return d = L.map("map_container", {
 			center: [a.initCoords.lat, a.initCoords.lon],
 			zoom: a.initCoords.zoom,
-			zoomControl: !1
-		}),L.control.zoom({
+			zoomControl: !1,
+			minZoom: 4,
+			maxZoom: 10
+		}), (window.d = d),L.control.zoom({
 			position: "topright"
 		}).addTo(d), d.initTiles = function(a, b) {
 			var c = e[b] || e.esritopo;
@@ -1368,7 +1368,7 @@ function event(a) {
 			},
 			zoom2zoom: [0, 0, 0, 0, 1, 1, 3, 3, 3, 3, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
 		}, e
-	}]), myApp.service("legends", ["settings", function(a) {
+	}]), /*myApp.service("legends", ["settings", function(a) {
 		"use strict;";
 		var b = {
 			temp: {
@@ -1547,7 +1547,7 @@ function event(a) {
 				data: e
 			}
 		}
-	}]), myApp.service("storage", [function() {
+	}]),*/ myApp.service("storage", [function() {
 		var a = !0;
 		try {
 			localStorage.test = 2
@@ -1739,7 +1739,6 @@ function event(a) {
 					G = B[1] * u + C[1] * v + D[1] * w + E[1] * z;
 				e && (c = e.data[n][m] * u + e.data[n][o] * v + e.data[p][m] * w + e.data[p][o] * z)
 			} catch (H) {}
-			console.log('e', a, b);
 			return {
 				wind: Math.sqrt(F * F + G * G),
 				angle: 10 * Math.floor(18 + 18 * Math.atan2(F, G) / Math.PI),
@@ -2046,14 +2045,22 @@ function event(a) {
 			}
 		}
 	}]), 
+	// 对跨域的数据进行代理
 	myApp.service('proxy', ["$http", function(http){
+		var pre_url = '';
+		var is_native = typeof global !== 'undefined' && typeof global.process !== 'undefined';
+		if(!is_native){
+			pre_url = 'http://10.14.85.116/php/proxy.php?url=';
+			// pre_url = './proxy.php?url=';
+		}
 		return {
 			get: function(url){
-				return http.get('http://10.14.85.116/php/proxy.php?url='+url);
+				return http.get(pre_url+url);
 			}
 		}
 	}]).service('paint'/*画布*/, [function(){
 		var paint = {
+			touch: ("createTouch" in document),
 			init: function(canvas) {
 				if(canvas.inited){
 					return;
@@ -2077,21 +2084,22 @@ function event(a) {
 					return typeof id == "string" ? document.getElementById(id) : id;
 				};
 				_this.canvas = canvas;
-				_this.cxt = _this.canvas.getContext('2d');console.log(_this.cxt);
+				_this.cxt = _this.canvas.getContext('2d');
 				_this.cxt.lineJoin = "round";
 				_this.cxt.lineWidth = 5;
 				_this.cxt.strokeStyle = _this.storageColor;
 				_this.w = _this.canvas.width;
 				_this.h = _this.canvas.height;
-				_this.touch = ("createTouch" in document);
 				_this.StartEvent = _this.touch ? "touchstart" : "mousedown";
 				_this.MoveEvent = _this.touch ? "touchmove" : "mousemove";
 				_this.EndEvent = _this.touch ? "touchend" : "mouseup";
 			},
 			bind: function() {
 				var t = this;
-				this.canvas['on' + t.StartEvent] = function(e) {
+				var $canvas = angular.element(t.canvas);
+				$canvas.bind(t.StartEvent, function(e) {
 					var touch = t.touch ? e.touches[0] : e;
+					t.preventDefault(e);
 					var _x = touch.clientX - touch.target.offsetLeft;
 					var _y = touch.clientY - touch.target.offsetTop;
 					if (t.isEraser) {
@@ -2101,8 +2109,8 @@ function event(a) {
 						t.drawPoint();
 					}
 					t.lock = true;
-				};
-				this.canvas['on' + t.MoveEvent] = function(e) {
+				});
+				$canvas.bind(t.MoveEvent, function(e) {
 					var touch = t.touch ? e.touches[0] : e;
 					if (t.lock) {
 						var _x = touch.clientX - touch.target.offsetLeft;
@@ -2114,15 +2122,15 @@ function event(a) {
 							t.drawPoint();
 						}
 					}
-				};
-				this.canvas['on' + t.EndEvent] = function(e) {
+				});
+				$canvas.bind(t.EndEvent, function(e) {
 					t.lock = false;
 					t.x = [];
 					t.y = [];
 					t.clickDrag = [];
 					clearInterval(t.Timer);
 					t.Timer = null;
-				};
+				});
 			},
 			movePoint: function(x, y, dragging) {
 				this.x.push(x);
@@ -2150,9 +2158,14 @@ function event(a) {
 				this.cxt.restore();
 			},
 			preventDefault: function(e) {
-				var touch = this.touch ? e.touches[0] : e;
-				if (this.touch) touch.preventDefault();
-				else window.event.returnValue = false;
+				if(e.preventDefault){
+					e.preventDefault();
+				}else{
+					window.event.returnValue = false;
+				}
+				// var touch = this.touch ? e.touches[0] : e;
+				// if (this.touch) e.preventDefault();
+				// else window.event.returnValue = false;
 			},
 			getUrl: function() {
 				this.$("html").innerHTML = this.canvas.toDataURL();
@@ -2168,6 +2181,86 @@ function event(a) {
 			}
 		};
 		return paint;
+	}]).service('selector', [function(){
+		return function(selector){
+			// http://www.jb51.net/article/59544.htm
+			// angular.element 方法集合
+			if(typeof selector == 'string'){
+				selector = document.querySelectorAll(selector);
+			}
+			return angular.element(selector);
+		}
+
+	}]).service('progress', ["$rootScope", 'selector', function(rootScope, $){
+		var $player_progressbar_progress = $('.player_progressbar_progress'),
+			$player_btn = $('.player_btn');
+		var $player_progressbar = $('.player_progressbar');
+
+		$player_progressbar.bind('click', function(e){
+			var per = e.layerX/$player_progressbar[0].offsetWidth;
+			var toIndex = Math.floor(per*_totalNum);
+
+			playing = true;
+			_click();
+			_setIndex(toIndex);
+		});
+		var autoPlay = true;
+		var playing = autoPlay;
+		rootScope.playing = playing;
+
+		function _click(){
+			if(playing){
+				_pause();
+				$player_btn.removeClass('playing');
+			}else{
+				_play();
+				$player_btn.addClass('playing');
+			}
+			playing = !playing;
+		}
+		$player_btn.bind('click', _click);
+		var _totalNum = 0,
+			_nextIndex = 0;
+		var delay = 300;
+		var playTT;
+		function _init(totalNum){
+			_totalNum = totalNum;
+			autoPlay && this.play();
+		}
+		function _setIndex(index){
+			rootScope.$emit('player_changeindex', {
+				index: index
+			});
+			_nextIndex = index;
+			if(_totalNum > 0)
+				$player_progressbar_progress.css('width', (_nextIndex/(_totalNum-1)*100)+'%');
+		}
+		function _play(){
+			var _this = this;
+			_setIndex(_nextIndex);
+			var next = _nextIndex + 1;
+			if(next < 0){
+				next = 0
+			}else if(next > _totalNum-1){
+				next = 0;
+			}
+			_nextIndex = next;
+			playTT = setTimeout(_play, delay);
+		}
+		function _pause(){
+			clearTimeout(playTT);
+		}
+		return {
+			init: _init
+			,setIndex: _setIndex
+			,play: _play
+			,pause: _pause
+			,clear: function(){
+				_totalNum = 0;
+				_nextIndex = 0;
+				_pause();
+			}
+		}
 	}]).service('imgs'/*图片播放相关*/, ['proxy', 'maps', '$rootScope', function(proxy, map, rootScope){
 		var runTT;
 	    var imageOverlays = [];
@@ -2182,25 +2275,31 @@ function event(a) {
 	        	var overlay = L.imageOverlay(imageUrl, imageBounds);
 	        	overlay.addTo(map);
 	        	overlay.setOpacity(i == 0? 1: 0);
+	        	overlay._time = item[1];
 	        	imageOverlays.push(overlay);
 	        }
-	        function run(){
-	        	clearTimeout(runTT);
-	        	if(!isNormal){
-	        		return;
-	        	}
-		    	imageOverlays[currentIndex].setOpacity(0);
-		    	var next = currentIndex + 1 < imageOverlays.length-1? 1+currentIndex: 0;
-		    	var overlay = imageOverlays[next].setOpacity(1);
-		    	currentIndex = next;
-		    	var info = list[currentIndex];
-		    	rootScope.$emit('change_img', {
-		    		url: info[0],
-		    		time: info[1]
-		    	});
-		    	runTT = setTimeout(run, 200)
-		    }
-		    run();
+	        rootScope.$emit('img_inited', {
+	        	total: j
+	        });
+		}
+		function setIndex(index){
+			var len = imageOverlays.length;
+			if(index < 0){
+				index = 0;
+			}else if(index >= len){
+				index = 0;
+			}
+			for(var i = 0; i<len;i++){
+				imageOverlays[i].setOpacity(i == index ? 1: 0);
+			}
+			currentIndex = index;
+			var info = imageOverlays[currentIndex];
+			rootScope.$emit('change_img', {
+	    		url: info._url,
+	    		time: info._time,
+	    		index: currentIndex,
+	    		total: len
+	    	});
 		}
 		return {
 			init: function(productname){
@@ -2224,6 +2323,7 @@ function event(a) {
 					});
 				}
 			},
+			setIndex: setIndex,
 			stop: function(index){
 				clearTimeout(runTT);
 				if(index !== undefined){
@@ -2244,8 +2344,8 @@ function event(a) {
 			}
 		}
 	}]), myApp.controller("WindytyCtrl", 
-		["$http", "$scope", "$rootScope", "$location", "maps", "calendar", "legends", "$timeout", "progressBar", "products", "$q",'imgs', 'windyty', "$filter", 'paint',
-		function(a, b, c, d, e, f, g, h, i, j, k, imgs, windyty, $filter, paint) {
+		["$http", "$scope", "$rootScope", "$location", "maps", "calendar", /*"legends", */"$timeout", "progressBar", "products", "$q",'imgs', 'windyty', "$filter", 'paint','selector','progress',
+		function(a, b, c, d, e, f, /*g,*/ h, i, j, k, imgs, windyty, $filter, paint, $, progress) {
 		"use strict";
 		
 		function l(a) {
@@ -2396,8 +2496,8 @@ function event(a) {
 			b.overlayLoader = b.levelLoader = b.overAllLoader = !1, 
 			n(function() {
 				c.$emit("windytyReady")
-			}), 
-			b.legend = g(b.overlay, !1)
+			})
+			// , b.legend = g(b.overlay, !1)
 		}, /*b.init(c.date),*/ 
 		b.selectDay = function(a) {
 			l(parseInt(a) / C + .52 / C)
@@ -2424,9 +2524,10 @@ function event(a) {
 					b.product = c
 			}
 			n(), log(a + "/" + ("overlay" == a ? b.overlay : "acTime" == a ? b.acTime : b.level))
-		}, b.cycleLegend = function() {
-			b.legend = g(b.overlay, !0)
 		}
+		// , b.cycleLegend = function() {
+		// 	b.legend = g(b.overlay, !0)
+		// }
 		, c.$on("redrawFinished", m)
 		, c.$on("reset", function() {
 			b.init(null);
@@ -2435,15 +2536,13 @@ function event(a) {
 		});
 
 		var currentProductName;
-		var $ = function(selector){
-			// http://www.jb51.net/article/59544.htm
-			// angular.element 方法集合
-			if(typeof selector == 'string'){
-				selector = document.querySelectorAll(selector);
-			}
-			return angular.element(selector);
-		}
+		
 		var $tool_btn_pro = $('.tool_btn_pro');
+
+		var CONF_LEGENDNAME = {
+			wind: 'legend_wind',
+			radar: 'legend_radar'
+		};
 		// 切换产品
 		b.changeProduct = function(productname, e){
 			if(currentProductName == productname){
@@ -2463,16 +2562,28 @@ function event(a) {
 			$(e.target).addClass('on');
 			currentProductName = productname;
 			b.productname = currentProductName;
+
+			// 初始化进度条
+			progress.clear();
+			b.show_player = false;
+
+			b.legend_name = CONF_LEGENDNAME[productname];
 			switch(productname){
 				case 'wind':
+					m();
 					b.init();
+					// c.$emit('reset');
 					break;
 				case 'radar':
 				case 'cloud':
+					b.show_player = true;
 					imgs.init(productname);
 					break;
 			}
 		}
+		c.$on('img_inited', function(e, data){
+			progress.init(data.total);
+		});
 		var date_formator = $filter('date');
 		// 控制图片播放进度
 		c.$on('change_img', function(e, data){
@@ -2480,6 +2591,11 @@ function event(a) {
 			var date = new Date(data.time*1000);
 			$('#time_top').html(date_formator(date, 'yyyy年MM月dd日'));
 			$('#time_bottom').html(date_formator(date, 'HH:mm'));
+			// progress.setIndex(data.index);
+			// b.playing = true;
+		});
+		c.$on('player_changeindex', function(e, data){
+			imgs.setIndex(data.index);
 		});
 		var canvas_brush = document.querySelector('#canvas_brush');
 		!function(){
@@ -2496,6 +2612,15 @@ function event(a) {
 			$(win).bind('resize', resizeBrush);
 			resizeBrush();
 		}();
+		!function(){
+			var $mask = $('#mask');
+			var fn = function(e){
+				paint.preventDefault(e);
+			}
+			$mask.bind('touchstart', fn);
+			$mask.bind('touchmove', fn);
+			$mask.bind('touchend', fn);
+		}();
 		// 初始化画板
 		b.initPaint = function(){
 			if(b.paint_can_use){
@@ -2506,6 +2631,15 @@ function event(a) {
 			}
 			
 			b.paint_can_use = !b.paint_can_use;
+		}
+
+		// 手势按钮点击事件
+		b.changeMask = function(){
+			b.show_mask = !b.show_mask;
+			if(b.paint_can_use){
+				paint.clear();
+				b.paint_can_use = false;
+			}
 		}
 	}]);
 }(angular);
