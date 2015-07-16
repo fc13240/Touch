@@ -30,6 +30,9 @@
 
 	<!-- LEAFLET MAPS -->
 	<div id="map_container"><div id="map_canvas"></div></div> 
+		<div class="load_progress_wrap">{{load_progress}}
+			<!-- <canvas id="load_progress" width="120" height="120"></canvas> -->
+		</div>
 	<div id="mask" ng-show="show_mask">
 		<canvas id="canvas_brush"  style="width:100%;height: 100%" ng-show="paint_can_use"></canvas>
 	</div>

@@ -2053,9 +2053,20 @@ function event(a) {
 			pre_url = 'http://10.14.85.116/php/proxy.php?url=';
 			// pre_url = './proxy.php?url=';
 		}
+		var proxy_cache = {};
 		return {
-			get: function(url){
-				return http.get(pre_url+url);
+			get: function(url, callback){
+				url = pre_url+url;
+				// 对请求进行缓存
+				var cache_val = proxy_cache[url];
+				if(cache_val){
+					callback && callback(cache_val);
+				}else{
+					http.get(url).success(function(data){
+						proxy_cache[url] = data;
+						callback && callback(data);
+					});
+				}
 			}
 		}
 	}]).service('paint'/*画布*/, [function(){
@@ -2078,7 +2089,7 @@ function event(a) {
 				_this.isEraser = false;
 				_this.storageColor = "#FF0000";
 				_this.eraserRadius = 15;
-				_this.color = ["#FF0000", "#80FF00", "#00FFFF", "#808080", "#FF8000", "#408080", "#8000FF", "#CCCC00", "#000000"];
+				// _this.color = ["#FF0000", "#80FF00", "#00FFFF", "#808080", "#FF8000", "#408080", "#8000FF", "#CCCC00", "#000000"];
 				_this.fontWeight = [2, 5, 8];
 				_this.$ = function(id) {
 					return typeof id == "string" ? document.getElementById(id) : id;
@@ -2098,6 +2109,7 @@ function event(a) {
 				var t = this;
 				var $canvas = angular.element(t.canvas);
 				$canvas.bind(t.StartEvent, function(e) {
+					t.cxt.strokeStyle = t.storageColor; //强制重置颜色
 					var touch = t.touch ? e.touches[0] : e;
 					t.preventDefault(e);
 					var _x = touch.clientX - touch.target.offsetLeft;
@@ -2190,7 +2202,6 @@ function event(a) {
 			}
 			return angular.element(selector);
 		}
-
 	}]).service('progress', ["$rootScope", 'selector', function(rootScope, $){
 		var $player_progressbar_progress = $('.player_progressbar_progress'),
 			$player_btn = $('.player_btn');
@@ -2266,21 +2277,78 @@ function event(a) {
 	    var imageOverlays = [];
 	    var currentIndex = 0;
 	    var isNormal = true;
-		function initData(list, bounds_default){
-	        for(var i = 0, j = list.length; i<j; i++){
-	        	var item = list[i];
-	        	var imageUrl = item[0];
-	        	var bounds = item[2];
-	        	var imageBounds = bounds_default || [[bounds[0], bounds[1]], [bounds[2], bounds[3]]];
-	        	var overlay = L.imageOverlay(imageUrl, imageBounds);
-	        	overlay.addTo(map);
-	        	overlay.setOpacity(i == 0? 1: 0);
-	        	overlay._time = item[1];
-	        	imageOverlays.push(overlay);
-	        }
-	        rootScope.$emit('img_inited', {
-	        	total: j
-	        });
+	    
+	    var cache_img = {};
+	    function loadAndCacheImg(url, opacityScale, cb){
+	    	var img = new Image();
+	    	img.onload = function(){
+	    		var t = this;
+	    		var canvas = document.createElement('canvas');
+	    		var w = t.width, h = t.height;
+	    		canvas.width = w;
+	    		canvas.height = h;
+
+	    		var cxt = canvas.getContext('2d');
+	    		cxt.drawImage(img, 0, 0);
+	    		if(opacityScale != 1){
+	    			var imagedata = cxt.getImageData(0, 0, w, h);
+	    			var data_arr = imagedata.data;
+	    			for(var i = 0, j = data_arr.length; i<j; i+= 4){
+	    				data_arr[i+3] = Math.min(data_arr[i+3] *opacityScale, 255);
+	    			}
+	    			cxt.putImageData(imagedata, 0, 0);
+	    			cache_img[url] = canvas.toDataURL("image/png");
+	    		}else{
+	    			cache_img[url] = url;
+	    		}
+	    		
+	    		
+	    		cb();
+	    	}
+	    	img.onerror = function(){
+	    		cache_img[url] = '';
+	    		cb();
+	    	}
+
+	    	img.src = url;
+	    }
+	    var cache_list = {};
+	    function loadImgs(list, opacityScale, callback){
+	    	var key = list.url;
+	    	if(cache_list[key]){
+	    		return callback();
+	    	}
+	    	var len = list.length;
+	    	var loadedNum = 0;
+	    	function cb(){
+	    		loadedNum += 1;
+	    		rootScope.$emit('load_progress', loadedNum/len);
+	    		if(loadedNum >= len){
+	    			cache_list[key] = true;
+	    			callback();
+	    		}
+	    	}
+	    	for(var i = 0, j = len; i<j; i++){
+	    		loadAndCacheImg(list[i][0], opacityScale, cb);
+	    	}
+	    }
+		function initData(list, opacityScale, bounds_default){
+			loadImgs(list, opacityScale, function(){
+				for(var i = 0, j = list.length; i<j; i++){
+		        	var item = list[i];
+		        	var imageUrl = item[0];
+		        	var bounds = item[2];
+		        	var imageBounds = bounds_default || [[bounds[0], bounds[1]], [bounds[2], bounds[3]]];
+		        	var overlay = L.imageOverlay(cache_img[imageUrl], imageBounds);
+		        	overlay.addTo(map);
+		        	overlay.setOpacity(i == 0? 1: 0);
+		        	overlay._time = item[1];
+		        	imageOverlays.push(overlay);
+		        }
+		        rootScope.$emit('img_inited', {
+		        	total: j
+		        });
+			});
 		}
 		function setIndex(index){
 			var len = imageOverlays.length;
@@ -2305,21 +2373,24 @@ function event(a) {
 			init: function(productname){
 				isNormal = true;
 				if('radar' == productname){
-					proxy.get('http://api.tianqi.cn:8070/v1/img.py').success(function(data){
-
-						initData(data.radar_img);
+					var url = 'http://api.tianqi.cn:8070/v1/img.py';
+					proxy.get(url, function(data){
+						var list = data.radar_img;
+						list.url = url;
+						initData(list, 2.5);
 					});
 				}else if('cloud' == productname){
 					var url = 'http://radar.tianqi.cn/radar/imgs.php?type=cloud_new';
 					// var url = 'http://10.14.85.116/php/radar/imgs.php?type=cloud';
-					proxy.get(url).success(function(data){
+					proxy.get(url, function(data){
 						var list = [];
 						var items = data.l;
 						for(var i = items.length-1; i>=0; i--){
 							var item = items[i];
 							list.push([item['l2'], new Date(item['l1']).getTime()/1000]);
 						}
-						initData(list, [[-4.98, 50.02], [59.97, 144.97]]);//西南，东北(纬度，经度)
+						list.url = url;
+						initData(list, 1, [[-4.98, 50.02], [59.97, 144.97]]);//西南，东北(纬度，经度)
 					});
 				}
 			},
@@ -2343,10 +2414,46 @@ function event(a) {
 				}
 			}
 		}
+	}]).service('load_progress', ['selector', function($){
+		var ctx, width, height, x, y, r;
+		function _init(){
+			var canvas = $('#load_progress')[0];
+			width = canvas.width;
+			height = canvas.height;
+			x = width/2,
+			y = height/2;
+			r = x - 3;
+			ctx = canvas.getContext('2d');
+		}
+		var PI = Math.PI;
+		function _progress(per){
+			var radians = 2*PI * per;
+			ctx.clearRect(0, 0, width, height);
+			ctx.beginPath();
+			ctx.moveTo(x, y);
+			ctx.arc(x, y, r, -PI/2, radians - PI/2, false);
+			ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+			ctx.fill();
+		}
+		return {
+			init: _init,
+			progress: _progress
+		}
 	}]), myApp.controller("WindytyCtrl", 
-		["$http", "$scope", "$rootScope", "$location", "maps", "calendar", /*"legends", */"$timeout", "progressBar", "products", "$q",'imgs', 'windyty', "$filter", 'paint','selector','progress',
-		function(a, b, c, d, e, f, /*g,*/ h, i, j, k, imgs, windyty, $filter, paint, $, progress) {
+		["$http", "$scope", "$rootScope", "$location", "maps", "calendar", /*"legends", */"$timeout", "progressBar", "products", "$q",'imgs', 'windyty', "$filter", 'paint','selector','progress', 'load_progress',
+		function(a, b, c, d, e, f, /*g,*/ h, i, j, k, imgs, windyty, $filter, paint, $, progress, load_progress) {
 		"use strict";
+		
+		// load_progress.init();
+		var $load_progress_wrap = $('.load_progress_wrap');
+		c.$on('load_progress', function(e, per){
+			if(per < 1){
+				$load_progress_wrap.addClass('show');
+			}else{
+				$load_progress_wrap.removeClass('show');
+			}
+			$load_progress_wrap.html((per*100).toFixed(1)+'%');
+		});
 		
 		function l(a) {
 			var c = f.getPath(a);
@@ -2572,11 +2679,11 @@ function event(a) {
 				case 'wind':
 					m();
 					b.init();
-					// c.$emit('reset');
 					break;
 				case 'radar':
 				case 'cloud':
 					b.show_player = true;
+					b.showtime = true;
 					imgs.init(productname);
 					break;
 			}
@@ -2587,7 +2694,6 @@ function event(a) {
 		var date_formator = $filter('date');
 		// 控制图片播放进度
 		c.$on('change_img', function(e, data){
-			b.showtime = true;
 			var date = new Date(data.time*1000);
 			$('#time_top').html(date_formator(date, 'yyyy年MM月dd日'));
 			$('#time_bottom').html(date_formator(date, 'HH:mm'));

@@ -190,3 +190,23 @@
 .legend img{
 	zoom: 0.5;
 }
+
+.load_progress_wrap{
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-left: -80px;
+	margin-top: -80px;
+	width: 200px;
+	height: 80px;
+	background-color: rgba(0, 0, 0, 0.8);
+	border-radius: 10px;
+	z-index: 102;
+	font-size: 40px;
+	line-height: 80px;
+	text-align: center;
+	display: none;
+}
+.load_progress_wrap.show{
+	display: block;
+}
