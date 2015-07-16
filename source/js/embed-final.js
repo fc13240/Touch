@@ -5,6 +5,18 @@ function log(a) {
 function event(a) {
 	// ga("send", "event", a + " UA:" + navigator.userAgent)
 }
+/*自定义系统级错误*/
+var is_native = typeof global !== 'undefined' && typeof global.process !== 'undefined';
+!function(){
+	var fn_error = function(e){
+		console.log('sysErr',e.stack);
+		return false;
+	}
+	if(is_native){
+		process.on('uncaughtException',fn_error);
+	}
+	window.onerror = fn_error;
+}();
 !function(angular){
 	L.TileLayer.Multi = L.TileLayer.extend({
 			_tileDefs: [],
@@ -1661,9 +1673,10 @@ function event(a) {
 			}
 			window.clearTimeout(z), 
 			window.clearTimeout(A), 
-			q = [], 
-			H.clearRect(0, 0, G.width, G.height), 
-			J[K].clearRect(0, 0, G.width, G.height)
+			q = [];
+
+			H && H.clearRect(0, 0, G.width, G.height);
+			J && J[K] && J[K].clearRect(0, 0, G.width, G.height)
 		}
 
 		function d(b, c) {
@@ -2035,10 +2048,18 @@ function event(a) {
 		var isNormal = false;
 		return b.on("dragend", c), b.on("zoomstart", c), b.on("resize", c), {
 			interpolateValues: e,
-			interpolate: f,
+			interpolate: function(){
+				c();
+				var args = arguments;
+				var _this = this;
+				setTimeout(function(){
+					f.apply(_this, args);
+				}, 20)
+			},
 			animate: g,
 			remove: function(){
 				if(isNormal){
+					clearTimeout(A);
 					b.removeLayer(F);
 					isNormal = false;
 				}
@@ -2048,7 +2069,6 @@ function event(a) {
 	// 对跨域的数据进行代理
 	myApp.service('proxy', ["$http", function(http){
 		var pre_url = '';
-		var is_native = typeof global !== 'undefined' && typeof global.process !== 'undefined';
 		if(!is_native){
 			pre_url = 'http://10.14.85.116/php/proxy.php?url=';
 			// pre_url = './proxy.php?url=';
@@ -2247,6 +2267,7 @@ function event(a) {
 				$player_progressbar_progress.css('width', (_nextIndex/(_totalNum-1)*100)+'%');
 		}
 		function _play(){
+			clearTimeout(playTT);
 			var _this = this;
 			_setIndex(_nextIndex);
 			var next = _nextIndex + 1;
@@ -2283,14 +2304,14 @@ function event(a) {
 	    	var img = new Image();
 	    	img.onload = function(){
 	    		var t = this;
-	    		var canvas = document.createElement('canvas');
-	    		var w = t.width, h = t.height;
-	    		canvas.width = w;
-	    		canvas.height = h;
+	    		if(is_native && opacityScale != 1){
+		    		var canvas = document.createElement('canvas');
+		    		var w = t.width, h = t.height;
+		    		canvas.width = w;
+		    		canvas.height = h;
 
-	    		var cxt = canvas.getContext('2d');
-	    		cxt.drawImage(img, 0, 0);
-	    		if(opacityScale != 1){
+		    		var cxt = canvas.getContext('2d');
+		    		cxt.drawImage(img, 0, 0);
 	    			var imagedata = cxt.getImageData(0, 0, w, h);
 	    			var data_arr = imagedata.data;
 	    			for(var i = 0, j = data_arr.length; i<j; i+= 4){
@@ -2414,37 +2435,19 @@ function event(a) {
 				}
 			}
 		}
-	}]).service('load_progress', ['selector', function($){
-		var ctx, width, height, x, y, r;
-		function _init(){
-			var canvas = $('#load_progress')[0];
-			width = canvas.width;
-			height = canvas.height;
-			x = width/2,
-			y = height/2;
-			r = x - 3;
-			ctx = canvas.getContext('2d');
-		}
-		var PI = Math.PI;
-		function _progress(per){
-			var radians = 2*PI * per;
-			ctx.clearRect(0, 0, width, height);
-			ctx.beginPath();
-			ctx.moveTo(x, y);
-			ctx.arc(x, y, r, -PI/2, radians - PI/2, false);
-			ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-			ctx.fill();
-		}
-		return {
-			init: _init,
-			progress: _progress
-		}
 	}]), myApp.controller("WindytyCtrl", 
-		["$http", "$scope", "$rootScope", "$location", "maps", "calendar", /*"legends", */"$timeout", "progressBar", "products", "$q",'imgs', 'windyty', "$filter", 'paint','selector','progress', 'load_progress',
-		function(a, b, c, d, e, f, /*g,*/ h, i, j, k, imgs, windyty, $filter, paint, $, progress, load_progress) {
+		["$http", "$scope", "$rootScope", "$location", "maps", "calendar", /*"legends", */"$timeout", "progressBar", "products", "$q",'imgs', 'windyty', "$filter", 'paint','selector','progress', 
+		function(a, b, c, d, e, f, /*g,*/ h, i, j, k, imgs, windyty, $filter, paint, $, progress) {
 		"use strict";
 		
-		// load_progress.init();
+		!function(){
+			if(typeof process != 'undefined'){
+				var _win_current = nwDispatcher.requireNwGui().Window.get();
+				$('#btn_close').bind('click', function(){
+					_win_current.close();
+				});
+			}
+		}()
 		var $load_progress_wrap = $('.load_progress_wrap');
 		c.$on('load_progress', function(e, per){
 			if(per < 1){
@@ -2682,13 +2685,13 @@ function event(a) {
 					break;
 				case 'radar':
 				case 'cloud':
-					b.show_player = true;
 					b.showtime = true;
 					imgs.init(productname);
 					break;
 			}
 		}
 		c.$on('img_inited', function(e, data){
+			b.show_player = true;
 			progress.init(data.total);
 		});
 		var date_formator = $filter('date');

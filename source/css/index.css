@@ -210,3 +210,13 @@
 .load_progress_wrap.show{
 	display: block;
 }
+
+#btn_close{
+	position: absolute;
+	left: 50%;
+	top: 0;
+	margin-left: -150px;
+	width: 300px;
+	height: 40px;
+	z-index: 1001;
+}

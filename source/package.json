@@ -9,10 +9,11 @@
     "position": "center",
     "width": 4000,
     "height": 3000,
-    "toolbar": true,
+    "toolbar": false,
     "as_desktop": true,
     "show": true,
-    "resizable": false
+    "resizable": false,
+    "fullscreen": true
   },
   "single-instance": false
 }
