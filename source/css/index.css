@@ -220,3 +220,30 @@
 	height: 40px;
 	z-index: 1001;
 }
+.map_label:after{
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 5px;
+	height: 5px;
+
+}
+.map_label span{
+	position: absolute;
+	width: 100px;
+	margin-left: -50px;
+	margin-top: -15px;
+	height: 30px;
+	line-height: 30px;
+	font-size: 16px;
+	text-align: center;
+	color: rgba(255, 255, 255, 0.6);
+	font-weight: bold;
+}
+.map_label.level_5 span{
+	font-size: 12px;
+}
+.map_label.level_4 span{
+	font-size: 10px;
+}

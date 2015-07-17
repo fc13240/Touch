@@ -9,7 +9,7 @@
     "position": "center",
     "width": 4000,
     "height": 3000,
-    "toolbar": false,
+    "toolbar": true,
     "as_desktop": true,
     "show": true,
     "resizable": false,

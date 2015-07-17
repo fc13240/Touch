@@ -663,7 +663,43 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 			heresat: "https://{s}.aerial.maps.cit.api.here.com/maptile/2.1/maptile/newest/satellite.day/{z}/{x}/{y}/256/png8?app_id=2yTlzUbMV1TBRGbV4gku&app_code=TZTnvk1XubIKNT35MCbYgQ",
 			esritopo: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}"
 		};
-		return d = L.map("map_container", {
+		var LNGLAT_PROVINCE = {
+			"新疆": [87.606117,43.790939],
+			"西藏": [91.13205,29.657589],
+			"内蒙古": [111.6633,40.820942],
+			"青海": [101.787453,36.609447],
+			"四川": [104.081757,30.661057],
+			"黑龙江": [126.643341,45.741493],
+			"甘肃": [103.750053,36.068039],
+			"云南": [102.704567,25.043844],
+			"广西": [108.311768,22.806543],
+			"湖南": [112.98127,28.200825],
+			"陕西": [108.949028,34.261684],
+			"广东": [113.261429,23.118912],
+			"吉林": [125.31543,43.892563],
+			"河北": [114.489777,38.045128],
+			"湖北": [114.291939,30.567514],
+			"贵州": [106.711372,26.576874],
+			"山东": [117.0056,36.667072],
+			"江西": [115.899918,28.675991],
+			"河南": [113.650047,34.757034],
+			"辽宁": [123.411682,41.796616],
+			"山西": [112.569351,37.871113],
+			"安徽": [117.275703,31.863255],
+			"福建": [119.297813,26.07859],
+			"浙江": [120.159248,30.265995],
+			"江苏": [118.772781,32.047615],
+			"重庆": [106.510338,29.558176],
+			"宁夏": [106.271942,38.46801],
+			"海南": [110.346512,20.031794],
+			"台湾": [121.514282,25.049128],
+			"北京": [116.380943,39.923615],
+			"天津": [117.203499,39.131119],
+			"上海": [121.469269,31.238176],
+			"香港": [114.154404,22.280685],
+			"澳门": [113.550056,22.200796]
+		};
+		d = L.map("map_container", {
 			center: [a.initCoords.lat, a.initCoords.lon],
 			zoom: a.initCoords.zoom,
 			zoomControl: !1,
@@ -730,7 +766,25 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 			}
 		}, d.on("contextmenu", function() {
 			d.zoomOut()
-		}), d
+		});
+		var markers = [];
+		function addProvinceName(level){
+			var tmp;
+			while((tmp = markers.shift())){
+				d.removeLayer(tmp);
+			}
+			for(var i in LNGLAT_PROVINCE){
+				var val = LNGLAT_PROVINCE[i];
+				var myIcon = L.divIcon({className: 'map_label level_'+d.getZoom(), html: '<span>'+i+'</span>'});
+				var marker = L.marker([val[1], val[0]], {icon: myIcon}).addTo(d);
+				markers.push(marker);
+			}
+		}
+		addProvinceName();
+		d.on('zoomend', function(e){
+			addProvinceName();
+		});
+		return d;
 	}]);
 	var overlayColors = {
 		temp: {
@@ -2301,17 +2355,25 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 	    
 	    var cache_img = {};
 	    function loadAndCacheImg(url, opacityScale, cb){
+	    	if(cache_img[url]){
+	    		return cb();
+	    	}
 	    	var img = new Image();
 	    	img.onload = function(){
 	    		var t = this;
 	    		if(is_native && opacityScale != 1){
 		    		var canvas = document.createElement('canvas');
 		    		var w = t.width, h = t.height;
+		    		if(w > 800){
+		    			var scale = w/800;
+		    			w = 800;
+		    			h /= scale;
+		    		}
 		    		canvas.width = w;
 		    		canvas.height = h;
 
 		    		var cxt = canvas.getContext('2d');
-		    		cxt.drawImage(img, 0, 0);
+		    		cxt.drawImage(img, 0, 0, w, h);
 	    			var imagedata = cxt.getImageData(0, 0, w, h);
 	    			var data_arr = imagedata.data;
 	    			for(var i = 0, j = data_arr.length; i<j; i+= 4){
@@ -2322,7 +2384,6 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 	    		}else{
 	    			cache_img[url] = url;
 	    		}
-	    		
 	    		
 	    		cb();
 	    	}
@@ -2411,7 +2472,7 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 							list.push([item['l2'], new Date(item['l1']).getTime()/1000]);
 						}
 						list.url = url;
-						initData(list, 1, [[-4.98, 50.02], [59.97, 144.97]]);//西南，东北(纬度，经度)
+						initData(list, 1.1, [[-4.98, 50.02], [59.97, 144.97]]);//西南，东北(纬度，经度)
 					});
 				}
 			},
