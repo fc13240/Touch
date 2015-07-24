@@ -134,7 +134,7 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 	window.onerror = function(a, b, c, d, e) {
 		event("Version:" + global.version + " Error:" + a + " url:" + b + " line:" + c + " column:" + d + " error:" + e + " UA:" + navigator.userAgent)
 	};
-	var myApp = angular.module("myApp", ["pascalprecht.translate"]).config(["transProvider", "$compileProvider", function(b, c) {
+	var myApp = angular.module("myApp", ["pascalprecht.translate", "services"]).config(["transProvider", "$compileProvider", function(b, c) {
 		c.debugInfoEnabled(!1), b.init()
 	}]).run(["$rootScope", "$location", "$http", "$translate", "trans", "maps", "proxy", function(a, b, c, d, e, f, proxy) {
 		{
@@ -705,9 +705,11 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 			zoomControl: !1,
 			minZoom: 4,
 			maxZoom: 10
-		}), (window.d = d),L.control.zoom({
-			position: "topright"
-		}).addTo(d), d.initTiles = function(a, b) {
+		}), (window.d = d)
+		// ,L.control.zoom({
+		// 	position: "topright"
+		// }).addTo(d)
+		,d.initTiles = function(a, b) {
 			var c = e[b] || e.esritopo;
 			L.TileLayer.multi({
 				10: {
@@ -1434,186 +1436,7 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 			},
 			zoom2zoom: [0, 0, 0, 0, 1, 1, 3, 3, 3, 3, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
 		}, e
-	}]), /*myApp.service("legends", ["settings", function(a) {
-		"use strict;";
-		var b = {
-			temp: {
-				metric: 0,
-				description: ["°C", "°F"],
-				lines: [
-					[237, -35, -31],
-					[242, -30, -22],
-					[247, -25, -13],
-					[252, -20, -4],
-					[257, -15, 5],
-					[262, -10, 14],
-					[267, -5, 23],
-					[272, 0, 32],
-					[277, 5, 41],
-					[282, 10, 50],
-					[287, 15, 59],
-					[292, 20, 68],
-					[297, 25, 77],
-					[302, 30, 86],
-					[307, 35, 95]
-				]
-			},
-			rh: {
-				metric: 0,
-				description: ["%"],
-				lines: [
-					[75, 75],
-					[80, 80],
-					[85, 85],
-					[90, 90],
-					[95, 95],
-					[100, 100]
-				]
-			},
-			pressure: {
-				metric: 0,
-				description: ["hPa", "inHg"],
-				lines: [
-					[98e3, 980, 28.93],
-					[98500, 985, 29.08],
-					[99e3, 990, 29.23],
-					[99500, 995, 29.38],
-					[1e5, 1e3, 29.52],
-					[100500, 1005, 29.67],
-					[101e3, 1010, 29.82],
-					[101500, 1015, 29.97],
-					[102e3, 1020, 30.12],
-					[102500, 1025, 30.26],
-					[103e3, 1030, 30.41]
-				]
-			},
-			wind: {
-				metric: 0,
-				description: ["kt", "bft", "m/s", "mph", "km/h"],
-				lines: [
-					[0, 0, 0, 0, 0, 0],
-					[2, 4, 2, 2, 4, 7],
-					[4, 8, 3, 4, 9, 14],
-					[6, 12, 4, 6, 13, 22],
-					[8, 16, 5, 8, 18, 29],
-					[10, 20, 5, 10, 22, 36],
-					[12, 24, 6, 12, 27, 43],
-					[14, 28, 7, 14, 31, 50],
-					[16, 32, 7, 16, 36, 58],
-					[18, 36, 8, 18, 40, 65],
-					[20, 44, 9, 20, 45, 72],
-					[24, 48, 9, 24, 55, 88],
-					[27, 52, 10, 27, 60, 96],
-					[29, 56, 11, 29, 64, 103]
-				]
-			},
-			gust: {
-				metric: 0,
-				description: ["kt", "bft", "m/s", "mph", "km/h"],
-				lines: [
-					[0, 0, 0, 0, 0, 0],
-					[2, 4, 2, 2, 4, 7],
-					[4, 8, 3, 4, 9, 14],
-					[6, 12, 4, 6, 13, 22],
-					[8, 16, 5, 8, 18, 29],
-					[10, 20, 5, 10, 22, 36],
-					[12, 24, 6, 12, 27, 43],
-					[14, 28, 7, 14, 31, 50],
-					[16, 32, 7, 16, 36, 58],
-					[18, 36, 8, 18, 40, 65],
-					[20, 40, 9, 20, 45, 72],
-					[24, 48, 9, 24, 55, 88],
-					[27, 52, 10, 27, 60, 96],
-					[29, 56, 11, 29, 64, 103]
-				]
-			},
-			waverages: {
-				metric: 0,
-				description: ["kt", "bft", "m/s", "mph", "km/h"],
-				lines: [
-					[0, 0, 0, 0, 0, 0],
-					[2, 4, 2, 2, 4, 7],
-					[4, 8, 3, 4, 9, 14],
-					[6, 12, 4, 6, 13, 22],
-					[8, 16, 5, 8, 18, 29],
-					[10, 20, 5, 10, 22, 36],
-					[12, 24, 6, 12, 27, 43],
-					[14, 28, 7, 14, 31, 50],
-					[16, 32, 7, 16, 36, 58],
-					[18, 36, 8, 18, 40, 65],
-					[20, 40, 9, 20, 45, 72],
-					[24, 48, 9, 24, 55, 88],
-					[27, 52, 10, 27, 60, 96],
-					[29, 56, 11, 29, 64, 103]
-				]
-			},
-			clouds: {
-				metric: 0,
-				description: ["mm", "in"],
-				lines: [
-					[230, .5, ".02"],
-					[260, 1, ".04"],
-					[290, 1.5, ".06"],
-					[320, 2, ".08"],
-					[380, 3, ".12"],
-					[440, 4, ".16"],
-					[500, 5, ".2"],
-					[620, 7, ".3"],
-					[800, 10, ".4"]
-				]
-			},
-			snow: {
-				metric: 0,
-				description: ["cm", "in"],
-				lines: [
-					[80, 8, 3.1],
-					[100, 10, 3.9],
-					[200, 20, 8],
-					[300, 30, 11],
-					[500, 50, 20],
-					[1e3, "1m", "3f"],
-					[2e3, "2m", "6f"],
-					[3e3, "3m", "9f"]
-				]
-			},
-			rain: {
-				metric: 0,
-				description: ["mm", "in"],
-				lines: [
-					[5, 5, ".2"],
-					[10, 10, ".4"],
-					[20, 20, ".8"],
-					[30, 30, "1.2"],
-					[40, 40, 1.5],
-					[100, 100, 3.9],
-					[1e3, "1m", "3f"],
-					[3e3, "3m", "9f"]
-				]
-			}
-		};
-		return function(c, d) {
-			var e = [];
-			if (!b[c]) return {
-				desc: null,
-				data: null
-			};
-			if (legend = b[c], colorTable = overlayColors[c].preparedColors, startingValue = overlayColors[c].startingValue, step = overlayColors[c].step, d) legend.metric = legend.description[legend.metric + 1] ? legend.metric + 1 : 0, a.setMetric(c, legend.description[legend.metric]);
-			else {
-				var f = a.getMetric(c);
-				f && (legend.metric = legend.description.indexOf(f), legend.metric < 0 && (legend.metric = 0))
-			}
-			return legend.lines.forEach(function(a) {
-				color = colorTable[Math.floor((a[0] - startingValue) / step)], e.push({
-					value: a[0],
-					desc: a[1 + legend.metric],
-					color: "rgba(" + color[0] + "," + color[1] + "," + color[2] + "," + color[3] / 200 + ")"
-				})
-			}), {
-				desc: legend.description[legend.metric],
-				data: e
-			}
-		}
-	}]),*/ myApp.service("storage", [function() {
+	}]), myApp.service("storage", [function() {
 		var a = !0;
 		try {
 			localStorage.test = 2
@@ -2497,10 +2320,10 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 			}
 		}
 	}]), myApp.controller("WindytyCtrl", 
-		["$http", "$scope", "$rootScope", "$location", "maps", "calendar", /*"legends", */"$timeout", "progressBar", "products", "$q",'imgs', 'windyty', "$filter", 'paint','selector','progress', 
-		function(a, b, c, d, e, f, /*g,*/ h, i, j, k, imgs, windyty, $filter, paint, $, progress) {
+		["$http", "$scope", "$rootScope", "$location", "maps", "calendar", /*"legends", */"$timeout", "progressBar", "products", "$q",'imgs', 'windyty', "$filter", 'paint','selector','progress', 'typhoon',
+		function(a, b, c, d, e, f, /*g,*/ h, i, j, k, imgs, windyty, $filter, paint, $, progress, typhoon) {
 		"use strict";
-		
+		typhoon.init();
 		!function(){
 			if(typeof process != 'undefined'){
 				var _win_current = nwDispatcher.requireNwGui().Window.get();

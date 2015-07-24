@@ -17,14 +17,13 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script> 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bower-angular-translate/2.5.2/angular-translate.min.js"></script>
 	-->
+	<script src="./js/jquery-1.8.2.js"></script> 
 	<script src="./js/externaljs2.js?angular=134"></script> 
 	<script src="./js/leaflet.js"></script> 
-
+	<script src="./js/services.js"></script> 
 	<script src="./js/embed-final.js?timestamp=0845"></script>
 </head>
 <body id="body">
-
-
 <!-- WINDYTY CONTROLLER -->
 <div ng-controller="WindytyCtrl" ng-init="show_mask = true">
 	<div id="btn_close"></div>
@@ -77,6 +76,15 @@
 				</div>
 			</div>
 		</div>
+	</div>
+	<div id="wrap_typhoon" ng-show="show_typhoon">
+		<div class="btn_typhoon_list">
+			<div class="box btn_typhoon"></div>
+			<!-- <div class="box btn_typhoon">莲花</div>
+			<div class="box btn_typhoon on">莲花莲花莲花</div> -->
+		</div>
+		<ul class="box typhoon_list" >
+		</ul>
 	</div>
 	<div class="legend" ng-show="legend_name"><img ng-src="./img/{{legend_name}}.png"/></div>
 </div> <!-- END of WINDYTY CONTROLLER -->
