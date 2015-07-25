@@ -57,11 +57,7 @@ ul, ol{
 	left: 5%;
 	border-bottom: 1px solid rgba(255, 255, 255, 0.6)
 }
-.tool_brush,
-.tool_hand,
-.tool_radar, 
-.tool_cloud,
-.tool_wind{
+.tool_btn{
 	background-size: cover;
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -79,6 +75,9 @@ ul, ol{
 .tool_wind{
 	background-image: url(../img/tool_wind.png);
 }
+.tool_typhoon{
+	background-image: url(../img/tool_typhoon.png);
+}
 .tool_radar.on{
 	background-image: url(../img/tool_radar_on.png);
 }
@@ -87,6 +86,9 @@ ul, ol{
 }
 .tool_wind.on{
 	background-image: url(../img/tool_wind_on.png);
+}
+.tool_typhoon.on{
+	background-image: url(../img/tool_typhoon_on.png);
 }
 .tool_top{
 	overflow: hidden;
@@ -296,6 +298,7 @@ ul, ol{
 	border-bottom: 0;
 }
 
+/*风圈半径 {*/
 .wind_radiu{
 	/*position: absolute;
 	z-index: 901;
@@ -409,6 +412,7 @@ ul, ol{
 .level10 .radiu:after{
 	border: 1px solid #ee731a;
 }
+/*风圈半径 }*/
 
 .wind_level{
 	width: 20px;
@@ -432,4 +436,91 @@ ul, ol{
 }
 .wl_6{
 	background-image: url(../img/level_6.png);
+}
+
+@-webkit-keyframes rotate 
+{
+	from {-webkit-transform: rotate(0deg);}
+	to {-webkit-transform: rotate(360deg);}
+}
+.rotate
+{
+	-webkit-animation-name:'rotate';
+	-webkit-animation-duration: 1s;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function:linear;
+	/*-webkit-animation-direction: alternate;*/
+}
+.typhoon_icon{
+	width: 30px;
+	height: 30px;
+}
+.typhoon_icon .rotate{
+	width: 100%;
+	height: 100%;
+	background-image: url(../img/typhoon.png);
+	background-size: 100%;
+	-webkit-animation-duration: 0.7s;
+}
+.popup{
+	background-color: rgba(255, 255, 255, 0.7);
+	text-align: center;
+	position: relative;
+	text-align: center;
+	min-width: 80px;
+	margin-left: 28px;
+	color: #000;
+	font-size: 15px;
+	padding: 3px;
+	margin-top: -6px;
+	float: left;
+	  white-space: nowrap;	
+}
+.popup span{
+	position: absolute;
+	width: 16px;
+	height: 16px;
+	overflow: hidden;
+	left: -16px;
+	top: 50%;
+	margin-top: -8px;
+}
+.popup span:after{
+	content: '';
+	position: absolute;
+	background-color: rgba(255, 255, 255, 0.7);
+	-webkit-transform: rotate(27deg) skewX(-36deg);;
+	width: 100%;
+	height: 100%;
+	left: 11px;
+}
+.typhoon_icon .popup{
+	margin-left: 40px;
+	margin-top: -30px;
+}
+
+.wrap_typhoon_chart{
+	width: 50%;
+	height: 50%;
+	left: 25%;
+	top: 25%;
+	z-index: 201;
+}
+#btn_close_typhoon_chart{
+	position: absolute;
+	left: 10px;
+	bottom: 10px;
+	width: 65px;
+	height: 65px;
+	background: url(../img/btn_close.png) center center no-repeat;
+	background-size: 100%;
+}
+#typhoon_chart{
+	width: 100%;
+	height: 100%;
+}
+#btn_close_typhoon_chart:hover{
+	-webkit-animation-name: 'rotate';
+	-webkit-animation-duration: 0.5s;
+	-webkit-animation-timing-function:linear;
 }

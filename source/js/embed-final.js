@@ -2323,7 +2323,6 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 		["$http", "$scope", "$rootScope", "$location", "maps", "calendar", /*"legends", */"$timeout", "progressBar", "products", "$q",'imgs', 'windyty', "$filter", 'paint','selector','progress', 'typhoon',
 		function(a, b, c, d, e, f, /*g,*/ h, i, j, k, imgs, windyty, $filter, paint, $, progress, typhoon) {
 		"use strict";
-		typhoon.init();
 		!function(){
 			if(typeof process != 'undefined'){
 				var _win_current = nwDispatcher.requireNwGui().Window.get();
@@ -2535,8 +2534,16 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 
 		var CONF_LEGENDNAME = {
 			wind: 'legend_wind',
-			radar: 'legend_radar'
+			radar: 'legend_radar',
+			typhoon: 'legend_typhoon'
 		};
+		var title_url_pre = './img/title_';
+		var CONF_TITLE = {
+			wind: title_url_pre + 'wind.png',
+			radar: title_url_pre + 'radar.png',
+			cloud: title_url_pre + 'cloud.png',
+			typhoon: ''
+		}
 		// 切换产品
 		b.changeProduct = function(productname, e){
 			if(currentProductName == productname){
@@ -2546,12 +2553,12 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 			paint.clear();
 			b.paint_can_use = false;
 
-			// 清空显示时间标识
-			b.showtime = false;
 
 			// 清空所有图层
 			imgs.remove();
 			windyty.remove();
+			typhoon.remove();
+
 			$tool_btn_pro.removeClass('on');
 			$(e.target).addClass('on');
 			currentProductName = productname;
@@ -2560,8 +2567,11 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 			// 初始化进度条
 			progress.clear();
 			b.show_player = false;
+			b.showtime = false;
+			b.show_typhoon = false;
 
 			b.legend_name = CONF_LEGENDNAME[productname];
+			b.title_img = CONF_TITLE[productname];
 			switch(productname){
 				case 'wind':
 					m();
@@ -2571,6 +2581,10 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 				case 'cloud':
 					b.showtime = true;
 					imgs.init(productname);
+					break;
+				case 'typhoon':
+					b.show_typhoon = true;
+					typhoon.init();
 					break;
 			}
 		}

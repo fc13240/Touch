@@ -1,25 +1,36 @@
 !function(angular){
+	/*时间格式化*/
+	Date.prototype.format = function(format,is_not_second){
+		format || (format = 'yyyy-MM-dd hh:mm:ss');
+		var o = {
+			"M{2}" : this.getMonth()+1, //month
+			"d{2}" : this.getDate(),    //day
+			"h{2}" : this.getHours(),   //hour
+			"m{2}" : this.getMinutes(), //minute
+			"q{2}" : Math.floor((this.getMonth()+3)/3),  //quarter
+		}
+		if(!is_not_second){
+			o["s{2}"] = this.getSeconds(); //second
+			o["S{2}"] = this.getMilliseconds() //millisecond
+		}
+		if(/(y{4}|y{2})/.test(format)){
+			format = format.replace(RegExp.$1,(this.getFullYear()+"").substr(4 - RegExp.$1.length));
+		} 
+		for(var k in o){
+			if(new RegExp("("+ k +")").test(format)){
+				format = format.replace(RegExp.$1,RegExp.$1.length==1 ? o[k] :("00"+ o[k]).substr((""+ o[k]).length));
+			}
+		}
+		
+		return format;
+	}
 	angular.module('services', []).service('typhoon', ["$rootScope", "maps", function(rootScope, map){
 		var URL_TYPHOON = 'http://typhoon.weather.gov.cn/Typhoon/data/';
+		var URL_LIST = URL_TYPHOON + 'typhoonList.xml';
 		var cache_typhoon = {};
 		function _getTyphoonList(cb, is_active){
-			$.get(URL_TYPHOON + 'typhoonList.xml', function(result){
-				var list = [];
-				$(result).find('typhoon').each(function(){
-					var $this = $(this);
-					var m_code = /(\d{2})$/.exec($this.attr('interCode'));
-					list.push({
-						is_active: !!$this.attr('year'),
-						index: m_code[1],
-						code: $this.attr('xuHao'),
-						cnName: $this.attr('chnName'),
-						enName: $this.attr('enName'),
-					});
-				});
+			function _getList(list){
 				if(is_active){
-					list.sort(function(a, b){
-						return a.code.localeCompare(b.code)
-					});
 					list = list.filter(function(v){
 						if(v.is_active){
 							return v;
@@ -27,7 +38,31 @@
 					});
 				}
 				cb(list);
-			});
+			}
+			var val_cache = cache_typhoon[URL_LIST];
+			if(val_cache){
+				_getList(val_cache);
+			}else{
+				$.get(URL_LIST, function(result){
+					var list = [];
+					$(result).find('typhoon').each(function(){
+						var $this = $(this);
+						var m_code = /(\d{2})$/.exec($this.attr('interCode'));
+						list.push({
+							is_active: !!$this.attr('year'),
+							index: m_code[1],
+							code: $this.attr('xuHao'),
+							cnName: $this.attr('chnName'),
+							enName: $this.attr('enName'),
+						});
+					});
+					list.sort(function(a, b){
+						return a.code.localeCompare(b.code)
+					});
+					cache_typhoon[URL_LIST] = list;
+					_getList(list);
+				});
+			}
 		}
 		function _getDate(YMDHM){
 			var m = /^(\d{4})(\d{2})(\d{2})(\d{2})/.exec(YMDHM);
@@ -73,7 +108,7 @@
 						$this.find('ele').each(function(){
 							var $ele = $(this);
 							forecast.push({
-								aging: parseInt($ele.attr('V04')),
+								aging: parseInt($ele.attr('V04')),//预报时效
 								lat: $ele.attr('V05'),
 								lng: $ele.attr('V06'),
 								level: $ele.attr('V07'),
@@ -138,7 +173,8 @@
 	    	return html;
 	    }
 	    var _prev_marker;
-		function _addTyphoonPoint(item){
+		function _addTyphoonPoint(item, html){
+			html = html || '';
 			var wind = item.level;
 			var level = 1;
 			if(wind <= 7){
@@ -156,17 +192,19 @@
 			}
 			
 			var cname = 'wind_level wl_'+level;
-			var myIcon = L.divIcon({className: cname, html: ''});
+			var myIcon = L.divIcon({className: cname, html: html});
 			var marker = L.marker([item.lat, item.lng], {icon: myIcon}).addTo(map).on('click', function(){
 				if(_prev_marker){
 					var cn = _prev_marker.options.icon.options.className;
-					_prev_marker.setIcon(L.divIcon({className: cn, html: ''}));
+					_prev_marker.setIcon(L.divIcon({className: cn, html: html}));
 				}
-				var myIcon = L.divIcon({className: cname, html: _getWindRadiu(7, item)+_getWindRadiu(10, item)});
+				_prev_marker = marker;
+				if(item.aging){
+					return;
+				}
+				var myIcon = L.divIcon({className: cname, html: html+_getWindRadiu(7, item)+_getWindRadiu(10, item)});
 				marker.setIcon(myIcon);
 				marker.setZIndexOffset(-100);
-				_prev_marker = marker;
-				console.log(_prev_marker);
 			});
 			return marker;
 		}
@@ -176,35 +214,105 @@
 				_prev_marker.setIcon(L.divIcon({className: cn, html: ''}));
 			}
 		});
+		function _getPropupHtml(text){
+			return '<div class="popup"><span></span>'+text+'</div>';
+		}
 		var overlays_cache = {};
+		var run_tt = {},
+			run_delay = 300;
 		function _showTyphoon(code){
 			_getTyphoonDetail(code, function(items){
+				var typhoon_info = cache_typhoon[code];
 				var _cache = overlays_cache[code] || (overlays_cache[code] = []);
-				_cache.push(_addTyphoonPoint(items[0]));
-				for(var i = 1, j = items.length; i<j; i++){
-					var item_start = items[i-1],
-						item_end = items[i];
-
-					var polyline = L.polyline([L.latLng(item_start.lat, item_start.lng), L.latLng(item_end.lat, item_end.lng)], 
-						{color: 'rgba(255, 255, 255, 0.6)'}).addTo(map);
-					_cache.push(polyline);
-
-					_cache.push(_addTyphoonPoint(item_end));
+				function _putCache(overlay){
+					if(overlay){
+						_cache.push(overlay);
+					}
 				}
+				var current_index = 0,
+					last_index = items.length - 1;
+				var item_first = items[current_index++];
 
+				var marker_typhoon = L.marker([item_first.lat, item_first.lng], {
+					icon: L.divIcon({
+						className: 'typhoon_icon', 
+						html: '<div class="rotate"></div>',
+						iconSize: [30, 30],
+					})
+				}).addTo(map);
+				_putCache(marker_typhoon);
+				_putCache(_addTyphoonPoint(item_first, _getPropupHtml(typhoon_info.cnName||typhoon_info.enName)));
+				var is_forcast = false;
+				function _run(){
+					var item_start = items[current_index-1],
+						item_end = items[current_index];
+					var option_polyline = {
+						color: 'rgba(255, 255, 255, 0.6)',
+						weight: 3
+					};
+					if(is_forcast){
+						option_polyline.dashArray = [15, 10];
+					}
+					var p_start = L.latLng(item_start.lat, item_start.lng),
+						p_end = L.latLng(item_end.lat, item_end.lng);
+					var polyline = L.polyline([p_start, p_end], option_polyline).addTo(map);
+					_putCache(polyline);
+
+					_putCache(_addTyphoonPoint(item_end));
+					if(!is_forcast){
+						marker_typhoon.setLatLng(p_end);
+						var options = marker_typhoon.options.icon.options;
+						options.html = '<div class="rotate"></div>'+_getPropupHtml(item_end.time.format((typhoon_info.cnName||typhoon_info.enName)+'(MM月dd日hh时)'));
+						marker_typhoon.setIcon(L.divIcon(options));
+					}
+					var is_can_next = false;
+					if(current_index < last_index){
+						current_index++;
+						is_can_next = true;
+					}else{
+						items = item_end.forecast;
+						if(items){
+							items.unshift(item_end);
+							current_index = 1;
+							last_index = items.length - 1;
+							is_forcast = true;
+							is_can_next = true;
+						}
+					}
+					if(is_can_next){
+						run_tt[code] = setTimeout(_run, run_delay);
+					}
+				}
+				run_tt[code] = setTimeout(_run, run_delay);
 			});
 		}
 		function _removeTyhoon(code){
 			var overlays = overlays_cache[code];
 			if(overlays){
+				clearTimeout(run_tt[code]);
 				$.each(overlays, function(i, v){
 					map.removeLayer(v);
 				});
 			}
 		}
+		function _initListRight(){
+			var html_title = '';
+			$btn_typhoon_list.find('.btn_typhoon.on').each(function(){
+				var code = $(this).data('code');
+				var v = cache_typhoon[code];
+				html_title += '<li>'+v.cnName+'(第'+v.index+'号台风'+v.enName+')</li>';
+			});
+			if(html_title){
+				$typhoon_list.show();
+			}else{
+				$typhoon_list.hide();
+			}
+			$typhoon_list.html(html_title);
+		}
 		var $btn_typhoon_list,
 			$typhoon_list;
 
+		// var ecObj;
 		// 绑定事件
 		$(function(){
 			$btn_typhoon_list = $('.btn_typhoon_list').delegate('.btn_typhoon', 'click', function(){
@@ -218,18 +326,89 @@
 					_showTyphoon(code);
 				}
 
+				_initListRight();
 			});
 			$typhoon_list = $('.typhoon_list');
+			$('#btn_close_typhoon_chart').click(function(){
+				$(this).parent().hide();
+			});
+			// $.getScript('./js/echarts.js', function(){
+				require.config({
+			        paths: {
+			            echarts: './js'
+			        }
+			    });
+				require([
+		            'echarts',
+		            'echarts/chart/line',
+		        ], function (ec) {
+		        	ecObj = ec;
+		        	_initChart();
+		        });
+			// });
 		});
+		function _initChart(){
+			if(ecObj){
+				myChart = ecObj.init($('#typhoon_chart').get(0));
+	            myChart.setOption({
+	            	color: ['white'],
+	            	grid: {
+	            		borderColor: 'rgba(0, 0, 0, 0)'
+	            	},
+				    tooltip : {
+				        trigger: 'axis'
+				    },
+				    legend: {
+				    	show: false,
+				        data:['意向']
+				    },
+				    calculable : true,
+				    xAxis : {
+			            show: 0,
+			            boundaryGap : false,
+			            data : ['周一','周二','周三','周四','周五','周六','周日']
+			        },
+				    yAxis : {	
+			        	show: 0
+				    },
+				    series : [
+				        {
+				            name:'成交',
+				            type:'line',
+				            smooth: 1,
+				            symbolSize: 6,
+				            itemStyle: {
+				            	normal: {
+				            		areaStyle: {
+				            			type: 'default',
+				            			color: (function (){
+				                            var zrColor = require('zrender/tool/color');
+				                            return zrColor.getLinearGradient(
+				                                0, 400, 0, 0,
+				                                [[0, '#CC6D35'],[0.5, '#C5C153'], [0.7, '#5FA5A3']]
+				                            )
+				                        })()
+				            		},
+				            		lineStyle: {
+				            			color: 'rgba(0, 0, 0, 0)'
+				            		}
+				            	}
+				            },
+				            data:[10, 12, 21, 54, 21, 10, 25]
+				        }
+				    ]
+	            });
+
+			}
+		}
 		function _initBtns(list){
 			var html = '';
-			var html_title = '';
 			$.each(list, function(i, v){
+				cache_typhoon[v.code] = v;
 				html += '<div class="box btn_typhoon" data-code="'+v.code+'">'+(v.cnName||v.enName)+'</div>';
-				html_title += '<li>'+v.cnName+'(第'+v.index+'号台风'+v.enName+')</li>';
+				
 			});
 			$btn_typhoon_list.html(html);
-			$typhoon_list.html(html_title);
 		}
 		return {
 			init: function(){
@@ -238,6 +417,14 @@
 					rootScope.typhoonList = typhoonList;
 					_initBtns(typhoonList);
 				}, true);
+			},
+			remove: function(){
+				var cache_list = cache_typhoon[URL_LIST];
+				if(cache_list){
+					for(var i = 0, j = cache_list.length; i<j; i++){
+						_removeTyhoon(cache_list[i].code);
+					}
+				}
 			}
 		}
 	}]);

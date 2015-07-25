@@ -20,6 +20,7 @@
 	<script src="./js/jquery-1.8.2.js"></script> 
 	<script src="./js/externaljs2.js?angular=134"></script> 
 	<script src="./js/leaflet.js"></script> 
+	<script src="./js/echarts.js"></script> 
 	<script src="./js/services.js"></script> 
 	<script src="./js/embed-final.js?timestamp=0845"></script>
 </head>
@@ -40,9 +41,9 @@
 		<div style="background-color: {{legend.data[0].color}};">{{legend.desc}}</div>
 		<div ng-repeat="item in legend.data" style="background-color: {{item.color}};">{{item.desc}}</div>
 	</div> -->
-	<div class="box_title_container" ng-show="productname">
+	<div class="box_title_container" ng-show="title_img||showtime">
 		<div class="box box_title">
-			<img ng-src="./img/title_{{productname}}.png"/>
+			<img ng-src="{{title_img}}"/>
 			<div class="time" ng-show="showtime">
 				<span id="time_top"></span>
 				<span id="time_bottom"></span>
@@ -55,6 +56,7 @@
 		<li class="tool_btn tool_btn_pro tool_radar on"></li>
 		<li class="tool_btn tool_btn_pro tool_cloud on"></li>
 		<li class="tool_btn tool_btn_pro tool_wind on"></li>
+		<li class="tool_btn tool_btn_pro tool_wind on"></li>
 		<img ng-src="./img/legend_wind.png"/>
 		<img ng-src="./img/legend_radar.png"/>
 	</div>
@@ -65,7 +67,8 @@
 		</li>
 		<li class="tool_btn tool_btn_pro tool_radar" ng-click="changeProduct('radar', $event)"><span></span></li>
 		<li class="tool_btn tool_btn_pro tool_cloud" ng-click="changeProduct('cloud', $event)"><span></span></li>
-		<li class="tool_btn tool_btn_pro tool_wind" ng-click="changeProduct('wind', $event)"></li>
+		<li class="tool_btn tool_btn_pro tool_wind" ng-click="changeProduct('wind', $event)"><span></span></li>
+		<li class="tool_btn tool_btn_pro tool_typhoon" ng-click="changeProduct('typhoon', $event)"></li>
 	</ul>
 	<div class="box box_player" ng-show="show_player">
 		<div class="player_btn" ng-class="{playing:playing}"></div>
@@ -86,6 +89,7 @@
 		<ul class="box typhoon_list" >
 		</ul>
 	</div>
+	<div class="box wrap_typhoon_chart"><div id="typhoon_chart"></div><div id="btn_close_typhoon_chart"></div></div>
 	<div class="legend" ng-show="legend_name"><img ng-src="./img/{{legend_name}}.png"/></div>
 </div> <!-- END of WINDYTY CONTROLLER -->
 
