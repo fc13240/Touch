@@ -82,6 +82,8 @@
 					var min_lng = min_lat = Number.MAX_VALUE,
 						max_lng = max_lat = -Number.MAX_VALUE;
 					function _init(lng, lat){
+						lng = parseFloat(lng);
+						lat = parseFloat(lat);
 						if(lng < min_lng){
 							min_lng = lng;
 						}
@@ -215,26 +217,31 @@
 			}
 			
 			var cname = 'wind_level wl_'+level;
-			var myIcon = L.divIcon({className: cname, html: html});
+			var myIcon = L.divIcon({className: cname, html: html, iconSize: L.point(20, 20)});
 			var marker = L.marker([item.lat, item.lng], {icon: myIcon}).addTo(map).on('click', function(){
 				if(_prev_marker){
-					var cn = _prev_marker.options.icon.options.className;
-					_prev_marker.setIcon(L.divIcon({className: cn, html: html}));
+					var options = _prev_marker.options.icon.options;
+					options.html = html;
+					_prev_marker.setIcon(L.divIcon(options));
+					_prev_marker.setZIndexOffset(99999);
 				}
 				_prev_marker = marker;
 				if(item.aging){
 					return;
 				}
-				var myIcon = L.divIcon({className: cname, html: html+_getWindRadiu(7, item)+_getWindRadiu(10, item)});
+				var options = marker.options.icon.options;
+				options.html = html+_getWindRadiu(7, item)+_getWindRadiu(10, item);
+				var myIcon = L.divIcon(options);
 				marker.setIcon(myIcon);
-				marker.setZIndexOffset(-100);
+				marker.setZIndexOffset(-99999);
 			});
 			return marker;
 		}
 		map.on('zoomstart', function(){
 			if(_prev_marker){
-				var cn = _prev_marker.options.icon.options.className;
-				_prev_marker.setIcon(L.divIcon({className: cn, html: ''}));
+				var option = _prev_marker.options.icon.options;
+				option.html = '';
+				_prev_marker.setIcon(L.divIcon(option));
 			}
 		});
 		function _getPropupHtml(text){
@@ -242,7 +249,7 @@
 		}
 		var overlays_cache = {};
 		var run_tt = {},
-			run_delay = 300;
+			run_delay = 200;
 		function _showTyphoon(code){
 			_getTyphoonDetail(code, function(items){
 				var typhoon_info = cache_typhoon[code];
@@ -396,7 +403,7 @@
 				var xAxisData = [];
 				var data = [];
 				$.each(points, function(i, v){
-					xAxisData.push(v.time.format('yyyy年MM月dd日hh时'));
+					xAxisData.push(v.time.format('MM月dd日hh时'));
 					data.push(v.wind);
 				});
 				var mark_name = xAxisData[xAxisData.length - 1],
@@ -408,7 +415,7 @@
 					$.each(forecast, function(i, v){
 						var d = new Date(time.getTime());
 						d.setHours(d.getHours() + v.aging);
-						xAxisData.push(d.format('yyyy年MM月dd日hh时'));
+						xAxisData.push(d.format('MM月dd日hh时'));
 						data.push(v.wind);
 					});
 				}
@@ -435,7 +442,7 @@
 					name: '强台风',
 					color: 'rgba(230,38,135, 0.8)'
 				}, {
-					val: [51.0, Number.MAX_VALUE],
+					val: [51.0, Math.max(55, wind_max)],
 					name: '超强台风',
 					color: 'rgba(126,64,149, 0.8)'
 				}];
@@ -444,24 +451,12 @@
 				for(var i = 0, j = LEVEL.length; i<j; i++){
 					var item = LEVEL[i];
 					var val = item.val;
-					if(wind_min < val[1]){
-						if(wind_max > val[1]){
-							var dis = val[1] - val[0];
-							space_total += dis;
-							space_arr.push({
-								d: dis,
-								c: item.color
-							});
-						}else{
-							var dis = wind_max - val[0];
-							space_total += dis;
-							space_arr.push({
-								d: dis,
-								c: item.color
-							});
-							break;
-						}
-					}
+					var dis = val[1] - val[0];
+					space_total += dis;
+					space_arr.push({
+						d: dis,
+						c: item.color
+					});
 				}
 				var color_arr = [];
 				var added_per = 0;
@@ -473,7 +468,8 @@
 				$wrap_typhoon_chart.show();
 				$typhoon_name.text(typhoon_title);
 				myChart = ecObj.init($typhoon_chart.get(0));
-				var WIND_MIN = 5;debugger;
+				var WIND_MIN = 10.8,
+					WIND_MAX = Math.max(55, wind_max);
 	            myChart.setOption({
 	            	color: ['white'],
 	            	grid: {
@@ -492,20 +488,47 @@
 				    },
 				    calculable : true,
 				    xAxis : {
-			            show: 0,
+			            show: 1,
 			            boundaryGap : false,
-			            data : xAxisData
+			            data : xAxisData,
+			            axisLabel: {
+			        		textStyle: {
+			        			color: 'white'
+			        		}
+			        	},
+			        	splitLine: {
+			        		lineStyle: {
+			        			color: 'rgba(255, 255, 255, 0.3)',
+			        		}
+			        	},
+			        	axisLine: {
+			        		show: false
+			        	}
 			        },
 				    yAxis : {	
 			        	show: 1,
-			        	min: 15
+			        	min: WIND_MIN,
+			        	max: WIND_MAX,
+			        	axisLabel: {
+			        		textStyle: {
+			        			color: 'white'
+			        		}
+			        	},
+			        	splitLine: {
+			        		lineStyle: {
+			        			color: 'rgba(255, 255, 255, 0.3)',
+			        		}
+			        	},
+			        	axisLine: {
+			        		show: false
+			        	}
 				    },
 				    series : [
 				        {
 				            name:'风速',
 				            type:'line',
 				            smooth: 1,
-				            symbolSize: 4,
+				            symbolSize: 2,
 				            clickable: false,
 				            draggable: false,
 				            itemStyle: {

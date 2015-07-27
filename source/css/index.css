@@ -197,7 +197,7 @@ ul, ol{
 	font-size: 0;
 }
 .legend img{
-	zoom: 0.5;
+	zoom: 0.4;
 }
 
 .load_progress_wrap{
@@ -514,7 +514,7 @@ ul, ol{
 #btn_close_typhoon_chart{
 	position: absolute;
 	left: 15px;
-	bottom: 15px;
+	top: 15px;
 	width: 40px;
 	height: 40px;
 	background: url(../img/btn_close.png) center center no-repeat;
@@ -540,4 +540,11 @@ ul, ol{
 	left: 50%;
 	margin-left: -250px;
 	margin-top: 10px;
+}
+.unit{
+	color: white;
+	position: absolute;
+	left: 50px;
+	top: 70px;
+	font-size: 14px;
 }
