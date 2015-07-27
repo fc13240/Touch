@@ -1,3 +1,7 @@
+body{
+	font: 14px/1.6 "Microsoft Yahei", "SimSun", "宋体", "Arial", "HELVETICA", "sans-serif", "Tahoma";
+            background-color: #fff;
+}
 ul, ol{
 	list-style: none;
 }
@@ -391,26 +395,26 @@ ul, ol{
 
 .level7 .line_up,
 .level7 .line_down{
-	border-left: 1px solid #a1318d;
+	border-left: 2px solid #a1318d;
 }
 .level7 .line_right,
 .level7 .line_left{
-	border-top: 1px solid #a1318d;
+	border-top: 2px solid #a1318d;
 }
 .level7 .radiu:after{
-	border: 1px solid #a1318d;
+	border: 2px solid #a1318d;
 }
 
 .level10 .line_up,
 .level10 .line_down{
-	border-left: 1px solid #ee731a;
+	border-left: 2px solid #ee731a;
 }
 .level10 .line_right,
 .level10 .line_left{
-	border-top: 1px solid #ee731a;
+	border-top: 2px solid #ee731a;
 }
 .level10 .radiu:after{
-	border: 1px solid #ee731a;
+	border: 2px solid #ee731a;
 }
 /*风圈半径 }*/
 
@@ -505,22 +509,35 @@ ul, ol{
 	left: 25%;
 	top: 25%;
 	z-index: 201;
+	display: none;
 }
 #btn_close_typhoon_chart{
 	position: absolute;
-	left: 10px;
-	bottom: 10px;
-	width: 65px;
-	height: 65px;
+	left: 15px;
+	bottom: 15px;
+	width: 40px;
+	height: 40px;
 	background: url(../img/btn_close.png) center center no-repeat;
 	background-size: 100%;
 }
 #typhoon_chart{
+	position: absolute;
+	left: 0;
+	bottom: 0;
 	width: 100%;
-	height: 100%;
+	height: 90%;
 }
 #btn_close_typhoon_chart:hover{
 	-webkit-animation-name: 'rotate';
 	-webkit-animation-duration: 0.5s;
 	-webkit-animation-timing-function:linear;
+}
+.typhoon_name{
+	position: absolute;
+	width: 500px;
+	font-size: 30px;
+	text-align: center;
+	left: 50%;
+	margin-left: -250px;
+	margin-top: 10px;
 }

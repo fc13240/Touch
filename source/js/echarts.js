@@ -1,4 +1,5 @@
-var define, require, esl;
+var nwrequire = require;
+var define, require = null, esl;
 ! function(e) {
 	function t(e) {
 		m(e, J) || (O[e] = 1)

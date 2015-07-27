@@ -161,7 +161,7 @@
 	background: rgba(255, 255, 255, .5)
 }
 .leaflet-container {
-	font: 12px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif
+	font: 12px/1.5 "Microsoft Yahei", "SimSun", "宋体", "Arial", "HELVETICA", "sans-serif", "Tahoma", "Helvetica Neue", Arial, Helvetica, sans-serif
 }
 .leaflet-bar {
 	box-shadow: 0 1px 5px rgba(0, 0, 0, .65);
