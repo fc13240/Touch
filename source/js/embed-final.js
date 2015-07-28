@@ -2105,12 +2105,15 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 			}
 			return angular.element(selector);
 		}
-	}]).service('progress', ["$rootScope", 'selector', function(rootScope, $){
+	}]).service('progress', ["$rootScope", function(rootScope){
 		var $player_progressbar_progress = $('.player_progressbar_progress'),
 			$player_btn = $('.player_btn');
 		var $player_progressbar = $('.player_progressbar');
 
-		$player_progressbar.bind('click', function(e){
+		$player_progressbar.on('click', function(e){
+			if(e.originalEvent){
+				e = e.originalEvent;
+			}
 			var per = e.layerX/$player_progressbar[0].offsetWidth;
 			var toIndex = Math.floor(per*_totalNum);
 
@@ -2142,6 +2145,11 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 			autoPlay && this.play();
 		}
 		function _setIndex(index){
+			if(index < 0){
+				index = 0;
+			}else if(index > _totalNum - 1){
+				index = _totalNum - 1;
+			}
 			rootScope.$emit('player_changeindex', {
 				index: index
 			});
@@ -2239,6 +2247,7 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 	    			callback();
 	    		}
 	    	}
+	    	rootScope.$emit('load_progress', 0);
 	    	for(var i = 0, j = len; i<j; i++){
 	    		loadAndCacheImg(list[i][0], opacityScale, cb);
 	    	}
