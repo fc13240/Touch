@@ -1,11 +1,10 @@
 ﻿{
   "name": "Blue π Ants",
-  "version": "v0.1.0",
+  "version": "v0.2.0",
   "description": "蓝π蚂蚁触屏",
   "main": "index.html",
   "window": {
     "title": "蓝π蚂蚁触屏",
-    "icon": "./img/icon.png",
     "position": "center",
     "width": 4000,
     "height": 3000,

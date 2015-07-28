@@ -31,12 +31,12 @@
 		function _getTyphoonList(cb, is_active){
 			function _getList(list){
 				if(is_active){
-					// list = list.filter(function(v){
-					// 	if(v.is_active){
-					// 		return v;
-					// 	}
-					// });
-					list = list.slice(-6);
+					list = list.filter(function(v){
+						if(v.is_active){
+							return v;
+						}
+					});
+					// list = list.slice(-6);
 				}
 				cb(list);
 			}
