@@ -36,7 +36,7 @@
 					// 		return v;
 					// 	}
 					// });
-					list = list.slice(0, 6);
+					list = list.slice(-6);
 				}
 				cb(list);
 			}
@@ -465,7 +465,13 @@
 					added_per += item.d/space_total;
 					color_arr.push([added_per, item.c]);
 				}
-				$wrap_typhoon_chart.show();
+				$wrap_typhoon_chart.show().css({
+					left: '100%'
+				}).animate({
+					left: '25%'
+				}, {
+					easing: 'swing'
+				});
 				$typhoon_name.text(typhoon_title);
 				myChart = ecObj.init($typhoon_chart.get(0));
 				var WIND_MIN = 10.8,
