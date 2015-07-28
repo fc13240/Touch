@@ -249,7 +249,8 @@
 		}
 		var overlays_cache = {};
 		var run_tt = {},
-			run_delay = 200;
+			run_delay_default = 200,
+			run_time_total = 5000;
 		function _showTyphoon(code){
 			_getTyphoonDetail(code, function(items){
 				var typhoon_info = cache_typhoon[code];
@@ -265,9 +266,16 @@
 					}
 				}
 				var current_index = 0,
-					last_index = items.length - 1;
+					len = items.length,
+					last_index = len - 1;
 				var item_first = items[current_index++];
 
+				var numTotal = len;
+				var item_last_forecast = items[last_index].forecast;
+				if(item_last_forecast){
+					numTotal += item_last_forecast.length;
+				}
+				var run_delay = Math.min(run_delay_default, Math.ceil(run_time_total/numTotal));
 				var marker_typhoon = L.marker([item_first.lat, item_first.lng], {
 					icon: L.divIcon({
 						className: 'typhoon_icon', 
@@ -289,11 +297,12 @@
 					var item_start = is_forcast && current_index == 0? last_shikuang_point: items[current_index-1],
 						item_end = items[current_index];
 					var option_polyline = {
-						color: 'rgba(255, 255, 255, 0.6)',
-						weight: 3
+						color: 'white',
+						weight: 2,
+						opacity: 1
 					};
 					if(is_forcast){
-						option_polyline.dashArray = [15, 10];
+						option_polyline.dashArray = [10, 8];
 					}
 					var p_start = L.latLng(item_start.lat, item_start.lng),
 						p_end = L.latLng(item_end.lat, item_end.lng);
@@ -383,18 +392,28 @@
 				$(this).parent().hide();
 			});
 			// $.getScript('./js/echarts.js', function(){
-				require.config({
+				require_web.config({
 			        paths: {
 			            echarts: './js/'
 			        }
 			    });
-				require([
+				require_web([
 		            'echarts',
 		            'echarts/chart/line',
 		        ], function (ec) {
 		        	ecObj = ec;
 		        });
 			// });
+			var fn = function(e){
+				if(e.preventDefault){
+					e.preventDefault();
+				}else{
+					window.event.returnValue = false;
+				}
+			}
+			// $wrap_typhoon_chart.bind('touchstart', fn);
+			$wrap_typhoon_chart.bind('touchmove', fn);
+			// $wrap_typhoon_chart.bind('touchend', fn);
 		});
 		var myChart;
 		function _initChart(points, typhoon_title){
@@ -402,20 +421,28 @@
 				myChart && myChart.dispose();
 				var xAxisData = [];
 				var data = [];
+				var last_index = points.length - 1;
+				var xLabelData = [];
 				$.each(points, function(i, v){
-					xAxisData.push(v.time.format('MM月dd日hh时'));
+					var xLabel = v.time.format('MM月dd日hh时');
+					xLabelData.push(xLabel);
+					xAxisData.push(i === 0 || i === last_index? xLabel: ' ');
 					data.push(v.wind);
 				});
-				var mark_name = xAxisData[xAxisData.length - 1],
+				var mark_index = xAxisData.length - 1, 
+					mark_name = xAxisData[mark_index],
 					mark_val = data[data.length - 1];
 				var point_last = points[points.length-1];
 				var forecast = point_last.forecast;
 				if(forecast){
 					var time = point_last.time;
+					var last_index = forecast.length - 1;
 					$.each(forecast, function(i, v){
 						var d = new Date(time.getTime());
 						d.setHours(d.getHours() + v.aging);
-						xAxisData.push(d.format('MM月dd日hh时'));
+						var xLabel = d.format('MM月dd日hh时');
+						xLabelData.push(xLabel);
+						xAxisData.push(last_index === i? xLabel: '  ');
 						data.push(v.wind);
 					});
 				}
@@ -468,7 +495,7 @@
 				$wrap_typhoon_chart.show().css({
 					left: '100%'
 				}).animate({
-					left: '25%'
+					left: '15%'
 				}, {
 					easing: 'swing'
 				});
@@ -484,8 +511,10 @@
 				    tooltip : {
 				        trigger: 'axis',
 				        formatter: function (params,ticket,callback) {
+				        	console.log(arguments);
 				        	var data = params[0];
-				        	return data.name+'<br/>'+data.seriesName+':'+data.value+'m/s';
+
+				        	return xLabelData[data.dataIndex]+'<br/>'+data.seriesName+':'+data.value+'m/s';
 				        }
 				    },
 				    legend: {
@@ -499,7 +528,9 @@
 			            data : xAxisData,
 			            axisLabel: {
 			        		textStyle: {
-			        			color: 'white'
+			        			color: 'white',
+			        			fontSize: 16
+			        			// fontFamily: '宋体'
 			        		}
 			        	},
 			        	splitLine: {
@@ -517,7 +548,8 @@
 			        	max: WIND_MAX,
 			        	axisLabel: {
 			        		textStyle: {
-			        			color: 'white'
+			        			color: 'white',
+			        			fontSize: 16
 			        		}
 			        	},
 			        	splitLine: {
@@ -542,9 +574,9 @@
 				            		areaStyle: {
 				            			type: 'default',
 				            			color: (function (){
-				                            var zrColor = require('zrender/tool/color');
+				                            var zrColor = require_web('zrender/tool/color');
 				                            return zrColor.getLinearGradient(
-				                                0, 500, 0, 0,
+				                                0, $typhoon_chart.height(), 0, 0,
 				                                color_arr
 				                                // [[0, '#CC6D35'],[0.5, '#C5C153'], [0.7, '#5FA5A3']]
 				                            )
@@ -569,8 +601,8 @@
 				            		}
 				            	},
 				            	data: [[
-							        { xAxis: mark_name, yAxis: 0},
-                  					{xAxis: mark_name, yAxis: mark_val - 1}           // 当xAxis为类目轴时，字符串'周三'会被理解为与类目轴的文本进行匹配
+							        {xAxis: mark_index, yAxis: 0},
+                  					{xAxis: mark_index, yAxis: mark_val - 1}           // 当xAxis为类目轴时，字符串'周三'会被理解为与类目轴的文本进行匹配
 							    ]]
 				            }
 				        }

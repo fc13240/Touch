@@ -1,6 +1,6 @@
-var nwrequire = require;
-var define, require = null, esl;
+var define, require_web = null, esl;
 ! function(e) {
+	var require = null;
 	function t(e) {
 		m(e, J) || (O[e] = 1)
 	}
@@ -488,6 +488,7 @@ var define, require = null, esl;
 	var G, Y, Z, Q, q, j, $, ee = document.getElementsByTagName("head")[0],
 		te = document.getElementsByTagName("base")[0];
 	te && (ee = te.parentNode), define || (define = o, require || (require = i), esl = i)
+	require_web = require;
 }(this), define("echarts", ["echarts/echarts"], function(e) {
 	return e
 }), define("echarts/echarts", ["require", "./config", "zrender/tool/util", "zrender/tool/event", "zrender/tool/env", "zrender", "zrender/config", "./chart/island", "./component/toolbox", "./component", "./component/title", "./component/tooltip", "./component/legend", "./util/ecData", "./chart", "zrender/tool/color", "./component/timeline", "zrender/shape/Image", "zrender/loadingEffect/Bar", "zrender/loadingEffect/Bubble", "zrender/loadingEffect/DynamicLine", "zrender/loadingEffect/Ring", "zrender/loadingEffect/Spin", "zrender/loadingEffect/Whirling", "./theme/macarons", "./theme/infographic"], function(e) {
@@ -6022,7 +6023,7 @@ var define, require = null, esl;
 			if (window.G_vmlCanvasManager) return !0;
 			e = e || window.event;
 			var t = e.toElement || e.relatedTarget || e.srcElement || e.target;
-			return t && t.className.match(o.elementClassName)
+			return t && t.className && t.className.match && t.className.match(o.elementClassName)
 		},
 		V = {
 			resize: function(e) {

@@ -14,7 +14,7 @@ ul, ol{
 
 .box{
 	position: absolute;
-	z-index: 100;
+	z-index: 110;
 	background-color: rgba(46, 46, 65, 0.8);
 	border: 1px solid rgba(255, 255, 255, 0.6);
 }
@@ -137,7 +137,7 @@ ul, ol{
 	height: 100%;
 	left: 0;
 	top: 0;
-	z-index: 10;
+	z-index: 109;
 }
 
 .box_player{
@@ -197,7 +197,7 @@ ul, ol{
 	font-size: 0;
 }
 .legend img{
-	zoom: 0.4;
+	zoom: 0.6;
 }
 
 .load_progress_wrap{
@@ -259,7 +259,7 @@ ul, ol{
 
 .btn_typhoon_list{
 	position: fixed;
-	z-index: 101;
+	z-index: 111;
 	left: 20px;
 	bottom: 10px;
 }
@@ -291,7 +291,7 @@ ul, ol{
 	right: 10px;
 	top: 10px;
 	text-align: center;
-	font-size: 20px;
+	font-size: 30px;
 }
 .typhoon_list li{
 	margin: 0 5px;
@@ -504,11 +504,11 @@ ul, ol{
 }
 
 .wrap_typhoon_chart{
-	width: 50%;
-	height: 50%;
-	left: 25%;
-	top: 25%;
-	z-index: 201;
+	width: 70%;
+	height: 60%;
+	left: 15%;
+	top: 20%;
+	z-index: 108;
 	display: none;
 }
 #btn_close_typhoon_chart{
@@ -546,5 +546,5 @@ ul, ol{
 	position: absolute;
 	left: 50px;
 	top: 70px;
-	font-size: 14px;
+	font-size: 16px;
 }

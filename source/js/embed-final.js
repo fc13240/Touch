@@ -2004,9 +2004,12 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 			},
 			bind: function() {
 				var t = this;
-				var $canvas = angular.element(t.canvas);
+				var $canvas = $(t.canvas);
 				$canvas.bind(t.StartEvent, function(e) {
 					t.cxt.strokeStyle = t.storageColor; //强制重置颜色
+					if(e.originalEvent){
+						e = e.originalEvent;
+					}
 					var touch = t.touch ? e.touches[0] : e;
 					t.preventDefault(e);
 					var _x = touch.clientX - touch.target.offsetLeft;
@@ -2020,6 +2023,9 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 					t.lock = true;
 				});
 				$canvas.bind(t.MoveEvent, function(e) {
+					if(e.originalEvent){
+						e = e.originalEvent;
+					}
 					var touch = t.touch ? e.touches[0] : e;
 					if (t.lock) {
 						var _x = touch.clientX - touch.target.offsetLeft;
