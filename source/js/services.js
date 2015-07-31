@@ -38,6 +38,7 @@
 					});
 					// list = list.slice(-6);
 				}
+				console.log(list);
 				cb(list);
 			}
 			var val_cache = cache_typhoon[URL_LIST];
@@ -48,20 +49,58 @@
 					var list = [];
 					$(result).find('typhoon').each(function(){
 						var $this = $(this);
+						var chnName = $this.attr('chnName');
+						var enName = $this.attr('enName');
+						if(chnName == '内部编号' || enName == 'NAMELESS'){
+							return;
+						}
 						var m_code = /(\d{2})$/.exec($this.attr('interCode'));
 						list.push({
 							is_active: !!$this.attr('year'),
 							index: m_code[1],
 							code: $this.attr('xuHao'),
-							cnName: $this.attr('chnName'),
-							enName: $this.attr('enName'),
+							cnName: chnName,
+							enName: enName,
 						});
 					});
-					list.sort(function(a, b){
+					var cache = {};
+					$.each(list, function(i, v){
+						var index = v.index;
+						var val = cache[index];
+						if(val){
+							val.push(v);
+						}else{
+							cache[index] = [v];
+						}
+					});
+					var list_new = [];
+					for(var i in cache){
+						var val = cache[i];
+						if(val.length > 1){
+							val.sort(function(a, b){
+								return a.code.localeCompare(b.code);
+							});
+							var flag_active = false;
+							var code_list = [];
+							$.each(val, function(i_val, v_val){
+								if(v_val.is_active){
+									flag_active = true;
+								}
+								code_list.push(v_val.code);
+							});
+							val[0].is_active = flag_active;
+							val[0].code_list = code_list;
+							list_new.push(val[0]);
+						}else{
+							list_new.push(val[0]);
+						}
+					}
+
+					list_new.sort(function(a, b){
 						return a.code.localeCompare(b.code)
 					});
-					cache_typhoon[URL_LIST] = list;
-					_getList(list);
+					cache_typhoon[URL_LIST] = list_new;
+					_getList(list_new);
 				});
 			}
 		}
@@ -72,12 +111,21 @@
 			return date;
 		}
 		function _getTyphoonDetail(typhoonCode, cb){
-			var url = URL_TYPHOON + typhoonCode + '.xml';
-			var val_cache = cache_typhoon[url];
+			var key = 'typhoon_'+typhoonCode;
+			var val_cache = cache_typhoon[key];
 			if(val_cache){
 				cb(val_cache);
 			}else{
-				$.get(url, function(result){
+				var deferredArr = [];
+				try{
+					typhoonCode = typhoonCode.split(',');
+				}catch(e){
+					typhoonCode = [typhoonCode];
+				}
+				$.each(typhoonCode, function(i, v){
+					deferredArr.push($.get(URL_TYPHOON + v + '.xml'));
+				});
+				$.when.apply($, deferredArr).done(function(){
 					var items = [];
 					var min_lng = min_lat = Number.MAX_VALUE,
 						max_lng = max_lat = -Number.MAX_VALUE;
@@ -97,54 +145,58 @@
 							max_lat = lat;
 						}
 					}
-					$(result).find('key').each(function(){
-						var $this = $(this);
-						var obj = {
-							time: _getDate($this.attr('YMDHM')),
-							lat: $this.attr('V05'),
-							lng: $this.attr('V06'),
-							level: $this.attr('V07'),
-							wind: $this.attr('V08'),
-							qy: $this.attr('V09'),
-							move_speed: $this.attr('V11'),
-							move_dir: $this.attr('V12'),
-							r7: $this.attr('V21'),
-							r10: $this.attr('V22'),
-							r7_en: $this.attr('V71'),
-							r7_es: $this.attr('V72'),
-							r7_wn: $this.attr('V73'),
-							r7_ws: $this.attr('V74'),
-							r10_en: $this.attr('V101'),
-							r10_es: $this.attr('V102'),
-							r10_wn: $this.attr('V103'),
-							r10_ws: $this.attr('V104'),
-							r12_en: $this.attr('V121'),
-							r12_es: $this.attr('V122'),
-							r12_wn: $this.attr('V123'),
-							r12_ws: $this.attr('V124'),
-						};
-						_init(obj.lng, obj.lat);
-						var forecast = [];
-						$this.find('ele').each(function(){
-							var $ele = $(this);
-							forecast.push({
-								aging: parseInt($ele.attr('V04')),//预报时效
-								lat: $ele.attr('V05'),
-								lng: $ele.attr('V06'),
-								level: $ele.attr('V07'),
-								wind: $ele.attr('V08'),
-								qy: $ele.attr('V09')
+					var result_arr = arguments;
+					for(var i = 0, args = deferredArr.length == 1? [arguments]: arguments, j = args.length; i<j; i++){
+						var result = args[i][0];
+						$(result).find('key').each(function(){
+							var $this = $(this);
+							var obj = {
+								time: _getDate($this.attr('YMDHM')),
+								lat: $this.attr('V05'),
+								lng: $this.attr('V06'),
+								level: $this.attr('V07'),
+								wind: $this.attr('V08'),
+								qy: $this.attr('V09'),
+								move_speed: $this.attr('V11'),
+								move_dir: $this.attr('V12'),
+								r7: $this.attr('V21'),
+								r10: $this.attr('V22'),
+								r7_en: $this.attr('V71'),
+								r7_es: $this.attr('V72'),
+								r7_wn: $this.attr('V73'),
+								r7_ws: $this.attr('V74'),
+								r10_en: $this.attr('V101'),
+								r10_es: $this.attr('V102'),
+								r10_wn: $this.attr('V103'),
+								r10_ws: $this.attr('V104'),
+								r12_en: $this.attr('V121'),
+								r12_es: $this.attr('V122'),
+								r12_wn: $this.attr('V123'),
+								r12_ws: $this.attr('V124'),
+							};
+							_init(obj.lng, obj.lat);
+							var forecast = [];
+							$this.find('ele').each(function(){
+								var $ele = $(this);
+								forecast.push({
+									aging: parseInt($ele.attr('V04')),//预报时效
+									lat: $ele.attr('V05'),
+									lng: $ele.attr('V06'),
+									level: $ele.attr('V07'),
+									wind: $ele.attr('V08'),
+									qy: $ele.attr('V09')
+								});
 							});
+							obj.forecast = forecast;
+							items.push(obj);
 						});
-						obj.forecast = forecast;
-						items.push(obj);
-					});
+					}
 					var item_last = items[items.length - 1];
 					$.each(item_last.forecast, function(i, v){
 						_init(v.lng, v.lat);
 					});
 					cache_typhoon['bound_'+typhoonCode] = [[max_lat, min_lng], [min_lat, max_lng]];
-					cache_typhoon[url] = items;
+					cache_typhoon[key] = items;
 					cb(items);
 				});
 			}
@@ -252,6 +304,8 @@
 			run_delay_default = 200,
 			run_time_total = 5000;
 		function _showTyphoon(code){
+			// var code_list = code.split(',');
+			// code = code_list[0];
 			_getTyphoonDetail(code, function(items){
 				var typhoon_info = cache_typhoon[code];
 				var bound = cache_typhoon['bound_'+code];
@@ -501,8 +555,14 @@
 				});
 				$typhoon_name.text(typhoon_title);
 				myChart = ecObj.init($typhoon_chart.get(0));
-				var WIND_MIN = 10.8,
+				var WIND_MIN = 10,
 					WIND_MAX = Math.max(55, wind_max);
+				var val_split = 5;
+				var yu = WIND_MAX % val_split;
+				if(yu > 0){
+					WIND_MAX = WIND_MAX - yu + val_split;
+				}
+				
 	            myChart.setOption({
 	            	color: ['white'],
 	            	grid: {
@@ -546,6 +606,7 @@
 			        	show: 1,
 			        	min: WIND_MIN,
 			        	max: WIND_MAX,
+			        	splitNumber: Math.floor((WIND_MAX - WIND_MIN)/5),
 			        	axisLabel: {
 			        		textStyle: {
 			        			color: 'white',
@@ -613,8 +674,8 @@
 		function _initBtns(list){
 			var html = '';
 			$.each(list, function(i, v){
-				cache_typhoon[v.code] = v;
-				html += '<div class="box btn_typhoon" data-code="'+v.code+'">'+(v.cnName||v.enName)+'</div>';
+				cache_typhoon[v.code_list || v.code] = v;
+				html += '<div class="box btn_typhoon" data-code="'+(v.code_list || v.code)+'">'+(v.cnName||v.enName)+'</div>';
 			});
 			$btn_typhoon_list.html(html);
 		}
