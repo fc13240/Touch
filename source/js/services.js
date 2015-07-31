@@ -26,7 +26,7 @@
 	}
 	angular.module('services', []).service('typhoon', ["$rootScope", "maps", function(rootScope, map){
 		var URL_TYPHOON = 'http://typhoon.weather.gov.cn/Typhoon/data/';
-		var URL_LIST = URL_TYPHOON + 'typhoonList.xml';
+		var URL_LIST = URL_TYPHOON + 'typhoonList.xml?'+Math.random();
 		var cache_typhoon = {};
 		function _getTyphoonList(cb, is_active){
 			function _getList(list){
@@ -123,7 +123,7 @@
 					typhoonCode = [typhoonCode];
 				}
 				$.each(typhoonCode, function(i, v){
-					deferredArr.push($.get(URL_TYPHOON + v + '.xml'));
+					deferredArr.push($.get(URL_TYPHOON + v + '.xml?'+Math.random()));
 				});
 				$.when.apply($, deferredArr).done(function(){
 					var items = [];
