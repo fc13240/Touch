@@ -710,12 +710,13 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 		// 	position: "topright"
 		// }).addTo(d)
 		,d.initTiles = function(a, b) {
+			var mapbox_tile_version = '1.1';
 			var c = e[b] || e.esritopo;
 			L.TileLayer.multi({
 				10: {
 					// url: "https://tiles{s}.windyty.com/tiles/" + (L.Browser.retina ? "rtnv3" : "v5") + "/{z}/{x}/{y}.jpg",
 					// url: 'http://api.tiles.mapbox.com/v4/ludawei.mj8ienmm/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibHVkYXdlaSIsImEiOiJldzV1SVIwIn0.-gaUYss5MkQMyem_IOskdA',
-					url: 'http://api.tiles.mapbox.com/v4/ludawei.mn69agep/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibHVkYXdlaSIsImEiOiJldzV1SVIwIn0.-gaUYss5MkQMyem_IOskdA',
+					url: 'http://api.tiles.mapbox.com/v4/ludawei.mn69agep/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibHVkYXdlaSIsImEiOiJldzV1SVIwIn0.-gaUYss5MkQMyem_IOskdA&v='+mapbox_tile_version,
 					// url: e.heresat,
 					subdomains: "1234"
 				},
