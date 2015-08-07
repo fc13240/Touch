@@ -18,6 +18,9 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 	window.onerror = fn_error;
 }();
 !function(angular){
+	function _getBlur(){
+		return window.Worker ? new Worker("./js/blur.js"): null;
+	}
 	L.TileLayer.Multi = L.TileLayer.extend({
 			_tileDefs: [],
 			initialize: function(a, b) {
@@ -1881,8 +1884,8 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 			var c = a - b * Math.floor(a / b);
 			return c === b ? 0 : c
 		}
-		var j = null;
-		window.Worker ? j = new Worker("./js/blur.js") : event("Web Worker not supported");
+		var j = _getBlur();
+		// window.Worker ? j = new Worker("./js/blur.js") : event("Web Worker not supported");
 		var k, l, m, n, o, p, q = [],
 			r = [],
 			s = [],
@@ -2197,28 +2200,61 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 	    		return cb();
 	    	}
 	    	var img = new Image();
+	    	img.crossOrigin = 'anonymous';
+	    	var worker = _getBlur();
 	    	img.onload = function(){
 	    		var t = this;
-	    		if(is_native && opacityScale != 1){
+	    		if(!is_native && opacityScale != 1){
 		    		var canvas = document.createElement('canvas');
 		    		var w = t.width, h = t.height;
-		    		if(w > 800){
-		    			var scale = w/800;
-		    			w = 800;
+		    		var TOSIZE = 1400;
+		    		if(w>h){
+		    			var scale = w/TOSIZE;
+		    			w = TOSIZE;
 		    			h /= scale;
+		    		}else{
+		    			var scale = h/TOSIZE;
+		    			h = TOSIZE;
+		    			w /= scale;
 		    		}
+		    		w = parseInt(w);
+		    		h = parseInt(h);
+		    		console.log(w, h);
+		    		// w *= 2;
+		    		// h *= 2;
 		    		canvas.width = w;
 		    		canvas.height = h;
 
 		    		var cxt = canvas.getContext('2d');
 		    		cxt.drawImage(img, 0, 0, w, h);
 	    			var imagedata = cxt.getImageData(0, 0, w, h);
-	    			var data_arr = imagedata.data;
-	    			for(var i = 0, j = data_arr.length; i<j; i+= 4){
-	    				data_arr[i+3] = Math.min(data_arr[i+3] *opacityScale, 255);
-	    			}
-	    			cxt.putImageData(imagedata, 0, 0);
-	    			cache_img[url] = canvas.toDataURL("image/png");
+	    			// var data_arr = imagedata.data;
+	    			// for(var i = 0, j = data_arr.length; i<j; i+= 4){
+	    			// 	data_arr[i+3] = Math.min(data_arr[i+3] *opacityScale, 255);
+	    			// }
+	    			if(worker){
+	    				worker.onmessage = function(a) {
+	    					var data_arr = a.data.data;
+			    			for(var i = 0, j = data_arr.length; i<j; i+= 4){
+			    				data_arr[i+3] = Math.min(data_arr[i+3] *opacityScale, 255);
+			    			}
+	    					cxt.putImageData(a.data, 0, 0);
+		    				cache_img[url] = canvas.toDataURL("image/png");
+		    				cb();
+							// E || J[K].putImageData(a.data, 0, 0)
+						}
+
+	    				worker.postMessage({
+							imageData: imagedata,
+							width: w,
+							height: h,
+							radius: 2
+						});
+						return;
+	    			}else{
+		    			cxt.putImageData(imagedata, 0, 0);
+		    			cache_img[url] = canvas.toDataURL("image/png");
+		    		}
 	    		}else{
 	    			cache_img[url] = url;
 	    		}
@@ -2298,7 +2334,7 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 					proxy.get(url, function(data){
 						var list = data.radar_img;
 						list.url = url;
-						initData(list, 2.5);
+						initData(list, 4);
 					});
 				}else if('cloud' == productname){
 					var url = 'http://radar.tianqi.cn/radar/imgs.php?type=cloud_new';

@@ -7193,7 +7193,6 @@
 	}))
 })(window, document);
 !window.angular.$$csp() && window.angular.element(document).find("head").prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}</style>');
-//# sourceMappingURL=angular.min.js.map
 
 /*
  AngularJS v1.3.14
@@ -7410,7 +7409,6 @@
 	v.$inject = ["$route", "$anchorScroll", "$animate"];
 	A.$inject = ["$compile", "$controller", "$route"]
 })(window, window.angular);
-//# sourceMappingURL=angular-route.min.js.map
 
 /*
  AngularJS v1.3.14
