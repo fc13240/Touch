@@ -4,7 +4,7 @@ SOURCE_PATH=$(cd $SHELLPATH; cd ../../source; pwd)
 
 rm -rf $TARGET_PATH/*
 #1. compress files
-node /e/source/compresser/ $SOURCE_PATH $TARGET_PATH/
+node /f/source/node_projects/compresser/ $SOURCE_PATH $TARGET_PATH/
 
 #3. change.js
 node $SHELLPATH/change.js $TARGET_PATH

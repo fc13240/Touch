@@ -1740,12 +1740,22 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 					w = a / L,
 					x = c.overlayOnly ? A : u;
 
-				for (f = db * (2 * Math.atan(Math.exp((jb - a) / hb)) - eb), G && (t[a] = (1 - .01 * Math.abs(f)) * Q), d = 0, e = 0; P >= d; d += L, e++)
-					if (G ? (g = N + d / P * gb, s = n[e] = k(g, f, d, a), v = o[e] = l(g, f)) : (v = R[w][e], s = S[w][e]), i = x(d, a, T, $, v), i = p(d, a, i, s, t[a]), j = $ ? i[3] : i[2], r[d + 3] = r[d + 2] = r[d + 1] = r[d] = i || [0 / 0, 0 / 0, null], h = H ? null : ab[Math.floor((j - bb) / cb)], h && rb)
-						if (m = d - (P - 4), m > 0 && (h = h.slice(0, 4 * (4 - m))), a > O - 4)
-							for (b = 0; 4 > b; b++) O > a + b && qb.set(h, 4 * ((a + b) * P + d));
-						else qb.set(h, 4 * (a * P + d)), qb.set(h, 4 * ((a + 1) * P + d)), qb.set(h, 4 * ((a + 2) * P + d)), qb.set(h, 4 * ((a + 3) * P + d));
-				else h && C(d, a, qb, P, h);
+				for (f = db * (2 * Math.atan(Math.exp((jb - a) / hb)) - eb), 
+					G && (t[a] = (1 - .01 * Math.abs(f)) * Q), d = 0, e = 0; P >= d; d += L, e++){
+					
+					if (G ? (g = N + d / P * gb, s = n[e] = k(g, f, d, a), v = o[e] = l(g, f)) : (v = R[w][e], s = S[w][e]), i = x(d, a, T, $, v), i = p(d, a, i, s, t[a]), j = $ ? i[3] : i[2], r[d + 3] = r[d + 2] = r[d + 1] = r[d] = i || [0 / 0, 0 / 0, null], h = H ? null : ab[Math.floor((j - bb) / cb)], h && rb){
+						if (m = d - (P - 4), m > 0 && (h = h.slice(0, 4 * (4 - m))), a > O - 4){
+							for (b = 0; 4 > b; b++){
+								O > a + b && qb.set(h, 4 * ((a + b) * P + d));
+							}
+						}else {
+							qb.set(h, 4 * (a * P + d)), 
+							qb.set(h, 4 * ((a + 1) * P + d)), 
+							qb.set(h, 4 * ((a + 2) * P + d)), qb.set(h, 4 * ((a + 3) * P + d));
+						}
+					}
+					else h && C(d, a, qb, P, h);
+				}
 				q[a + 3] = q[a + 2] = q[a + 1] = q[a] = r, G && (S[w] = n, R[w] = o)
 			}
 			window.clearTimeout(z), E = !1;
@@ -2204,7 +2214,7 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 	    	var worker = _getBlur();
 	    	img.onload = function(){
 	    		var t = this;
-	    		if(!is_native && opacityScale != 1){
+	    		if(is_native && opacityScale != 1){
 		    		var canvas = document.createElement('canvas');
 		    		var w = t.width, h = t.height;
 		    		var TOSIZE = 1400;
@@ -2233,7 +2243,7 @@ var is_native = typeof global !== 'undefined' && typeof global.process !== 'unde
 	    			// 	data_arr[i+3] = Math.min(data_arr[i+3] *opacityScale, 255);
 	    			// }
 	    			if(worker){
-	    				worker.onmessage = function(a) {
+	    				worker.onmessage = function(a) {console.log(opacityScale);
 	    					var data_arr = a.data.data;
 			    			for(var i = 0, j = data_arr.length; i<j; i+= 4){
 			    				data_arr[i+3] = Math.min(data_arr[i+3] *opacityScale, 255);
