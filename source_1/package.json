@@ -1,0 +1,19 @@
+{
+  "name": "Blue PI Ants",
+  "version": "v0.5.0",
+  "description": "蓝PI蚂蚁触屏",
+  "main": "index.html",
+  "window": {
+    "title": "蓝PI蚂蚁触屏",
+    "position": "center",
+    "width": 4000,
+    "height": 3000,
+    "toolbar": true,
+    "as_desktop": true,
+    "show": true,
+    "resizable": false,
+    "fullscreen": true
+  },
+  "single-instance": false,
+  "debug": true
+}

@@ -29,6 +29,7 @@
 		var URL_LIST = URL_TYPHOON + 'typhoonList.xml?'+Math.random();
 		var cache_typhoon = {};
 		function _getTyphoonList(cb, is_active){
+			is_active = false;
 			function _getList(list){
 				if(is_active){
 					list = list.filter(function(v){
@@ -36,7 +37,7 @@
 							return v;
 						}
 					});
-					// list = list.slice(-6);
+					list = list.slice(-6);
 				}
 				console.log(list);
 				cb(list);
