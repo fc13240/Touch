@@ -76,7 +76,7 @@
 <FldRef>1</FldRef>
 <FullName/>
 <FileName>*.*</FileName>
-<Source>D:\soft\node-webkit-v0.12.0-win-x32</Source>
+<Source>D:\soft\node-webkit-v0.11.2-win-x64</Source>
 <Ext>*</Ext>
 <RTSource>Archive</RTSource>
 <Desc/>
@@ -3128,9 +3128,9 @@ g_HandleSystemReboot();
 <Args/>
 <Script>result = System.Is64BitOS();
 -- An if statement that compares two numbers
-if (true == result) then
+if (false == result) then
 	-- Do something here
-	result = Dialog.Message("Notice", "检测到您的系统是不是32位，请使用相应安装包，本次安装将退出！", MB_OK, MB_ICONINFORMATION, MB_DEFBUTTON1);
+	result = Dialog.Message("Notice", "检测到您的系统是不是64位，请使用相应安装包，本次安装将退出！", MB_OK, MB_ICONINFORMATION, MB_DEFBUTTON1);
 	Application.Exit(0);
 end
 </Script>
@@ -3258,7 +3258,7 @@ g_HandleSystemReboot();
 <PostBuildProg/>
 <PostBuildCmdLine/>
 <PostBuildWait>0</PostBuildWait>
-<Filename>蓝PI蚂蚁触屏_32_v0.6.0.exe</Filename>
+<Filename>蓝PI蚂蚁触屏_64_v0.5.0.exe</Filename>
 <OutputFolder>E:\docs\2015\工作文档\气象频道\触屏项目\安装包</OutputFolder>
 <SegmentSizeMode>0</SegmentSizeMode>
 <CustomSegSize>100</CustomSegSize>

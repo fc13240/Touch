@@ -136,7 +136,7 @@ $(function() {
 			$canvas_brush.hide();
 		}else{
 			$tool_hand.removeClass('on');
-			// show_mask = true;
+			show_mask = true;
 			$canvas_brush.show();
 			$mask.show();
 			Paint.init($canvas_brush.get(0));

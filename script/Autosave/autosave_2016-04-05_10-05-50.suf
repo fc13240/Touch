@@ -76,7 +76,7 @@
 <FldRef>1</FldRef>
 <FullName/>
 <FileName>*.*</FileName>
-<Source>D:\soft\node-webkit-v0.12.0-win-x32</Source>
+<Source>D:\soft\node-webkit-v0.11.2-win-x64</Source>
 <Ext>*</Ext>
 <RTSource>Archive</RTSource>
 <Desc/>
@@ -366,42 +366,33 @@ end
 <Languages>
 <SUF70Messages>
 <Language>
-<Name>English</Name>
+<Name>Chinese (Simplified)</Name>
 <Default>1</Default>
-<Primary>9</Primary>
+<Primary>4</Primary>
 <Secondary>
-<ID>1</ID>
 <ID>2</ID>
 <ID>3</ID>
 <ID>4</ID>
 <ID>5</ID>
-<ID>6</ID>
-<ID>7</ID>
-<ID>8</ID>
-<ID>9</ID>
-<ID>10</ID>
-<ID>11</ID>
-<ID>12</ID>
-<ID>13</ID>
 </Secondary>
 </Language>
 <Messages>
-<IDS_WINDOW_TITLE>%ProductName% Setup</IDS_WINDOW_TITLE>
-<IDS_HEADER_TEXT>Welcome</IDS_HEADER_TEXT>
-<IDS_SUBHEADER_TEXT>Welcome to the installer for %ProductName% %ProductVer%</IDS_SUBHEADER_TEXT>
-<IDS_CTRL_BUTTON_NEXT>&amp;Next &gt;</IDS_CTRL_BUTTON_NEXT>
-<IDS_CTRL_BUTTON_BACK>&lt; &amp;Back</IDS_CTRL_BUTTON_BACK>
-<IDS_CTRL_BUTTON_CANCEL>&amp;Cancel</IDS_CTRL_BUTTON_CANCEL>
-<IDS_CTRL_BUTTON_HELP>&amp;Help</IDS_CTRL_BUTTON_HELP>
-<IDS_CTRL_STATICTEXT_BODY>Welcome to the installer for %ProductName% %ProductVer%.
+<IDS_WINDOW_TITLE>%ProductName% °²×°³ÌÐò</IDS_WINDOW_TITLE>
+<IDS_HEADER_TEXT>»¶Ó­</IDS_HEADER_TEXT>
+<IDS_SUBHEADER_TEXT>»¶Ó­Ê¹ÓÃ %ProductName% %ProductVer% °²×°³ÌÐò</IDS_SUBHEADER_TEXT>
+<IDS_CTRL_BUTTON_NEXT>ÏÂÒ»²½(&amp;N) &gt;</IDS_CTRL_BUTTON_NEXT>
+<IDS_CTRL_BUTTON_BACK>&lt; ·µ»Ø(&amp;B)</IDS_CTRL_BUTTON_BACK>
+<IDS_CTRL_BUTTON_CANCEL>È¡Ïû(&amp;C)</IDS_CTRL_BUTTON_CANCEL>
+<IDS_CTRL_BUTTON_HELP>°ïÖú(&amp;H)</IDS_CTRL_BUTTON_HELP>
+<IDS_CTRL_STATICTEXT_BODY>»¶Ó­Ê¹ÓÃ %ProductName% %ProductVer% °²×°³ÌÐò¡£
 
-It is strongly recommended that you exit all Windows programs before continuing with this installation.
+Ç¿ÁÒ½¨ÒéÄúÔÚ¼ÌÐø¸Ã°²×°Ö®Ç°£¬ÍË³öËùÓÐ Windows ³ÌÐò¡£
 
-If you have any other programs running, please click Cancel, close the programs, and run this setup again.
+Èç¹ûÄúÓÐÈÎºÎÆäËû³ÌÐòÕýÔÚÔËÐÐ£¬Çëµ¥»÷¡°È¡Ïû¡±£¬¹Ø±Õ³ÌÐò£¬È»ºóÔÙ´ÎÔËÐÐ¸Ã°²×°³ÌÐò¡£
 
-Otherwise, click Next to continue.
+·ñÔò£¬Çëµ¥»÷¡°ÏÂÒ»²½¡±¼ÌÐø¡£
 </IDS_CTRL_STATICTEXT_BODY>
-<IDS_CTRL_HEADINGTEXT_BODY>Welcome</IDS_CTRL_HEADINGTEXT_BODY>
+<IDS_CTRL_HEADINGTEXT_BODY>»¶Ó­</IDS_CTRL_HEADINGTEXT_BODY>
 </Messages>
 </SUF70Messages>
 </Languages>
@@ -519,7 +510,23 @@ Otherwise, click Next to continue.
 <Event>
 <Name>On Preload</Name>
 <Args/>
-<Script>-- These actions are performed before the screen is shown.
+<Script>Reg_path = SessionVar.Expand("%Reg_path%");
+Reg_val_name = SessionVar.Expand("%Reg_val_name%");
+
+
+result_base_path = Registry.GetValue(HKEY_LOCAL_MACHINE, Reg_path, Reg_val_name, true);
+
+-- result = Dialog.Message("Notice", result_base_path, MB_OK, MB_ICONINFORMATION, MB_DEFBUTTON1);
+
+if (result_base_path ~= "") then
+	SessionVar.Set("%AppFolder%", result_base_path);
+
+	Screen.Next();
+end
+      
+
+
+-- These actions are performed before the screen is shown.
 
 -- calculate the amount of space required for the installation
 _SpaceRequired = SetupData.CalculateRequiredSpace();
@@ -559,6 +566,16 @@ if(g_IsValidPath(strInstallFolderPath)) then
 
 	-- if there's enough space on the selected drive, proceed to the next screen
 	if(_SpaceAvailable &gt;= _SpaceRequired) then
+	
+		Reg_path = SessionVar.Expand("%Reg_path%");
+		Reg_val_name = SessionVar.Expand("%Reg_val_name%");
+
+		Registry.CreateKey(HKEY_LOCAL_MACHINE, Reg_path);
+		
+		_appfolder = SessionVar.Expand("%AppFolder%");
+
+		Registry.SetValue(HKEY_LOCAL_MACHINE, Reg_path, Reg_val_name, _appfolder, REG_SZ);
+		
 		-- there's enough space on the drive...so
 		-- proceed to the next screen
 		Screen.Next();
@@ -763,410 +780,30 @@ end
 <Languages>
 <SUF70Messages>
 <Language>
-<Name>English</Name>
+<Name>Chinese (Simplified)</Name>
 <Default>1</Default>
-<Primary>9</Primary>
+<Primary>4</Primary>
 <Secondary>
-<ID>1</ID>
 <ID>2</ID>
 <ID>3</ID>
 <ID>4</ID>
 <ID>5</ID>
-<ID>6</ID>
-<ID>7</ID>
-<ID>8</ID>
-<ID>9</ID>
-<ID>10</ID>
-<ID>11</ID>
-<ID>12</ID>
-<ID>13</ID>
 </Secondary>
 </Language>
 <Messages>
-<IDS_WINDOW_TITLE>%ProductName% Setup</IDS_WINDOW_TITLE>
-<IDS_HEADER_TEXT>Installation Folder</IDS_HEADER_TEXT>
-<IDS_SUBHEADER_TEXT>Where would you like %ProductName% to be installed?</IDS_SUBHEADER_TEXT>
-<IDS_CTRL_BUTTON_NEXT>&amp;Next &gt;</IDS_CTRL_BUTTON_NEXT>
-<IDS_CTRL_BUTTON_BACK>&lt; &amp;Back</IDS_CTRL_BUTTON_BACK>
-<IDS_CTRL_BUTTON_CANCEL>&amp;Cancel</IDS_CTRL_BUTTON_CANCEL>
-<IDS_CTRL_BUTTON_HELP>&amp;Help</IDS_CTRL_BUTTON_HELP>
-<IDS_CTRL_BUTTON_BROWSE>C&amp;hange...</IDS_CTRL_BUTTON_BROWSE>
+<IDS_WINDOW_TITLE>%ProductName% °²×°³ÌÐò</IDS_WINDOW_TITLE>
+<IDS_HEADER_TEXT>°²×°ÎÄ¼þ¼Ð</IDS_HEADER_TEXT>
+<IDS_SUBHEADER_TEXT>ÄúÏë½« %ProductName% °²×°µ½ºÎ´¦£¿</IDS_SUBHEADER_TEXT>
+<IDS_CTRL_BUTTON_NEXT>ÏÂÒ»²½(&amp;N) &gt;</IDS_CTRL_BUTTON_NEXT>
+<IDS_CTRL_BUTTON_BACK>&lt; ·µ»Ø(&amp;B)</IDS_CTRL_BUTTON_BACK>
+<IDS_CTRL_BUTTON_CANCEL>È¡Ïû(&amp;C)</IDS_CTRL_BUTTON_CANCEL>
+<IDS_CTRL_BUTTON_HELP>°ïÖú(&amp;H)</IDS_CTRL_BUTTON_HELP>
+<IDS_CTRL_BUTTON_BROWSE>¸ü¸Ä(&amp;H)...</IDS_CTRL_BUTTON_BROWSE>
 <IDS_CTRL_EDIT_FOLDER>%AppFolder%</IDS_CTRL_EDIT_FOLDER>
-<IDS_CTRL_STATICTEXT_TOPINSTRUCTIONS>The software will be installed in the folder listed below. To select a different location, either type in a new path, or click Change to browse for an existing folder.</IDS_CTRL_STATICTEXT_TOPINSTRUCTIONS>
-<IDS_CTRL_STATICTEXT_LABEL_01>Install %ProductName% to:</IDS_CTRL_STATICTEXT_LABEL_01>
-<IDS_CTRL_STATICTEXT_SPACEREQUIRED>Space required: %SpaceRequired%</IDS_CTRL_STATICTEXT_SPACEREQUIRED>
-<IDS_CTRL_STATICTEXT_SPACEAVAILABLE>Space available on selected drive: %SpaceAvailable%</IDS_CTRL_STATICTEXT_SPACEAVAILABLE>
-</Messages>
-</SUF70Messages>
-</Languages>
-</Screen>
-<Screen>
-<Type>115</Type>
-<Name>Select Shortcut Folder</Name>
-<BannerStyle>2</BannerStyle>
-<TemplateName>Select Shortcut Folder</TemplateName>
-<OverrideProjTheme>0</OverrideProjTheme>
-<StyleData>
-<CstClrs>0</CstClrs>
-<TBBG format="hex">ffffff</TBBG>
-<BDYBG format="hex">ffffff</BDYBG>
-<FTBG format="hex">ffffff</FTBG>
-<TBTXT format="hex">000000</TBTXT>
-<BDYTXT format="hex">ffffff</BDYTXT>
-<CBG format="hex">ffffff</CBG>
-<C3DFACE format="hex">038df6</C3DFACE>
-<C3DHLT format="hex">038df6</C3DHLT>
-<C3DLIT format="hex">038df6</C3DLIT>
-<C3DSH format="hex">038df6</C3DSH>
-<CBTNTXT format="hex">ffffff</CBTNTXT>
-<CTEXT format="hex">000000</CTEXT>
-<CDISTXT format="hex">c0c0c0</CDISTXT>
-<CPRGRS format="hex">316ac5</CPRGRS>
-<C3DSHDK format="hex">038df6</C3DSHDK>
-<TBIMG>06_top.jpg</TBIMG>
-<SBIMG>06_side.jpg</SBIMG>
-<BDIMG>06_body.jpg</BDIMG>
-<BDFILL>1</BDFILL>
-<HDSEP>0</HDSEP>
-<FTSEP>0</FTSEP>
-<CstFnts>1</CstFnts>
-<Fonts>
-<FontData>
-<FontName>Arial</FontName>
-<CharacterSet>0</CharacterSet>
-<Height>-13</Height>
-<Weight>700</Weight>
-<Italic>1</Italic>
-<Underline>0</Underline>
-<StrikeOut>0</StrikeOut>
-<AntiAlias>1</AntiAlias>
-</FontData>
-<FontData>
-<FontName>Arial</FontName>
-<CharacterSet>0</CharacterSet>
-<Height>-11</Height>
-<Weight>400</Weight>
-<Italic>0</Italic>
-<Underline>0</Underline>
-<StrikeOut>0</StrikeOut>
-<AntiAlias>1</AntiAlias>
-</FontData>
-<FontData>
-<FontName>Arial</FontName>
-<CharacterSet>0</CharacterSet>
-<Height>-27</Height>
-<Weight>700</Weight>
-<Italic>0</Italic>
-<Underline>0</Underline>
-<StrikeOut>0</StrikeOut>
-<AntiAlias>1</AntiAlias>
-</FontData>
-<FontData>
-<FontName>Arial</FontName>
-<CharacterSet>0</CharacterSet>
-<Height>-12</Height>
-<Weight>400</Weight>
-<Italic>0</Italic>
-<Underline>0</Underline>
-<StrikeOut>0</StrikeOut>
-<AntiAlias>1</AntiAlias>
-</FontData>
-<FontData>
-<FontName>Arial</FontName>
-<CharacterSet>0</CharacterSet>
-<Height>-13</Height>
-<Weight>400</Weight>
-<Italic>0</Italic>
-<Underline>0</Underline>
-<StrikeOut>0</StrikeOut>
-<AntiAlias>1</AntiAlias>
-</FontData>
-</Fonts>
-<CAOff>
-<TP>0</TP>
-<L>22</L>
-<T>26</T>
-<R>15</R>
-<B>15</B>
-</CAOff>
-<CAOff>
-<TP>1</TP>
-<L>1</L>
-<T>62</T>
-<R>10</R>
-<B>29</B>
-</CAOff>
-<CAOff>
-<TP>2</TP>
-<L>22</L>
-<T>35</T>
-<R>15</R>
-<B>2</B>
-</CAOff>
-<TBTXTX>14</TBTXTX>
-<TBTXTY>12</TBTXTY>
-<ScreenW>497</ScreenW>
-<ScreenH>362</ScreenH>
-</StyleData>
-<NameVariable>%AppShortcutFolderName%</NameVariable>
-<Events>
-<Event>
-<Name>On Preload</Name>
-<Args/>
-<Script>-- These actions are performed before the screen is shown.
-
--- select the appropriate user profile for the shortcuts
--- (per user or all users) based on _UsePerUserFolders
-
--- We only want to offer all user vs. per user on Windows NT 4.0/2000/XP+
-local bHideUserProfileOptions = false;
-local tblOS = System.GetOSVersionInfo();
-if(tblOS)then
-	if(tblOS.PlatformId == "1")then
-		bHideUserProfileOptions = true;
-	end
-end
-
-if(bHideUserProfileOptions)then
-	DlgRadioButton.SetProperties(CTRL_RADIOBTN_PERUSER,{Visible = false});
-	DlgRadioButton.SetProperties(CTRL_RADIOBTN_ALLUSERS,{Visible = false});
-	-- Always use per user folders on Windows 95/98/ME
-	_UsePerUserFolders = true;
-else
-	DlgRadioButton.SetProperties(CTRL_RADIOBTN_PERUSER,{Checked = _UsePerUserFolders});
-	DlgRadioButton.SetProperties(CTRL_RADIOBTN_ALLUSERS,{Checked = not _UsePerUserFolders});
-end
-
--- from _SUF70_Global_Functions.lua:
--- fill the combo box with the existing shortcut folder names
-g_FillComboBoxWithShortcutFolders(CTRL_COMBOBOX_SHORTCUTFOLDERS);
-</Script>
-<BookMarks count="0">
-</BookMarks>
-</Event>
-<Event>
-<Name>On Back</Name>
-<Args/>
-<Script>-- These actions are performed when the Back button is clicked.
-
--- go back to the previous screen
-Screen.Back();
-</Script>
-<BookMarks count="0">
-</BookMarks>
-</Event>
-<Event>
-<Name>On Next</Name>
-<Args/>
-<Script>-- These actions are performed when the Next button is clicked.
-
--- get the text from the combo box
-strShortcutFolder = DlgComboBox.GetProperties(CTRL_COMBOBOX_SHORTCUTFOLDERS).Text;
-
--- if the shortcut folder path is empty, display a message
--- if it isn't empty, check for invalid characters and advance to the next screen
-if String.Length(strShortcutFolder) == 0 then
-
-	-- the field is empty...
-	-- come on user, don't be shy :)
-	local strTitle = SetupData.GetLocalizedString("MSG_INVALID_ENTRY");
-	local strPrompt = SetupData.GetLocalizedString("ERR_FIELD_CANNOT_BE_EMPTY");
-	Dialog.Message(strTitle, strPrompt, MB_OK, MB_ICONEXCLAMATION);
-
-else
-	-- the field's not empty...
-	-- make sure the shortcut folder path contains only valid characters for a relative path
-	if g_ContainsValidRelativePathChars(strShortcutFolder) then
-
-		-- advance to the next screen
-		Screen.Next();
-
-	else
-		-- the shortcut folder contains invalid characters
-		-- tell the user to smarten up :)
-		local strTitle = SetupData.GetLocalizedString("MSG_INVALID_ENTRY");
-		local strPrompt = SetupData.GetLocalizedString("ERR_INVALID_CHARACTERS") .. "\r\n/ * ? \" &lt; &gt; | :";
-		Dialog.Message(strTitle, strPrompt, MB_OK, MB_ICONEXCLAMATION);
-	end
-end
-</Script>
-<BookMarks count="0">
-</BookMarks>
-</Event>
-<Event>
-<Name>On Cancel</Name>
-<Args/>
-<Script>-- These actions are performed when the Cancel button is clicked.
-
--- from _SUF70_Global_Functions.lua:
--- ask user if they're sure they want to exit
-if g_ConfirmSetupAbort() then
-	Application.Exit(EXIT_REASON_USER_ABORTED);
-end
-</Script>
-<BookMarks count="0">
-</BookMarks>
-</Event>
-<Event>
-<Name>On Help</Name>
-<Args/>
-<Script>-- These actions are performed when the Help button is clicked.
-</Script>
-<BookMarks count="0">
-</BookMarks>
-</Event>
-<Event>
-<Name>On Ctrl Message</Name>
-<Args>number e_CtrlID, number e_MsgID, table e_Details</Args>
-<Script>-- These actions are triggered by the controls on the screen.
-
-if (e_MsgID == MSGID_CLICKED) then
-
-	-- something was clicked...was it one of the radio buttons?
-	if (e_CtrlID == CTRL_RADIOBTN_PERUSER) then
-
-		-- the user selected the 'per-user' option on the screen...
-	
-		-- turn the option on in the setup
-		_UsePerUserFolders = true;
-
-		-- update the list of shortcut folders in the combo box
-		g_FillComboBoxWithShortcutFolders(CTRL_COMBOBOX_SHORTCUTFOLDERS);
-
-	elseif (e_CtrlID == CTRL_RADIOBTN_ALLUSERS) then
-
-		-- the user selected the 'all-users' option on the screen...
-
-		-- turn the option off in the setup
-		_UsePerUserFolders = false;
-
-		-- update the list of shortcut folders in the combo box
-		g_FillComboBoxWithShortcutFolders(CTRL_COMBOBOX_SHORTCUTFOLDERS);
-	end
-end
-</Script>
-<BookMarks count="0">
-</BookMarks>
-</Event>
-</Events>
-<Controls>
-<Control>
-<Type>1</Type>
-<ID>103</ID>
-<Visible>0</Visible>
-<Enabled>0</Enabled>
-<TabOrder>75</TabOrder>
-<FTButton>1</FTButton>
-</Control>
-<Control>
-<Type>1</Type>
-<ID>101</ID>
-<Visible>1</Visible>
-<Enabled>1</Enabled>
-<TabOrder>76</TabOrder>
-<FTButton>1</FTButton>
-</Control>
-<Control>
-<Type>1</Type>
-<ID>100</ID>
-<Visible>1</Visible>
-<Enabled>1</Enabled>
-<TabOrder>-10</TabOrder>
-<FTButton>1</FTButton>
-</Control>
-<Control>
-<Type>1</Type>
-<ID>102</ID>
-<Visible>1</Visible>
-<Enabled>1</Enabled>
-<TabOrder>-9</TabOrder>
-<FTButton>1</FTButton>
-</Control>
-<Control>
-<Type>2</Type>
-<ID>203</ID>
-<Visible>1</Visible>
-<Enabled>1</Enabled>
-<TabOrder>0</TabOrder>
-<IsHeading>0</IsHeading>
-</Control>
-<Control>
-<Type>2</Type>
-<ID>211</ID>
-<Visible>1</Visible>
-<Enabled>1</Enabled>
-<TabOrder>1</TabOrder>
-<IsHeading>0</IsHeading>
-</Control>
-<Control>
-<Type>4</Type>
-<ID>501</ID>
-<Visible>1</Visible>
-<Enabled>1</Enabled>
-<TabOrder>2</TabOrder>
-<Sorted>0</Sorted>
-<ShowShortcutFolders>1</ShowShortcutFolders>
-<PerUser>1</PerUser>
-<Variable/>
-<Lines>4</Lines>
-<ComboType>1</ComboType>
-</Control>
-<Control>
-<Type>5</Type>
-<ID>600</ID>
-<Visible>1</Visible>
-<Enabled>1</Enabled>
-<TabOrder>35</TabOrder>
-<Group>1</Group>
-<StartID>600</StartID>
-<EndID>601</EndID>
-</Control>
-<Control>
-<Type>5</Type>
-<ID>601</ID>
-<Visible>1</Visible>
-<Enabled>1</Enabled>
-<TabOrder>40</TabOrder>
-<Group>0</Group>
-<StartID>600</StartID>
-<EndID>601</EndID>
-</Control>
-</Controls>
-<Languages>
-<SUF70Messages>
-<Language>
-<Name>English</Name>
-<Default>1</Default>
-<Primary>9</Primary>
-<Secondary>
-<ID>1</ID>
-<ID>2</ID>
-<ID>3</ID>
-<ID>4</ID>
-<ID>5</ID>
-<ID>6</ID>
-<ID>7</ID>
-<ID>8</ID>
-<ID>9</ID>
-<ID>10</ID>
-<ID>11</ID>
-<ID>12</ID>
-<ID>13</ID>
-</Secondary>
-</Language>
-<Messages>
-<IDS_WINDOW_TITLE>%ProductName% Setup</IDS_WINDOW_TITLE>
-<IDS_HEADER_TEXT>Shortcut Folder</IDS_HEADER_TEXT>
-<IDS_SUBHEADER_TEXT>Where would you like the shortcuts to be installed?</IDS_SUBHEADER_TEXT>
-<IDS_CTRL_BUTTON_NEXT>&amp;Next &gt;</IDS_CTRL_BUTTON_NEXT>
-<IDS_CTRL_BUTTON_BACK>&lt; &amp;Back</IDS_CTRL_BUTTON_BACK>
-<IDS_CTRL_BUTTON_CANCEL>&amp;Cancel</IDS_CTRL_BUTTON_CANCEL>
-<IDS_CTRL_BUTTON_HELP>&amp;Help</IDS_CTRL_BUTTON_HELP>
-<IDS_CTRL_STATICTEXT_TOPINSTRUCTIONS>The shortcut icons will be created in the folder indicated below. If you don't want to use the default folder, you can either type a new name, or select an existing folder from the list.</IDS_CTRL_STATICTEXT_TOPINSTRUCTIONS>
-<IDS_CTRL_STATICTEXT_LABEL_01>Shortcut Folder:</IDS_CTRL_STATICTEXT_LABEL_01>
-<IDS_CTRL_RADIOBTN_PERUSER>Install shortcuts for current user only</IDS_CTRL_RADIOBTN_PERUSER>
-<IDS_CTRL_RADIOBTN_ALLUSERS>Make shortcuts available to all users</IDS_CTRL_RADIOBTN_ALLUSERS>
-<IDS_CTRL_COMBOBOX_SHORTCUTFOLDERS>%AppShortcutFolderName%</IDS_CTRL_COMBOBOX_SHORTCUTFOLDERS>
+<IDS_CTRL_STATICTEXT_TOPINSTRUCTIONS>Èí¼þ½«±»°²×°µ½ÒÔÏÂÁÐ³öµÄÎÄ¼þ¼ÐÖÐ¡£ÒªÑ¡Ôñ²»Í¬µÄÎ»ÖÃ£¬¼üÈëÐÂµÄÂ·¾¶£¬»òµ¥»÷¡°¸ü¸Ä¡±ä¯ÀÀÏÖÓÐµÄÎÄ¼þ¼Ð¡£</IDS_CTRL_STATICTEXT_TOPINSTRUCTIONS>
+<IDS_CTRL_STATICTEXT_LABEL_01>½« %ProductName% °²×°µ½:</IDS_CTRL_STATICTEXT_LABEL_01>
+<IDS_CTRL_STATICTEXT_SPACEREQUIRED>ËùÐè¿Õ¼ä: %SpaceRequired%</IDS_CTRL_STATICTEXT_SPACEREQUIRED>
+<IDS_CTRL_STATICTEXT_SPACEAVAILABLE>Ñ¡¶¨Çý¶¯Æ÷µÄ¿ÉÓÃ¿Õ¼ä: %SpaceAvailable%</IDS_CTRL_STATICTEXT_SPACEAVAILABLE>
 </Messages>
 </SUF70Messages>
 </Languages>
@@ -1394,45 +1031,36 @@ end
 <Languages>
 <SUF70Messages>
 <Language>
-<Name>English</Name>
+<Name>Chinese (Simplified)</Name>
 <Default>1</Default>
-<Primary>9</Primary>
+<Primary>4</Primary>
 <Secondary>
-<ID>1</ID>
 <ID>2</ID>
 <ID>3</ID>
 <ID>4</ID>
 <ID>5</ID>
-<ID>6</ID>
-<ID>7</ID>
-<ID>8</ID>
-<ID>9</ID>
-<ID>10</ID>
-<ID>11</ID>
-<ID>12</ID>
-<ID>13</ID>
 </Secondary>
 </Language>
 <Messages>
-<IDS_WINDOW_TITLE>%ProductName% Setup</IDS_WINDOW_TITLE>
-<IDS_HEADER_TEXT>Ready to Install</IDS_HEADER_TEXT>
-<IDS_SUBHEADER_TEXT>You are now ready to install %ProductName% %ProductVer%</IDS_SUBHEADER_TEXT>
-<IDS_CTRL_BUTTON_NEXT>&amp;Next &gt;</IDS_CTRL_BUTTON_NEXT>
-<IDS_CTRL_BUTTON_BACK>&lt; &amp;Back</IDS_CTRL_BUTTON_BACK>
-<IDS_CTRL_BUTTON_CANCEL>&amp;Cancel</IDS_CTRL_BUTTON_CANCEL>
-<IDS_CTRL_BUTTON_HELP>&amp;Help</IDS_CTRL_BUTTON_HELP>
-<IDS_CTRL_STATICTEXT_BODY>The installer now has enough information to install %ProductName% on your computer.
+<IDS_WINDOW_TITLE>%ProductName% °²×°³ÌÐò</IDS_WINDOW_TITLE>
+<IDS_HEADER_TEXT>×¼±¸°²×°</IDS_HEADER_TEXT>
+<IDS_SUBHEADER_TEXT>ÏÖÔÚÄúÕý×¼±¸°²×° %ProductName% %ProductVer%</IDS_SUBHEADER_TEXT>
+<IDS_CTRL_BUTTON_NEXT>ÏÂÒ»²½(&amp;N) &gt;</IDS_CTRL_BUTTON_NEXT>
+<IDS_CTRL_BUTTON_BACK>&lt; ·µ»Ø(&amp;B)</IDS_CTRL_BUTTON_BACK>
+<IDS_CTRL_BUTTON_CANCEL>È¡Ïû(&amp;C)</IDS_CTRL_BUTTON_CANCEL>
+<IDS_CTRL_BUTTON_HELP>°ïÖú(&amp;H)</IDS_CTRL_BUTTON_HELP>
+<IDS_CTRL_STATICTEXT_BODY>ÏÖÔÚ°²×°³ÌÐòÒÑÓÐ×ã¹»µÄÐÅÏ¢½« %ProductName% °²×°µ½ÄúµÄ¼ÆËã»úÖÐ¡£
 
 
-The following settings will be used:
+½«Ê¹ÓÃÒÔÏÂÉèÖÃ:
 
-Install folder:        %AppFolder%
+°²×°ÎÄ¼þ¼Ð:        %AppFolder%
 
-Shortcut folder:    %AppShortcutFolderName%
+¿ì½Ý·½Ê½ÎÄ¼þ¼Ð:    %AppShortcutFolderName%
 
 
-Please click Next to proceed with the installation.</IDS_CTRL_STATICTEXT_BODY>
-<IDS_CTRL_HEADINGTEXT_BODY>Title</IDS_CTRL_HEADINGTEXT_BODY>
+Çëµ¥»÷¡°ÏÂÒ»²½¡±¼ÌÐø°²×°¡£</IDS_CTRL_STATICTEXT_BODY>
+<IDS_CTRL_HEADINGTEXT_BODY>±êÌâ</IDS_CTRL_HEADINGTEXT_BODY>
 </Messages>
 </SUF70Messages>
 </Languages>
@@ -1700,36 +1328,27 @@ end
 <Languages>
 <SUF70Messages>
 <Language>
-<Name>English</Name>
+<Name>Chinese (Simplified)</Name>
 <Default>1</Default>
-<Primary>9</Primary>
+<Primary>4</Primary>
 <Secondary>
-<ID>1</ID>
 <ID>2</ID>
 <ID>3</ID>
 <ID>4</ID>
 <ID>5</ID>
-<ID>6</ID>
-<ID>7</ID>
-<ID>8</ID>
-<ID>9</ID>
-<ID>10</ID>
-<ID>11</ID>
-<ID>12</ID>
-<ID>13</ID>
 </Secondary>
 </Language>
 <Messages>
-<IDS_WINDOW_TITLE>%ProductName% Setup</IDS_WINDOW_TITLE>
-<IDS_HEADER_TEXT>Installing %ProductName%</IDS_HEADER_TEXT>
-<IDS_SUBHEADER_TEXT>Please wait...</IDS_SUBHEADER_TEXT>
-<IDS_CTRL_BUTTON_CANCEL>&amp;Cancel</IDS_CTRL_BUTTON_CANCEL>
+<IDS_WINDOW_TITLE>%ProductName% °²×°³ÌÐò</IDS_WINDOW_TITLE>
+<IDS_HEADER_TEXT>ÕýÔÚ°²×° %ProductName%</IDS_HEADER_TEXT>
+<IDS_SUBHEADER_TEXT>ÇëÉÔºò...</IDS_SUBHEADER_TEXT>
+<IDS_CTRL_BUTTON_CANCEL>È¡Ïû(&amp;C)</IDS_CTRL_BUTTON_CANCEL>
 <IDS_CTRL_STATICTEXT_TOPINSTRUCTIONS/>
 <IDS_CTRL_STATICTEXT_LABEL_01/>
 <IDS_CTRL_STATICTEXT_LABEL_02/>
 <IDS_CTRL_PROGRESS_BAR_01/>
-<IDS_CTRL_STATICTEXT_LABEL_03>Progress Two</IDS_CTRL_STATICTEXT_LABEL_03>
-<IDS_CTRL_STATICTEXT_LABEL_04>Performing Actions...</IDS_CTRL_STATICTEXT_LABEL_04>
+<IDS_CTRL_STATICTEXT_LABEL_03>½ø³Ì¶þ</IDS_CTRL_STATICTEXT_LABEL_03>
+<IDS_CTRL_STATICTEXT_LABEL_04>ÕýÔÚÖ´ÐÐ¶¯×÷...</IDS_CTRL_STATICTEXT_LABEL_04>
 <IDS_CTRL_PROGRESS_BAR_02/>
 </Messages>
 </SUF70Messages>
@@ -1961,40 +1580,31 @@ end
 <Languages>
 <SUF70Messages>
 <Language>
-<Name>English</Name>
+<Name>Chinese (Simplified)</Name>
 <Default>1</Default>
-<Primary>9</Primary>
+<Primary>4</Primary>
 <Secondary>
-<ID>1</ID>
 <ID>2</ID>
 <ID>3</ID>
 <ID>4</ID>
 <ID>5</ID>
-<ID>6</ID>
-<ID>7</ID>
-<ID>8</ID>
-<ID>9</ID>
-<ID>10</ID>
-<ID>11</ID>
-<ID>12</ID>
-<ID>13</ID>
 </Secondary>
 </Language>
 <Messages>
-<IDS_WINDOW_TITLE>%ProductName% Setup</IDS_WINDOW_TITLE>
-<IDS_HEADER_TEXT>Installation Finished</IDS_HEADER_TEXT>
-<IDS_SUBHEADER_TEXT>The installation has completed successfully.</IDS_SUBHEADER_TEXT>
-<IDS_CTRL_BUTTON_NEXT>&amp;Finish</IDS_CTRL_BUTTON_NEXT>
-<IDS_CTRL_BUTTON_BACK>&lt; &amp;Back</IDS_CTRL_BUTTON_BACK>
-<IDS_CTRL_BUTTON_CANCEL>&amp;Cancel</IDS_CTRL_BUTTON_CANCEL>
-<IDS_CTRL_BUTTON_HELP>&amp;Help</IDS_CTRL_BUTTON_HELP>
-<IDS_CTRL_STATICTEXT_BODY>The %ProductName% %ProductVer% installation is complete.
+<IDS_WINDOW_TITLE>%ProductName% °²×°³ÌÐò</IDS_WINDOW_TITLE>
+<IDS_HEADER_TEXT>°²×°ÒÑÍê³É</IDS_HEADER_TEXT>
+<IDS_SUBHEADER_TEXT>°²×°ÒÑ³É¹¦Íê³É¡£</IDS_SUBHEADER_TEXT>
+<IDS_CTRL_BUTTON_NEXT>Íê³É(&amp;F)</IDS_CTRL_BUTTON_NEXT>
+<IDS_CTRL_BUTTON_BACK>&lt; ·µ»Ø(&amp;B)</IDS_CTRL_BUTTON_BACK>
+<IDS_CTRL_BUTTON_CANCEL>È¡Ïû(&amp;C)</IDS_CTRL_BUTTON_CANCEL>
+<IDS_CTRL_BUTTON_HELP>°ïÖú(&amp;H)</IDS_CTRL_BUTTON_HELP>
+<IDS_CTRL_STATICTEXT_BODY>%ProductName% %ProductVer% °²×°ÒÑÍê³É¡£
 
-Thank you for choosing %ProductName%!
+¸ÐÐ»ÄúÑ¡Ôñ %ProductName%£¡
 
-Please click Finish to exit this installer.
+Çëµ¥»÷¡°Íê³É¡±ÍË³ö¸Ã°²×°³ÌÐò¡£
 </IDS_CTRL_STATICTEXT_BODY>
-<IDS_CTRL_HEADINGTEXT_BODY>Installation Successful</IDS_CTRL_HEADINGTEXT_BODY>
+<IDS_CTRL_HEADINGTEXT_BODY>°²×°³É¹¦</IDS_CTRL_HEADINGTEXT_BODY>
 </Messages>
 </SUF70Messages>
 </Languages>
@@ -2339,40 +1949,31 @@ end
 <Languages>
 <SUF70Messages>
 <Language>
-<Name>English</Name>
+<Name>Chinese (Simplified)</Name>
 <Default>1</Default>
-<Primary>9</Primary>
+<Primary>4</Primary>
 <Secondary>
-<ID>1</ID>
 <ID>2</ID>
 <ID>3</ID>
 <ID>4</ID>
 <ID>5</ID>
-<ID>6</ID>
-<ID>7</ID>
-<ID>8</ID>
-<ID>9</ID>
-<ID>10</ID>
-<ID>11</ID>
-<ID>12</ID>
-<ID>13</ID>
 </Secondary>
 </Language>
 <Messages>
-<IDS_WINDOW_TITLE>%ProductName% Uninstaller</IDS_WINDOW_TITLE>
-<IDS_HEADER_TEXT>Welcome</IDS_HEADER_TEXT>
-<IDS_SUBHEADER_TEXT>Welcome to the uninstaller for %ProductName% %ProductVer%</IDS_SUBHEADER_TEXT>
-<IDS_CTRL_BUTTON_NEXT>&amp;Next &gt;</IDS_CTRL_BUTTON_NEXT>
-<IDS_CTRL_BUTTON_BACK>&lt; &amp;Back</IDS_CTRL_BUTTON_BACK>
-<IDS_CTRL_BUTTON_CANCEL>&amp;Cancel</IDS_CTRL_BUTTON_CANCEL>
-<IDS_CTRL_BUTTON_HELP>&amp;Help</IDS_CTRL_BUTTON_HELP>
-<IDS_CTRL_STATICTEXT_BODY>This program will uninstall %ProductName% %ProductVer%.
+<IDS_WINDOW_TITLE>%ProductName% Ð¶ÔØ³ÌÐò</IDS_WINDOW_TITLE>
+<IDS_HEADER_TEXT>»¶Ó­</IDS_HEADER_TEXT>
+<IDS_SUBHEADER_TEXT>»¶Ó­Ê¹ÓÃ %ProductName% %ProductVer% Ð¶ÔØ³ÌÐò</IDS_SUBHEADER_TEXT>
+<IDS_CTRL_BUTTON_NEXT>ÏÂÒ»²½(&amp;N) &gt;</IDS_CTRL_BUTTON_NEXT>
+<IDS_CTRL_BUTTON_BACK>&lt; ·µ»Ø(&amp;B)</IDS_CTRL_BUTTON_BACK>
+<IDS_CTRL_BUTTON_CANCEL>È¡Ïû(&amp;C)</IDS_CTRL_BUTTON_CANCEL>
+<IDS_CTRL_BUTTON_HELP>°ïÖú(&amp;H)</IDS_CTRL_BUTTON_HELP>
+<IDS_CTRL_STATICTEXT_BODY>¸Ã³ÌÐò½«Ð¶ÔØ %ProductName% %ProductVer%¡£
 
-If %ProductName% is currently running, please close it before proceeding with the uninstallation.
+Èç¹û %ProductName% µ±Ç°ÕýÔÚÔËÐÐ£¬¼ÌÐøÐ¶ÔØÖ®Ç°Çë½«Æä¹Ø±Õ¡£
 
-Otherwise, click Next to continue.
+·ñÔò£¬Çëµ¥»÷¡°ÏÂÒ»²½¡±¼ÌÐø¡£
 </IDS_CTRL_STATICTEXT_BODY>
-<IDS_CTRL_HEADINGTEXT_BODY>Uninstall %ProductName%</IDS_CTRL_HEADINGTEXT_BODY>
+<IDS_CTRL_HEADINGTEXT_BODY>Ð¶ÔØ %ProductName%</IDS_CTRL_HEADINGTEXT_BODY>
 </Messages>
 </SUF70Messages>
 </Languages>
@@ -2634,36 +2235,27 @@ end
 <Languages>
 <SUF70Messages>
 <Language>
-<Name>English</Name>
+<Name>Chinese (Simplified)</Name>
 <Default>1</Default>
-<Primary>9</Primary>
+<Primary>4</Primary>
 <Secondary>
-<ID>1</ID>
 <ID>2</ID>
 <ID>3</ID>
 <ID>4</ID>
 <ID>5</ID>
-<ID>6</ID>
-<ID>7</ID>
-<ID>8</ID>
-<ID>9</ID>
-<ID>10</ID>
-<ID>11</ID>
-<ID>12</ID>
-<ID>13</ID>
 </Secondary>
 </Language>
 <Messages>
-<IDS_WINDOW_TITLE>%ProductName% Uninstaller</IDS_WINDOW_TITLE>
-<IDS_HEADER_TEXT>Removing %ProductName%</IDS_HEADER_TEXT>
-<IDS_SUBHEADER_TEXT>Please wait...</IDS_SUBHEADER_TEXT>
-<IDS_CTRL_BUTTON_CANCEL>&amp;Cancel</IDS_CTRL_BUTTON_CANCEL>
+<IDS_WINDOW_TITLE>%ProductName% Ð¶ÔØ³ÌÐò</IDS_WINDOW_TITLE>
+<IDS_HEADER_TEXT>ÕýÔÚÒÆ³ý %ProductName%</IDS_HEADER_TEXT>
+<IDS_SUBHEADER_TEXT>ÇëÉÔºò...</IDS_SUBHEADER_TEXT>
+<IDS_CTRL_BUTTON_CANCEL>È¡Ïû(&amp;C)</IDS_CTRL_BUTTON_CANCEL>
 <IDS_CTRL_STATICTEXT_TOPINSTRUCTIONS/>
 <IDS_CTRL_STATICTEXT_LABEL_01> </IDS_CTRL_STATICTEXT_LABEL_01>
 <IDS_CTRL_STATICTEXT_LABEL_02> </IDS_CTRL_STATICTEXT_LABEL_02>
 <IDS_CTRL_PROGRESS_BAR_01/>
-<IDS_CTRL_STATICTEXT_LABEL_03>Progress Two</IDS_CTRL_STATICTEXT_LABEL_03>
-<IDS_CTRL_STATICTEXT_LABEL_04>Performing Actions...</IDS_CTRL_STATICTEXT_LABEL_04>
+<IDS_CTRL_STATICTEXT_LABEL_03>½ø³Ì¶þ</IDS_CTRL_STATICTEXT_LABEL_03>
+<IDS_CTRL_STATICTEXT_LABEL_04>ÕýÔÚÖ´ÐÐ¶¯×÷...</IDS_CTRL_STATICTEXT_LABEL_04>
 <IDS_CTRL_PROGRESS_BAR_02/>
 </Messages>
 </SUF70Messages>
@@ -2895,38 +2487,29 @@ end
 <Languages>
 <SUF70Messages>
 <Language>
-<Name>English</Name>
+<Name>Chinese (Simplified)</Name>
 <Default>1</Default>
-<Primary>9</Primary>
+<Primary>4</Primary>
 <Secondary>
-<ID>1</ID>
 <ID>2</ID>
 <ID>3</ID>
 <ID>4</ID>
 <ID>5</ID>
-<ID>6</ID>
-<ID>7</ID>
-<ID>8</ID>
-<ID>9</ID>
-<ID>10</ID>
-<ID>11</ID>
-<ID>12</ID>
-<ID>13</ID>
 </Secondary>
 </Language>
 <Messages>
-<IDS_WINDOW_TITLE>%ProductName% Uninstaller</IDS_WINDOW_TITLE>
-<IDS_HEADER_TEXT>Uninstallation Finished</IDS_HEADER_TEXT>
-<IDS_SUBHEADER_TEXT>The uninstallation has completed successfully.</IDS_SUBHEADER_TEXT>
-<IDS_CTRL_BUTTON_NEXT>&amp;Finish</IDS_CTRL_BUTTON_NEXT>
-<IDS_CTRL_BUTTON_BACK>&lt; &amp;Back</IDS_CTRL_BUTTON_BACK>
-<IDS_CTRL_BUTTON_CANCEL>&amp;Cancel</IDS_CTRL_BUTTON_CANCEL>
-<IDS_CTRL_BUTTON_HELP>&amp;Help</IDS_CTRL_BUTTON_HELP>
-<IDS_CTRL_STATICTEXT_BODY>%ProductName% %ProductVer% has been uninstalled.
+<IDS_WINDOW_TITLE>%ProductName% Ð¶ÔØ³ÌÐò</IDS_WINDOW_TITLE>
+<IDS_HEADER_TEXT>Ð¶ÔØÒÑÍê³É</IDS_HEADER_TEXT>
+<IDS_SUBHEADER_TEXT>Ð¶ÔØÒÑ³É¹¦Íê³É¡£</IDS_SUBHEADER_TEXT>
+<IDS_CTRL_BUTTON_NEXT>Íê³É(&amp;F)</IDS_CTRL_BUTTON_NEXT>
+<IDS_CTRL_BUTTON_BACK>&lt; ·µ»Ø(&amp;B)</IDS_CTRL_BUTTON_BACK>
+<IDS_CTRL_BUTTON_CANCEL>È¡Ïû(&amp;C)</IDS_CTRL_BUTTON_CANCEL>
+<IDS_CTRL_BUTTON_HELP>°ïÖú(&amp;H)</IDS_CTRL_BUTTON_HELP>
+<IDS_CTRL_STATICTEXT_BODY>%ProductName% %ProductVer% ÒÑ±»Ð¶ÔØ¡£
 
-Please click Finish to exit.
+Çëµ¥»÷¡°Íê³É¡±ÍË³ö¡£
 </IDS_CTRL_STATICTEXT_BODY>
-<IDS_CTRL_HEADINGTEXT_BODY>Uninstallation Successful</IDS_CTRL_HEADINGTEXT_BODY>
+<IDS_CTRL_HEADINGTEXT_BODY>Ð¶ÔØ³É¹¦</IDS_CTRL_HEADINGTEXT_BODY>
 </Messages>
 </SUF70Messages>
 </Languages>
@@ -2958,7 +2541,9 @@ Please click Finish to exit.
 <Event>
 <Name>On Post Uninstall</Name>
 <Args/>
-<Script/>
+<Script>Shell.DeleteShortcut(Shell.GetFolder(SHF_DESKTOP), SessionVar.Expand("%ProductName%"));
+
+Registry.DeleteKey(HKEY_LOCAL_MACHINE, SessionVar.Expand("%Reg_path%"));</Script>
 <BookMarks count="0">
 </BookMarks>
 </Event>
@@ -2992,7 +2577,7 @@ g_HandleSystemReboot();
 <MainWindowSettings>
 <ShowBackGroundWindow>0</ShowBackGroundWindow>
 <WindowStyle>0</WindowStyle>
-<WindowAppearance>1</WindowAppearance>
+<WindowAppearance>0</WindowAppearance>
 <SolidBackColor format="hex">008080</SolidBackColor>
 <GradientBackColor format="hex">b4c2e3</GradientBackColor>
 <GradientForeColor format="hex">5971b6</GradientForeColor>
@@ -3059,7 +2644,7 @@ g_HandleSystemReboot();
 <NumDaysBld>30</NumDaysBld>
 <NumDaysRun>30</NumDaysRun>
 <AbortNotWriteDFR>1</AbortNotWriteDFR>
-<ExpireDate>1430963805</ExpireDate>
+<ExpireDate>1453259111</ExpireDate>
 <TellUserDate>0</TellUserDate>
 <ExpireByUses>0</ExpireByUses>
 <UsesMethod>1</UsesMethod>
@@ -3067,7 +2652,7 @@ g_HandleSystemReboot();
 <NumUsesSystem>2</NumUsesSystem>
 <AbortNotWritable>1</AbortNotWritable>
 <TellUserUses>0</TellUserUses>
-<UniqueKey>0F59E18F-8A38-4569-BCD3-A7E2AB76DE0A</UniqueKey>
+<UniqueKey>868E99EC-A6F7-4C0F-B7A9-983066CB55F1</UniqueKey>
 <ShowContactInfo>0</ShowContactInfo>
 <ContactName>%CompanyName%</ContactName>
 <ContactURL>%CompanyURL%</ContactURL>
@@ -3081,9 +2666,9 @@ g_HandleSystemReboot();
 <OS>65535</OS>
 <OS>65535</OS>
 <OS>0</OS>
-<OS>65535</OS>
-<OS>65535</OS>
-<OS>65535</OS>
+<OS>0</OS>
+<OS>0</OS>
+<OS>0</OS>
 <OS>65535</OS>
 <OS>65535</OS>
 <OS>65535</OS>
@@ -3107,8 +2692,8 @@ g_HandleSystemReboot();
 <ProjFileEmail/>
 <ProjFileCreatedVer>9.1.0.0</ProjFileCreatedVer>
 <ProjFileSavedVer>9.1.0.0</ProjFileSavedVer>
-<BaseFolderArchive>F:\source\node_projects\CWTV\shell_1\build\target</BaseFolderArchive>
-<BaseFolderExternal>D:\soft\node-webkit-v0.11.2-win-x64</BaseFolderExternal>
+<BaseFolderArchive>F:\source\node_projects\GraphTool\shell\build\x64</BaseFolderArchive>
+<BaseFolderExternal/>
 <UseSkinFile>0</UseSkinFile>
 <SkinFilename/>
 <SkinSubStyle/>
@@ -3128,9 +2713,9 @@ g_HandleSystemReboot();
 <Args/>
 <Script>result = System.Is64BitOS();
 -- An if statement that compares two numbers
-if (true == result) then
+if (false == result) then
 	-- Do something here
-	result = Dialog.Message("Notice", "¼ì²âµ½ÄúµÄÏµÍ³ÊÇ²»ÊÇ32Î»£¬ÇëÊ¹ÓÃÏàÓ¦°²×°°ü£¬±¾´Î°²×°½«ÍË³ö£¡", MB_OK, MB_ICONINFORMATION, MB_DEFBUTTON1);
+	result = Dialog.Message("Notice", "¼ì²âµ½ÄúµÄÏµÍ³ÊÇ²»ÊÇ64Î»£¬ÇëÊ¹ÓÃÏàÓ¦°²×°°ü£¬±¾´Î°²×°½«ÍË³ö£¡", MB_OK, MB_ICONINFORMATION, MB_DEFBUTTON1);
 	Application.Exit(0);
 end
 </Script>
@@ -3140,7 +2725,11 @@ end
 <Event>
 <Name>On Pre Install</Name>
 <Args/>
-<Script/>
+<Script>_appfolder = SessionVar.Expand("%AppFolder%");
+_isExist = Folder.DoesExist(_appfolder);
+if (_isExist == true) then
+	Folder.DeleteTree(_appfolder, nil);
+end</Script>
 <BookMarks count="0">
 </BookMarks>
 </Event>
@@ -3177,23 +2766,14 @@ g_HandleSystemReboot();
 </ProjectData>
 <LangSettings>
 <Language>
-<Name>English</Name>
+<Name>Chinese (Simplified)</Name>
 <Default>1</Default>
-<Primary>9</Primary>
+<Primary>4</Primary>
 <Secondary>
-<ID>1</ID>
 <ID>2</ID>
 <ID>3</ID>
 <ID>4</ID>
 <ID>5</ID>
-<ID>6</ID>
-<ID>7</ID>
-<ID>8</ID>
-<ID>9</ID>
-<ID>10</ID>
-<ID>11</ID>
-<ID>12</ID>
-<ID>13</ID>
 </Secondary>
 </Language>
 </LangSettings>
@@ -3210,17 +2790,17 @@ g_HandleSystemReboot();
 </SessionVar>
 <SessionVar>
 <Name>%ProductVer%</Name>
-<Value>v0.6.0</Value>
+<Value>0.6.0</Value>
 <Type>1</Type>
 </SessionVar>
 <SessionVar>
 <Name>%Copyright%</Name>
-<Value>Copyright ?2015 %CompanyName%</Value>
+<Value>Copyright © 2012 %CompanyName%</Value>
 <Type>1</Type>
 </SessionVar>
 <SessionVar>
 <Name>%CompanyURL%</Name>
-<Value>http://www.tianqi.cn/</Value>
+<Value>http://www.tianqi.cn</Value>
 <Type>1</Type>
 </SessionVar>
 <SessionVar>
@@ -3235,7 +2815,7 @@ g_HandleSystemReboot();
 </SessionVar>
 <SessionVar>
 <Name>%AppFolder%</Name>
-<Value>%ProgramFilesFolder%\%ProductName_en%</Value>
+<Value>%ProgramFilesFolder%\BPA\%ProductName_en%</Value>
 <Type>2</Type>
 </SessionVar>
 <SessionVar>
@@ -3245,7 +2825,17 @@ g_HandleSystemReboot();
 </SessionVar>
 <SessionVar>
 <Name>%ProductName_en%</Name>
-<Value>Blue PI Ants</Value>
+<Value>Touch</Value>
+<Type>10</Type>
+</SessionVar>
+<SessionVar>
+<Name>%Reg_path%</Name>
+<Value>Software\\BPA\\%ProductName_en%</Value>
+<Type>10</Type>
+</SessionVar>
+<SessionVar>
+<Name>%Reg_val_name%</Name>
+<Value>base_path %ProductName_en%</Value>
 <Type>10</Type>
 </SessionVar>
 </SUF7SessionVars>
@@ -3258,12 +2848,12 @@ g_HandleSystemReboot();
 <PostBuildProg/>
 <PostBuildCmdLine/>
 <PostBuildWait>0</PostBuildWait>
-<Filename>À¶PIÂìÒÏ´¥ÆÁ_32_v0.6.0.exe</Filename>
-<OutputFolder>E:\docs\2015\¹¤×÷ÎÄµµ\ÆøÏóÆµµÀ\´¥ÆÁÏîÄ¿\°²×°°ü</OutputFolder>
+<Filename>BPA-GT-64-1.1.0.exe</Filename>
+<OutputFolder>I:\docs\2015\À¶PIÏà¹Ø\ÖÆÍ¼\°²×°°ü</OutputFolder>
 <SegmentSizeMode>0</SegmentSizeMode>
 <CustomSegSize>100</CustomSegSize>
 <CustomSegSizeMode>2</CustomSegSizeMode>
-<Platform>0</Platform>
+<Platform>1</Platform>
 <CollectLaunchUserInfo>0</CollectLaunchUserInfo>
 <CodeSignLocation/>
 <CodeSignCertificateFile/>
