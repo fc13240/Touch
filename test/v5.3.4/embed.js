@@ -1,7 +1,176 @@
 /*!
 	Copyright(c) 2014 - 2015, Citationtech S.E. 
 */
+! function() {
+	function a() {
+		var a, b = navigator.userAgent,
+			c = b.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+		return /trident/i.test(c[1]) ? (a = /\brv[ :]+(\d+)/g.exec(b) || [], "ie" + (a[1] || "")) : "Chrome" === c[1] && (a = b.match(/\bOPR\/(\d+)/), null !== a) ? "opera" + a[1] : (c = c[2] ? [c[1], c[2]] : [navigator.appName, navigator.appVersion, "-?"], null !== (a = b.match(/version\/(\d+)/i)) && c.splice(1, 1, a[1]), c[0] + c[1])
+	}
+	var b = "unknown";
+	try {
+		b = a()
+	} catch (c) {}
+	try {
+		new Float32Array(100);
+		window.onerror = function(a, c, d, e, f) {
+			ga("send", "event", "error v" + W.version, a + " URL:" + c + " LINE:" + d + " COLUMN:" + e + " BROWSER:" + b + " " + navigator.userAgent), ga("send", "pageview", "errors/" + W.version + "/" + b + "/" + d + "/" + e + "/" + a)
+		}
+	} catch (c) {
+		window.onload = function() {
+			var a = document.getElementById("not-supported");
+			a.style.display = "block", window.ga && ga("send", "pageview", "notSupported/" + b + "/" + navigator.userAgent)
+		}
+	}
+}(),
+function(a) {
+	function b(a, b) {
+		return function() {
+			a.apply(b, arguments)
+		}
+	}
 
+	function c(a) {
+		if ("object" != typeof this) throw new TypeError("Promises must be constructed via new");
+		if ("function" != typeof a) throw new TypeError("not a function");
+		this._state = null, this._value = null, this._deferreds = [], i(a, b(e, this), b(f, this))
+	}
+
+	function d(a) {
+		var b = this;
+		return null === this._state ? void this._deferreds.push(a) : void j(function() {
+			var c = b._state ? a.onFulfilled : a.onRejected;
+			if (null === c) return void(b._state ? a.resolve : a.reject)(b._value);
+			var d;
+			try {
+				d = c(b._value)
+			} catch (e) {
+				return void a.reject(e)
+			}
+			a.resolve(d)
+		})
+	}
+
+	function e(a) {
+		try {
+			if (a === this) throw new TypeError("A promise cannot be resolved with itself.");
+			if (a && ("object" == typeof a || "function" == typeof a)) {
+				var c = a.then;
+				if ("function" == typeof c) return void i(b(c, a), b(e, this), b(f, this))
+			}
+			this._state = !0, this._value = a, g.call(this)
+		} catch (d) {
+			f.call(this, d)
+		}
+	}
+
+	function f(a) {
+		this._state = !1, this._value = a, g.call(this)
+	}
+
+	function g() {
+		for (var a = 0, b = this._deferreds.length; b > a; a++) d.call(this, this._deferreds[a]);
+		this._deferreds = null
+	}
+
+	function h(a, b, c, d) {
+		this.onFulfilled = "function" == typeof a ? a : null, this.onRejected = "function" == typeof b ? b : null, this.resolve = c, this.reject = d
+	}
+
+	function i(a, b, c) {
+		var d = !1;
+		try {
+			a(function(a) {
+				d || (d = !0, b(a))
+			}, function(a) {
+				d || (d = !0, c(a))
+			})
+		} catch (e) {
+			if (d) return;
+			d = !0, c(e)
+		}
+	}
+	var j = c.immediateFn || "function" == typeof setImmediate && setImmediate || function(a) {
+			setTimeout(a, 1)
+		},
+		k = Array.isArray || function(a) {
+			return "[object Array]" === Object.prototype.toString.call(a)
+		};
+	c.prototype["catch"] = function(a) {
+		return this.then(null, a)
+	}, c.prototype.then = function(a, b) {
+		var e = this;
+		return new c(function(c, f) {
+			d.call(e, new h(a, b, c, f))
+		})
+	}, c.all = function() {
+		var a = Array.prototype.slice.call(1 === arguments.length && k(arguments[0]) ? arguments[0] : arguments);
+		return new c(function(b, c) {
+			function d(f, g) {
+				try {
+					if (g && ("object" == typeof g || "function" == typeof g)) {
+						var h = g.then;
+						if ("function" == typeof h) return void h.call(g, function(a) {
+							d(f, a)
+						}, c)
+					}
+					a[f] = g, 0 === --e && b(a)
+				} catch (i) {
+					c(i)
+				}
+			}
+			if (0 === a.length) return b([]);
+			for (var e = a.length, f = 0; f < a.length; f++) d(f, a[f])
+		})
+	}, c.resolve = function(a) {
+		return a && "object" == typeof a && a.constructor === c ? a : new c(function(b) {
+			b(a)
+		})
+	}, c.reject = function(a) {
+		return new c(function(b, c) {
+			c(a)
+		})
+	}, c.race = function(a) {
+		return new c(function(b, c) {
+			for (var d = 0, e = a.length; e > d; d++) a[d].then(b, c)
+		})
+	}, "undefined" != typeof module && module.exports ? module.exports = c : a.Promise || (a.Promise = c)
+}(this),
+/*! 
+Adrian Cooney <cooney.adrian@gmail.com> License: MIT */
+function(a) {
+	function b(a, b, d, f) {
+		var g, h;
+		if ("function" == typeof b ? (h = b, g = []) : (g = b, h = d), e[a]) throw "DI conflict: Module " + a + " already defined.";
+		return e[a] = {
+			name: a,
+			callback: h,
+			loaded: null,
+			wasLoaded: !1,
+			dependencies: g
+		}, f && c(e[a]), e[a]
+	}
+
+	function c(a) {
+		var b = [];
+		return a.dependencies.forEach(function(a) {
+			var d = e[a];
+			if (!d) throw "DI error: Module " + a + " not defined";
+			d.wasLoaded ? b.push(d.loaded) : b.push(c(d))
+		}), a.loaded = a.callback.apply(null, b), a.wasLoaded = !0, W[a.name] ? console.error("DI error: Object W." + a.name + " already exists") : W[a.name] = a.loaded, a.loaded
+	}
+
+	function d(a, b) {
+		var d, f, g;
+		"function" == typeof a ? (f = a, d = []) : (d = a, f = b), g = c({
+			callback: f,
+			dependencies: d
+		});
+		for (var h in e) e[h].wasLoaded || console.warn("DI warning: module " + h + " defined but not loaded")
+	}
+	var e = {};
+	a.W || (a.W = {}), d.modules = e, a.W.require = d, a.W.define = b
+}(window), /*! */
 W.define("prototypes", [], function() {
 		Array.prototype.getNextItem = function(a, b) {
 			var c = this.indexOf(a);
@@ -1339,7 +1508,7 @@ EMBED_MODE = !0, document.addEventListener("DOMContentLoaded", W.require.bind(nu
 			return f = new Promise(function(b, c) {
 				Promise.all(g).then(function(c) {
 					b(h.composeObject(i, c, a, j))
-				})["catch"](function(a) {console.log(arguments);
+				})["catch"](function(a) {
 					c(a)
 				})
 			}), f.cancel = function() {
@@ -2924,33 +3093,33 @@ EMBED_MODE = !0, document.addEventListener("DOMContentLoaded", W.require.bind(nu
 		}
 	}), /*! */
 	W.define("legend", ["overlays", "broadcast"], function(a, b) {
-		// function c(a) {
-		// 	if (!a.description) return void(h.innerHTML = "");
-		// 	var b, c, d, e, f = "",
-		// 		i = a.lines,
-		// 		j = a.description,
-		// 		k = a.preparedColors,
-		// 		l = a.startingValue,
-		// 		m = a.step,
-		// 		n = a.metric;
-		// 	for (g = j.indexOf(n), 0 > g && (g = 0), b = 0; b < i.length; b++) c = i[b], d = k[Math.floor((c[0] - l) / m)], e = "rgba(" + d[0] + "," + d[1] + "," + d[2] + "," + d[3] / 200 + ")", f += '<div style="background-color:' + e + ';">' + i[b][1 + g] + "</div>", 0 === b && (f = '<div style="background-color:' + e + ';">' + j[g] + "</div>" + f);
-		// 	h.innerHTML = f
-		// }
+		function c(a) {
+			if (!a.description) return void(h.innerHTML = "");
+			var b, c, d, e, f = "",
+				i = a.lines,
+				j = a.description,
+				k = a.preparedColors,
+				l = a.startingValue,
+				m = a.step,
+				n = a.metric;
+			for (g = j.indexOf(n), 0 > g && (g = 0), b = 0; b < i.length; b++) c = i[b], d = k[Math.floor((c[0] - l) / m)], e = "rgba(" + d[0] + "," + d[1] + "," + d[2] + "," + d[3] / 200 + ")", f += '<div style="background-color:' + e + ';">' + i[b][1 + g] + "</div>", 0 === b && (f = '<div style="background-color:' + e + ';">' + j[g] + "</div>" + f);
+			h.innerHTML = f
+		}
 
-		// function d(b) {
-		// 	h.classList.add("animate"), setTimeout(function() {
-		// 		f = b, e = a[b], c(e), h.classList.remove("animate")
-		// 	}, 400)
-		// }
-		// var e, f, g, h = document.getElementById("legend");
-		// h.onclick = function(a) {
-		// 	var b, c;
-		// 	(b = e.description) && (c = b.cycleItems(b[g], !0), e.setMetric(c))
-		// }, b.on("metricChanged", function(a) {
-		// 	a === e.ident && d(a)
-		// }), b.on("redrawFinished", function(a) {
-		// 	a.overlay !== f && d(a.overlay)
-		// })
+		function d(b) {
+			h.classList.add("animate"), setTimeout(function() {
+				f = b, e = a[b], c(e), h.classList.remove("animate")
+			}, 400)
+		}
+		var e, f, g, h = document.getElementById("legend");
+		h.onclick = function(a) {
+			var b, c;
+			(b = e.description) && (c = b.cycleItems(b[g], !0), e.setMetric(c))
+		}, b.on("metricChanged", function(a) {
+			a === e.ident && d(a)
+		}), b.on("redrawFinished", function(a) {
+			a.overlay !== f && d(a.overlay)
+		})
 	}), /*! */
 	W.define("productInfo", ["broadcast", "products", "trans"], function(a, b, c) {
 		function d() {
@@ -3500,8 +3669,198 @@ EMBED_MODE = !0, document.addEventListener("DOMContentLoaded", W.require.bind(nu
 		}
 	}), /*! */
 	W.define("picker", ["broadcast", "maps", "interpolation", "trans", "overlays", "rootScope"], function(a, b, c, d, e, f) {
-		
+		function g() {
+			var a = '<div class="popup"><div class="popup-draggable-square"><div class="popup-ball"></div></div><div class="popup-content"></div><a class="popup-link shy">' + d.DETAILED + '</a><a class="popup-close-button shy">×</a>';
+			return G || (a = a + '<div class="popup-drag-me">' + d.DRAG_ME + "</div>"), L.divIcon({
+				className: "popup-wrapper",
+				html: a,
+				iconSize: [0, 150],
+				iconAnchor: [0, 150]
+			})
+		}
+
+		function h() {
+			H && (t.style.diplay = "block", C.classList.remove("moooving"), a.off(E), a.off(F), window.clearTimeout(D), G = !0, b.removeLayer(H), H = null)
+		}
+
+		function i(a, b) {
+			H ? k(a, b) : j(a, b)
+		}
+
+		function j(c, d) {
+			H = L.marker([c, d], {
+				icon: g(),
+				draggable: !0
+			}).on("dragstart", n).on("drag", p).on("dragend", o).addTo(b), w = B.querySelector(".popup-drag-me") || null, u = B.querySelector(".popup-content"), s = B.querySelector(".popup-ball"), v = B.querySelector(".popup-close-button"), t = B.querySelector(".popup-link"), E = a.on("redrawFinished", q), F = a.on("mapChanged", function() {
+				m(), l()
+			}), m(), l(), q(), t.onclick = function(c) {
+				var d = b.containerPointToLatLng([x, y]).wrap();
+				a.emit("rqstOpen", "detail", {
+					type: "spot",
+					lat: d.lat,
+					lon: d.lng,
+					icao: null,
+					fromPopup: !0,
+					x: x,
+					y: y
+				}), c.stopPropagation()
+			}, v.onmouseup = h, a.emit("popupOpened", "maps")
+		}
+
+		function k(b, c) {
+			H.setLatLng([b, c]), m(), q(), a.emit("popupMoved", {
+				type: "spot",
+				lat: b,
+				lon: c,
+				icao: null
+			})
+		}
+
+		function l() {
+			z = f.map.width - 5, A = f.map.height - 5
+		}
+
+		function m() {
+			var a = s.getBoundingClientRect();
+			x = a.left + 3, y = a.top + 3
+		}
+
+		function n(a) {
+			w && (w.style.opacity = 0, w.style.visibility = "hidden"), C.classList.add("moooving")
+		}
+
+		function o(c) {
+			var d = b.containerPointToLatLng([x, y]).wrap();
+			C.classList.remove("moooving"), a.emit("popupMoved", {
+				type: "spot",
+				lat: d.lat,
+				lon: d.lng,
+				icao: null
+			})
+		}
+
+		function p(a) {
+			m(), q()
+		}
+
+		function q() {
+			if (x > 5 && z > x && A > y && y > 5) {
+				var a = b.containerPointToLatLng([x, y]);
+				c.hasGrid() && (u.innerHTML = r(c.interpolateValues(a.lat, a.lng)))
+			}
+		}
+
+		function r(a) {
+			var b = "",
+				c = a.overlayName,
+				f = e[c];
+			switch (c) {
+				case "wind":
+					b = "<span>" + d.WIND + "</span><div>" + a.angle + "° / " + f.convertValue(a.wind) + "</div>";
+					break;
+				case "waves":
+				case "swell":
+				case "wwaves":
+				case "swellperiod":
+					isNaN(a.wind) || (b = "<span>" + d[e.trans[c]] + "</span><div>" + a.angle + "° / " + f.convertValue(a.overlayValue) + "</div><span>" + d.PERIOD + "</span><div>" + Math.round(a.wind) + " s.</div>");
+					break;
+				case "lclouds":
+				case "clouds":
+					a.overlayValue > 200 && (b = "<span>" + d.RAIN + "</span><div>" + f.convertValue(a.overlayValue) + "</div>");
+					break;
+				case "rain":
+				case "snow":
+					b = d[e.trans[c]] + "<div>" + f.convertValue(a.overlayValue) + "</div>";
+					break;
+				case "snowcover":
+					b = "";
+					break;
+				default:
+					d[e.trans[c]] && !isNaN(a.overlayValue) && (b = d[e.trans[c]] + "<div>" + f.convertValue(a.overlayValue) + "</div>")
+			}
+			return b
+		}
+		var s, t, u, v, w, x, y, z, A, B = document.getElementById("map_container"),
+			C = document.body,
+			D = (document.documentElement, null),
+			E = null,
+			F = null,
+			G = !1,
+			H = null;
+		return a.on("closePopup", h), b.on("singleclick", function(a) {
+			var b = 60,
+				c = a.containerPoint.x,
+				d = a.containerPoint.y,
+				e = a.latlng.lat,
+				g = a.latlng.lng;
+			b > d || d > f.map.height - b || b > c || c > f.map.width - b || i(e, g)
+		}), a.on("mapsPopupRequested", i), {
+			createHTML: r
+		}
 	}), /*! */
 	W.define("pickerGlobe", ["broadcast", "interpolation", "globe", "picker"], function(a, b, c, d) {
-		
+		function e() {
+			x && (m.style.display = "none", x = !1, a.off(u), c.off(v), n.style.visibility = "hidden")
+		}
+
+		function f(b, d) {
+			g(b, d - w), x || (m.style.display = "block", x = !0, u = a.on("redrawFinished", h), v = c.on("movestart", e), a.emit("popupOpened", "globe"))
+		}
+
+		function g(a, b) {
+			j = a, k = b + w, m.style.left = a + "px", m.style.top = b + "px", h()
+		}
+
+		function h() {
+			var a = c.projection.invert([j, k]);
+			b.hasGrid() && (o.innerHTML = d.createHTML(b.interpolateValues(a[1], a[0])))
+		}
+
+		function i(a, b) {
+			function d(b) {
+				a && (b.preventDefault(), b = b.touches && 1 === b.touches.length ? b.touches[0] : b);
+				var d = b.clientX - f,
+					e = b.clientY - h;
+				c.isVisible(d, e + w) && g(d.bound(10, i), e.bound(k, j))
+			}
+
+			function e(a) {
+				window.removeEventListener("mousemove", d), window.removeEventListener("mouseup", e), p.removeEventListener("touchmove", d), p.removeEventListener("touchend", e), document.body.classList.remove("moooving")
+			}
+			a ? (b.preventDefault(), b = b.touches && 1 === b.touches.length ? b.touches[0] : b, p.addEventListener("touchmove", d)) : window.addEventListener("mousemove", d);
+			var f = b.clientX - m.style.left.replace("px", ""),
+				h = b.clientY - m.style.top.replace("px", ""),
+				i = s.clientWidth - 10,
+				j = Math.max(s.scrollHeight, s.offsetHeight, t.clientHeight, t.scrollHeight, t.offsetHeight) - w - 10,
+				k = 10 - w;
+			n.style.opacity = 0, n.style.visibility = "hidden", document.body.classList.add("moooving"), window.addEventListener("mouseup", e), p.addEventListener("touchend", e)
+		}
+		var j, k, l = document.getElementById("globe_container"),
+			m = l.querySelector(".popup-wrapper"),
+			n = l.querySelector(".popup-drag-me"),
+			o = l.querySelector(".popup-content"),
+			p = l.querySelector(".popup"),
+			q = l.querySelector(".popup-close-button"),
+			r = l.querySelector(".popup-link"),
+			s = document.body,
+			t = document.documentElement,
+			u = null,
+			v = null,
+			w = 150,
+			x = !1;
+		a.on("globePopupRequested", function(a, b) {
+			var d = c.projection([b, a]);
+			x ? g(d[0], d[1]) : f(d[0], d[1])
+		}), a.on("closePopup", e), q.onmouseup = e, c.on("click", f), r.onclick = function(b) {
+			var d = c.projection.invert([j, k]);
+			a.emit("rqstOpen", "detail", {
+				type: "spot",
+				lat: d[1],
+				lon: d[0],
+				icao: null,
+				fromPopup: !0,
+				x: j,
+				y: k
+			}), e()
+		}, p.addEventListener("mousedown", i.bind(null, !1)), p.addEventListener("touchstart", i.bind(null, !0))
 	});

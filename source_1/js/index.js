@@ -55,6 +55,7 @@ $(function() {
 			addProvinceName();
 		});
 	});
+	$(window).on('load', W.require.bind(null, ['typhoon','imgs', 'text'], function() {}));
 	var _getCanvasWind = (function() {
 		var $canvasWind;
 		return function() {

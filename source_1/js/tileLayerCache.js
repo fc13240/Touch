@@ -1,0 +1,112 @@
+!function() {
+	var fs = require('fs');
+	var path = require('path');
+	var crypto = require('crypto');
+	var os = require('os');
+
+	function mkdirSync(mkPath) {
+		try{
+			var parentPath = path.dirname(mkPath);
+			if(!fs.existsSync(parentPath)){
+				mkdirSync(parentPath);
+			}
+			if(!fs.existsSync(mkPath)){
+				fs.mkdirSync(mkPath);
+			}
+			return true;
+		}catch(e){}
+	}
+	function saveBase64(save_file_name, img_data){
+		img_data = img_data.substring(img_data.indexOf('base64,') + 7);
+		img_data = new Buffer(img_data, 'base64');
+
+		mkdirSync(path.dirname(save_file_name));
+		fs.writeFileSync(save_file_name, img_data);
+	}
+	var saveImg = (function() {
+		var canvas = L.DomUtil.create("canvas");
+		var cxt = canvas.getContext('2d');
+		return function(savepath, img, fn) {
+			canvas.width = img.width;
+			canvas.height = img.height;
+			cxt.drawImage(img, 0, 0);
+			var dataURL = canvas.toDataURL('image/png');
+
+			saveBase64(savepath, dataURL);
+			fn && fn (dataURL);
+		}
+	})();
+	var DEFAULT_PRIVATE_KEY = 'cwtv'
+	var encrypt = function(str, key){
+		if(str && str.toString){
+			return crypto.createHash('sha1').update(str.toString() + (key||DEFAULT_PRIVATE_KEY)).digest('hex');
+		}
+		return '';
+	}
+	function _getKey(url, option) {
+		return encrypt(url+([option.s, option.x, option.y, option.z].join('_')));
+	}
+	function _getCachePath(url, option) {
+		var key = encrypt(url);
+		var src = path.join(os.tmpDir(), 'cwtv', key, option.s+'', option.z+'', option.x+'', option.y+'.png');
+		
+		return src;
+	}
+	L.TileLayer.Multi.include({
+		getTileUrl: function(a) {
+			var b = this._getZoomForUrl(),
+				c = this._tileDefs[b];
+			this._adjustTilePoint(a);
+			var option = L.extend({
+				s: this._getSubdomain(a, c.subdomains),
+				z: b,
+				x: a.x,
+				y: a.y
+			}, this.options);
+			var _cachePath = _getCachePath(c.url, option);
+			if (fs.existsSync(_cachePath)) {
+				console.log('_cachePath = ', _cachePath);
+				return _cachePath;
+			} else {
+				var url = L.Util.template(c.url, option);
+				return url;
+			}
+		},
+		_loadTile: function(a, b) {
+			var _this = this;
+			a._layer = this;
+			a.onerror = this._tileOnError;
+			_this._adjustTilePoint(b);
+			var src = _this.getTileUrl(b);
+
+			var z = _this._getZoomForUrl(),
+				c = _this._tileDefs[z];
+			_this._adjustTilePoint(b);
+			var option = L.extend({
+				s: _this._getSubdomain(b, c.subdomains),
+				z: z,
+				x: b.x,
+				y: b.y
+			}, _this.options);
+
+			if (/^http/.test(src)) {
+				var _cachePath = _getCachePath(c.url, option);
+				var img = new Image();
+				img.onload = function() {
+					saveImg(_cachePath, img);
+					a.src = _cachePath;
+					_this._tileOnLoad.apply(a);
+				}
+				img.src = src;
+				console.log('loadImg = ', src);
+			} else {
+				a.onload = _this._tileOnLoad;
+				a.src = src;
+			}
+			_this.fire("tileloadstart", {
+				tile: a,
+				url: src
+			})
+		}
+	});
+}()

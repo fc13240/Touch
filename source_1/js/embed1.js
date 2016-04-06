@@ -97,13 +97,21 @@ W.define("prototypes", [], function() {
 			get: function(a) {
 				try {
 					return d ? JSON.parse(window.localStorage.getItem(a)) : e[a]
-				} catch (b) {console.log('err', b);}
+				} catch (b) {}
 			},
 			getFile: function(c, d) {
 				var e = this,
 					f = this.get(c);
 				return f && f.version === a.version && (!d || f.data && f.data[d]) ? Promise.resolve(f.data) : new Promise(function(d, f) {
-					b.get("./v" + a.version + "/" + c).then(function(b) {
+					var url = "/v" + a.version + "/" + c;
+					var url = './' + c;
+					b.get(url).then(function(b) {
+						try {
+							var tmp = JSON.parse(b.data);
+						} catch(e){}
+						if (tmp) {
+							b.data = tmp;
+						}
 						b.version = a.version, e.put(c, b), d(b.data)
 					}, function(a) {
 						f(a)
@@ -439,7 +447,7 @@ W.define("prototypes", [], function() {
 				var h = d[f];
 				if (a.levels.indexOf(h) > -1 && (a.level = h), a.overlays.indexOf(h) > -1 && (a.overlay = h), a.acTimes.indexOf(h) > -1 && (a.acTime = h), /^(\d\d\d\d)-(\d\d)-(\d\d)-(\d\d)$/.test(h) && (a.path = h.replace(/-/g, "/")), "menu" === h && (a.menu = !0), "message" === h && (a.message = !0), "ip" === h && (a.sharedCoords = null), "marker" === h && (a.marker = !0), "embedmake" === h && (a.embedMake = !0), /metric/.test(h)) {
 					var i = h.match(/metric\.(.+)\.(.+)/);
-					1 === i[2].length && (i[2] = "°" + i[2]), b[i[1]].metric = i[2]
+					1 === i[2].length && (i[2] = "掳" + i[2]), b[i[1]].metric = i[2]
 				} else if (/in:\d+/.test(h)) {
 					var i = h.match(/in:(\d+)/);
 					a.nextHours = parseInt(i[1]);
@@ -451,13 +459,14 @@ W.define("prototypes", [], function() {
 		}
 	});
 var dependencies = ["prototypes", "rootScope", "broadcast", "object", "mapsCtrl", "trans", "broadcast", "windytyUI", "progressBar", "calendar", "http", "jsonLoader", "overlays", "products", "colors", "legend", "productInfo", "loaders", "windytyCtrl", "picker", "pickerGlobe"];
+dependencies = ["windytyCtrl",'typhoon','imgs', 'text'],
 EMBED_MODE = !0, document.addEventListener("DOMContentLoaded", W.require.bind(null, dependencies, function(a, b, c, d, e) {
 		var f;
-		b.message && (document.getElementById("note-message").style.display = "none"), b.menu || (document.getElementById("bottom").style.display = "none"), b.marker && c.once("redrawFinished", function(a) {
-			c.emit("popupRequested", a.map.lat, a.map.lon)
-		}), (f = document.referrer) && (document.getElementById("embed-title").href = document.querySelector("#note a").href = "https://www.windyty.com/?wreferrer=" + encodeURIComponent(f)), b.embedMake && window.parent && window.parent.updateValues && c.on("redrawFinished", function(a) {
-			window.parent.updateValues(a.map)
-		})
+		// b.message && (document.getElementById("note-message").style.display = "none"), b.menu || (document.getElementById("bottom").style.display = "none"), b.marker && c.once("redrawFinished", function(a) {
+		// 	c.emit("popupRequested", a.map.lat, a.map.lon)
+		// }), (f = document.referrer) && (document.getElementById("embed-title").href = document.querySelector("#note a").href = "https://www.windyty.com/?wreferrer=" + encodeURIComponent(f)), b.embedMake && window.parent && window.parent.updateValues && c.on("redrawFinished", function(a) {
+		// 	window.parent.updateValues(a.map)
+		// })
 	})), /*! */
 	W.define("rootScope", [], function() {
 		"undefined" == typeof API_MODE && (API_MODE = !1), "undefined" == typeof EMBED_MODE && (EMBED_MODE = !1);
@@ -709,15 +718,15 @@ EMBED_MODE = !0, document.addEventListener("DOMContentLoaded", W.require.bind(nu
 			pois: "cities",
 			metric: null,
 			separator: "",
-			defaults: ["°C", "°F"],
+			defaults: ["掳C", "掳F"],
 			conv: {
-				"°C": {
+				"掳C": {
 					conversion: function(a) {
 						return a - 273.15
 					},
 					precision: 0
 				},
-				"°F": {
+				"掳F": {
 					conversion: function(a) {
 						return 9 * a / 5 - 459.67
 					},
@@ -741,7 +750,7 @@ EMBED_MODE = !0, document.addEventListener("DOMContentLoaded", W.require.bind(nu
 				[311, [230, 71, 39, 120]],
 				[328, [88, 27, 67, 120]]
 			],
-			description: ["°C", "°F"],
+			description: ["掳C", "掳F"],
 			lines: [
 				[237, -35, -31],
 				[242, -30, -22],
@@ -1199,15 +1208,15 @@ EMBED_MODE = !0, document.addEventListener("DOMContentLoaded", W.require.bind(nu
 			pois: "empty",
 			metric: null,
 			separator: "",
-			defaults: ["°C", "°F"],
+			defaults: ["掳C", "掳F"],
 			conv: {
-				"°C": {
+				"掳C": {
 					conversion: function(a) {
 						return a
 					},
 					precision: 1
 				},
-				"°F": {
+				"掳F": {
 					conversion: function(a) {
 						return 1.8 * a + 32
 					},
@@ -1235,7 +1244,7 @@ EMBED_MODE = !0, document.addEventListener("DOMContentLoaded", W.require.bind(nu
 				[31, [41, 10, 130, 120]],
 				[40, [255, 255, 255, 120]]
 			],
-			description: ["°C", "°F"],
+			description: ["掳C", "掳F"],
 			lines: [
 				[0, 0, 32],
 				[2, 2, 35],
@@ -1258,9 +1267,9 @@ EMBED_MODE = !0, document.addEventListener("DOMContentLoaded", W.require.bind(nu
 			pois: "empty",
 			metric: null,
 			separator: "",
-			defaults: ["°C"],
+			defaults: ["掳C"],
 			conv: {
-				"°C": {
+				"掳C": {
 					conversion: function(a) {
 						return a
 					},
@@ -1284,7 +1293,7 @@ EMBED_MODE = !0, document.addEventListener("DOMContentLoaded", W.require.bind(nu
 					[10, [255, 255, 255, 120]]
 				]
 			],
-			description: ["°C"],
+			description: ["掳C"],
 			lines: [
 				[-3, -3],
 				[-2, -2],
@@ -1339,7 +1348,7 @@ EMBED_MODE = !0, document.addEventListener("DOMContentLoaded", W.require.bind(nu
 			return f = new Promise(function(b, c) {
 				Promise.all(g).then(function(c) {
 					b(h.composeObject(i, c, a, j))
-				})["catch"](function(a) {console.log(arguments);
+				})["catch"](function(a) {
 					c(a)
 				})
 			}), f.cancel = function() {
@@ -3232,7 +3241,7 @@ EMBED_MODE = !0, document.addEventListener("DOMContentLoaded", W.require.bind(nu
 				}), this.isInit = !0, Promise.resolve(this.info()))
 			},
 			drawGraticule: function() {
-				if (b.get("graticule")) {
+				if (1||b.get("graticule")) {
 					for (var a = {
 							stroke: !0,
 							color: "#a0a0a0",
@@ -3335,6 +3344,7 @@ EMBED_MODE = !0, document.addEventListener("DOMContentLoaded", W.require.bind(nu
 		}), f
 	}), /*! */
 	W.define("globe", ["rootScope", "http", "settings", "broadcast", "storage", "helpers", "globeCtrl"], function(a, b, c, d, e, f, g) {
+
 		var h = W.Evented.extend({
 			ident: "globe",
 			isInit: !1,
@@ -3426,7 +3436,7 @@ EMBED_MODE = !0, document.addEventListener("DOMContentLoaded", W.require.bind(nu
 				a ? b.addColorStop(.99, "rgba(40,40,40,0)") : (b.addColorStop(0, "rgba(40,40,40,0)"), b.addColorStop(.7, "rgba(40,40,40,0.15)"), b.addColorStop(.8, "rgba(40,40,40,0.2)"), b.addColorStop(.98, "rgba(40,40,40,0.5)"), b.addColorStop(.99, "rgba(40,40,40,0.7)")), b.addColorStop(1, "rgba(40,40,40,1)"), this.maskCtx.clearRect(0, 0, this.w, this.h), this.maskCtx.fillStyle = b, this.maskCtx.fillRect(0, 0, this.w, this.h)
 			},
 			draw: function(a) {
-				a && Date.now() - this.drawStamp < 30 || (a || this.projection.precision(this.precision), this.context.clearRect(0, 0, this.w, this.h), this.context.beginPath(), this.path(this.land), this.context.fillStyle = "#1A6EB7"/*"#858585"*/, this.context.fill(), this.context.strokeStyle = "#e0e0e0", this.context.lineWidth = 1, this.context.stroke(), a || (this.context.beginPath(), this.path(this.borders), this.context.strokeStyle = "#484848", this.context.lineWidth = .7, this.context.stroke(), this.context.beginPath(), this.path(this.lakes), this.context.fillStyle = "#454545", this.context.fill()), this.context.beginPath(), this.path(this.grid), this.context.lineWidth = .5, this.context.strokeStyle = "#a0a0a0", this.context.stroke(), this.drawStamp = Date.now())
+				a && Date.now() - this.drawStamp < 30 || (a || this.projection.precision(this.precision), this.context.clearRect(0, 0, this.w, this.h), this.context.beginPath(), this.path(this.land), this.context.fillStyle = "#858585", this.context.fill(), this.context.strokeStyle = "#e0e0e0", this.context.lineWidth = 1, this.context.stroke(), a || (this.context.beginPath(), this.path(this.borders), this.context.strokeStyle = "#484848", this.context.lineWidth = .7, this.context.stroke(), this.context.beginPath(), this.path(this.lakes), this.context.fillStyle = "#454545", this.context.fill()), this.context.beginPath(), this.path(this.grid), this.context.lineWidth = .5, this.context.strokeStyle = "#a0a0a0", this.context.stroke(), this.drawStamp = Date.now())
 			}
 		});
 		return h
@@ -3500,8 +3510,198 @@ EMBED_MODE = !0, document.addEventListener("DOMContentLoaded", W.require.bind(nu
 		}
 	}), /*! */
 	W.define("picker", ["broadcast", "maps", "interpolation", "trans", "overlays", "rootScope"], function(a, b, c, d, e, f) {
-		
+		function g() {
+			var a = '<div class="popup"><div class="popup-draggable-square"><div class="popup-ball"></div></div><div class="popup-content"></div><a class="popup-link shy">' + d.DETAILED + '</a><a class="popup-close-button shy">×</a>';
+			return G || (a = a + '<div class="popup-drag-me">' + d.DRAG_ME + "</div>"), L.divIcon({
+				className: "popup-wrapper",
+				html: a,
+				iconSize: [0, 150],
+				iconAnchor: [0, 150]
+			})
+		}
+
+		function h() {
+			H && (t.style.diplay = "block", C.classList.remove("moooving"), a.off(E), a.off(F), window.clearTimeout(D), G = !0, b.removeLayer(H), H = null)
+		}
+
+		function i(a, b) {
+			H ? k(a, b) : j(a, b)
+		}
+
+		function j(c, d) {
+			H = L.marker([c, d], {
+				icon: g(),
+				draggable: !0
+			}).on("dragstart", n).on("drag", p).on("dragend", o).addTo(b), w = B.querySelector(".popup-drag-me") || null, u = B.querySelector(".popup-content"), s = B.querySelector(".popup-ball"), v = B.querySelector(".popup-close-button"), t = B.querySelector(".popup-link"), E = a.on("redrawFinished", q), F = a.on("mapChanged", function() {
+				m(), l()
+			}), m(), l(), q(), t.onclick = function(c) {
+				var d = b.containerPointToLatLng([x, y]).wrap();
+				a.emit("rqstOpen", "detail", {
+					type: "spot",
+					lat: d.lat,
+					lon: d.lng,
+					icao: null,
+					fromPopup: !0,
+					x: x,
+					y: y
+				}), c.stopPropagation()
+			}, v.onmouseup = h, a.emit("popupOpened", "maps")
+		}
+
+		function k(b, c) {
+			H.setLatLng([b, c]), m(), q(), a.emit("popupMoved", {
+				type: "spot",
+				lat: b,
+				lon: c,
+				icao: null
+			})
+		}
+
+		function l() {
+			z = f.map.width - 5, A = f.map.height - 5
+		}
+
+		function m() {
+			var a = s.getBoundingClientRect();
+			x = a.left + 3, y = a.top + 3
+		}
+
+		function n(a) {
+			w && (w.style.opacity = 0, w.style.visibility = "hidden"), C.classList.add("moooving")
+		}
+
+		function o(c) {
+			var d = b.containerPointToLatLng([x, y]).wrap();
+			C.classList.remove("moooving"), a.emit("popupMoved", {
+				type: "spot",
+				lat: d.lat,
+				lon: d.lng,
+				icao: null
+			})
+		}
+
+		function p(a) {
+			m(), q()
+		}
+
+		function q() {
+			if (x > 5 && z > x && A > y && y > 5) {
+				var a = b.containerPointToLatLng([x, y]);
+				c.hasGrid() && (u.innerHTML = r(c.interpolateValues(a.lat, a.lng)))
+			}
+		}
+
+		function r(a) {
+			var b = "",
+				c = a.overlayName,
+				f = e[c];
+			switch (c) {
+				case "wind":
+					b = "<span>" + d.WIND + "</span><div>" + a.angle + "° / " + f.convertValue(a.wind) + "</div>";
+					break;
+				case "waves":
+				case "swell":
+				case "wwaves":
+				case "swellperiod":
+					isNaN(a.wind) || (b = "<span>" + d[e.trans[c]] + "</span><div>" + a.angle + "° / " + f.convertValue(a.overlayValue) + "</div><span>" + d.PERIOD + "</span><div>" + Math.round(a.wind) + " s.</div>");
+					break;
+				case "lclouds":
+				case "clouds":
+					a.overlayValue > 200 && (b = "<span>" + d.RAIN + "</span><div>" + f.convertValue(a.overlayValue) + "</div>");
+					break;
+				case "rain":
+				case "snow":
+					b = d[e.trans[c]] + "<div>" + f.convertValue(a.overlayValue) + "</div>";
+					break;
+				case "snowcover":
+					b = "";
+					break;
+				default:
+					d[e.trans[c]] && !isNaN(a.overlayValue) && (b = d[e.trans[c]] + "<div>" + f.convertValue(a.overlayValue) + "</div>")
+			}
+			return b
+		}
+		var s, t, u, v, w, x, y, z, A, B = document.getElementById("map_container"),
+			C = document.body,
+			D = (document.documentElement, null),
+			E = null,
+			F = null,
+			G = !1,
+			H = null;
+		return a.on("closePopup", h), b.on("singleclick", function(a) {
+			var b = 60,
+				c = a.containerPoint.x,
+				d = a.containerPoint.y,
+				e = a.latlng.lat,
+				g = a.latlng.lng;
+			b > d || d > f.map.height - b || b > c || c > f.map.width - b || i(e, g)
+		}), a.on("mapsPopupRequested", i), {
+			createHTML: r
+		}
 	}), /*! */
 	W.define("pickerGlobe", ["broadcast", "interpolation", "globe", "picker"], function(a, b, c, d) {
-		
+		function e() {
+			x && (m.style.display = "none", x = !1, a.off(u), c.off(v), n.style.visibility = "hidden")
+		}
+
+		function f(b, d) {
+			g(b, d - w), x || (m.style.display = "block", x = !0, u = a.on("redrawFinished", h), v = c.on("movestart", e), a.emit("popupOpened", "globe"))
+		}
+
+		function g(a, b) {
+			j = a, k = b + w, m.style.left = a + "px", m.style.top = b + "px", h()
+		}
+
+		function h() {
+			var a = c.projection.invert([j, k]);
+			b.hasGrid() && (o.innerHTML = d.createHTML(b.interpolateValues(a[1], a[0])))
+		}
+
+		function i(a, b) {
+			function d(b) {
+				a && (b.preventDefault(), b = b.touches && 1 === b.touches.length ? b.touches[0] : b);
+				var d = b.clientX - f,
+					e = b.clientY - h;
+				c.isVisible(d, e + w) && g(d.bound(10, i), e.bound(k, j))
+			}
+
+			function e(a) {
+				window.removeEventListener("mousemove", d), window.removeEventListener("mouseup", e), p.removeEventListener("touchmove", d), p.removeEventListener("touchend", e), document.body.classList.remove("moooving")
+			}
+			a ? (b.preventDefault(), b = b.touches && 1 === b.touches.length ? b.touches[0] : b, p.addEventListener("touchmove", d)) : window.addEventListener("mousemove", d);
+			var f = b.clientX - m.style.left.replace("px", ""),
+				h = b.clientY - m.style.top.replace("px", ""),
+				i = s.clientWidth - 10,
+				j = Math.max(s.scrollHeight, s.offsetHeight, t.clientHeight, t.scrollHeight, t.offsetHeight) - w - 10,
+				k = 10 - w;
+			n.style.opacity = 0, n.style.visibility = "hidden", document.body.classList.add("moooving"), window.addEventListener("mouseup", e), p.addEventListener("touchend", e)
+		}
+		var j, k, l = document.getElementById("globe_container"),
+			m = l.querySelector(".popup-wrapper"),
+			n = l.querySelector(".popup-drag-me"),
+			o = l.querySelector(".popup-content"),
+			p = l.querySelector(".popup"),
+			q = l.querySelector(".popup-close-button"),
+			r = l.querySelector(".popup-link"),
+			s = document.body,
+			t = document.documentElement,
+			u = null,
+			v = null,
+			w = 150,
+			x = !1;
+		a.on("globePopupRequested", function(a, b) {
+			var d = c.projection([b, a]);
+			x ? g(d[0], d[1]) : f(d[0], d[1])
+		}), a.on("closePopup", e), q.onmouseup = e, c.on("click", f), r.onclick = function(b) {
+			var d = c.projection.invert([j, k]);
+			a.emit("rqstOpen", "detail", {
+				type: "spot",
+				lat: d[1],
+				lon: d[0],
+				icao: null,
+				fromPopup: !0,
+				x: j,
+				y: k
+			}), e()
+		}, p.addEventListener("mousedown", i.bind(null, !1)), p.addEventListener("touchstart", i.bind(null, !0))
 	});

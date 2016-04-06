@@ -2,28 +2,19 @@
 <html lang="en">
 
 <head>
-    <title>蓝PI触屏</title>
+    <title>Windyty, wind map &amp; forecast</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-    <meta name="geoip" content="114.247.188.89,39.9289,116.3883,CN,Beijing">
-    <link href="./css/embed.css" rel="stylesheet" type="text/css">
-    <link href="./css/index.css" rel="stylesheet" type="text/css">
+    <meta name="geoip" content="106.120.73.196,39.9289,116.3883,CN,Beijing">
+    <link href="./v5.3.4/embed.css?timestamp=1950" rel="stylesheet" type="text/css">
     <script src="./gfs/minifest.js"></script>
     <script>
     var W = {
         version: '5.3.4'
     }
-    </script> 
-	<script src="./js/def.js"></script>
-    <script src="./js/jquery-1.8.2.js"></script> 
-	<script src="./js/echarts.js"></script>
+    </script>
     <script src="./js/leaflet3D.v0.js"></script>
-    <script src="./js/tileLayerCache.js"></script>
-	<script src="./js/typhoon.js"></script>
-	<script src="./js/imgs.js"></script>
-	<script src="./js/paint.js"></script>
-    <script src="./js/embed.js"></script>
-    <script src="./js/index.js"></script>
+    <script src="./v5.3.4/embed.js?timestamp=1950"></script>
 </head>
 
 <body id="body" class="blur">
@@ -186,69 +177,32 @@
             </div>
         </form>
     </div>
+    <div id="legend" class="shy"></div>
     <div id="embed-header-container">
-        <a href="https://www.windyty.com/" target="wind" id="embed-title" title="Windyty, wind forecast"></a>
+        <a href="https://www.windyty.com/" target="wind" id="embed-title" title="Windyty, wind forecast"><img class="logo" src="./img/logo_windyty_11.svg"></a>
         <div id="title" style="display:none"></div>
     </div>
     <div id="note" class="shy"><span id="note-message" data-t="E_MESSAGE"></span>&nbsp;<a href="https://www.windyty.com/" target="wind">www.windyty.com</a></div>
     <div id="bottom-credits" class="not-shy" data-t="DEVELOPED"></div>
     <canvas id="jpg_decoder" style="display: none"></canvas>
     <div id="intent" style="display: none"></div>
+    <script>
+    // GOOGLE ANALYTICS 
+    (function(i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function() {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-    <div class="other">
-        <div id="btn_close"></div>
-	    <div id="mask" ng-show="show_mask">
-			<canvas id="canvas_brush"  style="width:100%;height: 100%" ng-show="paint_can_use"></canvas>
-		</div>
-    	<div class="load_progress_wrap"></div>
-    	<div class="box_title_container">
-			<div class="box box_title">
-				<img ng-src="{{title_img}}"/>
-				<div class="time" ng-show="showtime">
-					<span id="time_top"></span>
-					<span id="time_bottom"></span>
-				</div>
-			</div>
-		</div>
-		<div class="preload" ng-hide="1">
-			<div class="tool_btn tool_brush on"></div>
-			<div class="tool_btn tool_hand on"></div>
-			<li class="tool_btn tool_btn_pro tool_radar on"></li>
-			<li class="tool_btn tool_btn_pro tool_cloud on"></li>
-			<li class="tool_btn tool_btn_pro tool_wind on"></li>
-			<li class="tool_btn tool_btn_pro tool_typhoonon"></li>
-			<img ng-src="./img/legend_wind.png"/>
-			<img ng-src="./img/legend_radar.png"/>
-		</div>
-		<ul class="box box_tool">
-			<li class="tool_top">
-				<div class="tool_btn tool_brush"></div>
-				<div class="tool_btn tool_hand"></div>
-			</li>
-			<li class="tool_btn tool_btn_pro tool_radar"  data-name="radar"><span></span></li>
-			<li class="tool_btn tool_btn_pro tool_cloud"  data-name="cloud"><span></span></li>
-			<li class="tool_btn tool_btn_pro tool_wind"  data-name="wind"><span></span></li>
-			<li class="tool_btn tool_btn_pro tool_typhoon"  data-name="typhoon"></li>
-		</ul>
-		<div class="box box_player" ng-show="show_player">
-			<div class="player_btn" ng-class="{playing:playing}"></div>
-			<div class="player_progressbar_wrap">
-				<div class="player_progressbar">
-					<div class="player_progressbar_progress">
-						<div class="player_progressbar_flag"></div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div id="wrap_typhoon" ng-show="show_typhoon">
-			<div class="btn_typhoon_list">
-			</div>
-			<ul class="box typhoon_list" >
-			</ul>
-		</div>
-		<div class="box wrap_typhoon_chart"><div class="unit">(米/秒)</div><div class="typhoon_name"></div><div id="typhoon_chart"></div><div id="btn_close_typhoon_chart"></div></div>
-		<div class="legend" ng-show="legend_name"><img ng-src="./img/{{legend_name}}.png"/></div>
-    </div>
+    ga('create', 'UA-56263486-2', 'auto');
+    ga('send', 'pageview');
+    </script>
 </body>
 
 </html>
