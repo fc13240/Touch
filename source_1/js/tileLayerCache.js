@@ -1,4 +1,10 @@
+/**
+ * 主要对leaflet的瓦片进行请求时缓存
+ */
 !function() {
+    if (!is_native) {
+        return;
+    }
 	var fs = require('fs');
 	var path = require('path');
 	var crypto = require('crypto');
