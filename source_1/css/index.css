@@ -5,6 +5,16 @@ body{
 ul, ol{
 	list-style: none;
 }
+.clear{
+	overflow: hidden;
+	clear: both;
+}
+.fl{
+	float: left;
+}
+.fr{
+	float: right;
+}
 #buts{
 	position: absolute;
 	top: 0;
@@ -513,7 +523,8 @@ ul, ol{
 	z-index: 108;
 	display: none;
 }
-#btn_close_typhoon_chart{
+#btn_close_typhoon_chart,
+.box_btn_close{
 	position: absolute;
 	left: 15px;
 	top: 15px;
@@ -521,6 +532,8 @@ ul, ol{
 	height: 40px;
 	background: url(../img/btn_close.png) center center no-repeat;
 	background-size: 100%;
+	cursor: pointer;
+	z-index: 902;
 }
 #typhoon_chart{
 	position: absolute;
@@ -529,7 +542,8 @@ ul, ol{
 	width: 100%;
 	height: 90%;
 }
-#btn_close_typhoon_chart:hover{
+#btn_close_typhoon_chart:hover,
+.box_btn_close:hover{
 	-webkit-animation-name: 'rotate';
 	-webkit-animation-duration: 0.5s;
 	-webkit-animation-timing-function:linear;
@@ -552,7 +566,7 @@ ul, ol{
 }
 
 
-/*重写*/
+/*rewrite*/
 .leaflet-canvas1, .leaflet-canvas2, .leaflet-canvas3,
 .box_title_container,
 .box_player,
@@ -563,4 +577,203 @@ ul, ol{
 
 .box_title .time{
 	display: none;
+}
+
+#video_player{
+    position: fixed;
+    left: 25%;
+    top: 25%;
+    width: 50%;
+    height: 50%;
+    z-index: 901;
+    padding: 5px;
+    display: none;
+}
+.btn_close_video{
+    right: 5px;
+    top: 5px;
+    left: auto;
+}
+
+.station {
+	width: 80px;
+    height: 80px;
+    background-color: #E7410D;
+    border-radius: 40px;
+    text-align: center;
+    line-height: 80px;
+    border: 1px solid white;
+    font-size: 22px;
+}
+.station_aqi{
+	color: black;
+    font-size: 14px;
+    display: table;
+}
+.station_aqi p{
+	display: table-cell; 
+	vertical-align: middle; 
+	text-align: center;
+	position: relative;
+	top: -3px;
+}
+.aqi_you{
+	background-image: url(../img/aqi/you.png);
+}
+.aqi_liang{
+	background-image: url(../img/aqi/liang.png);
+}
+.aqi_qingdu{
+	background-image: url(../img/aqi/qingdu.png);
+}
+.aqi_zhongdu{
+	background-image: url(../img/aqi/zhongdu.png);
+}
+.aqi_zhongduwuran{
+	background-image: url(../img/aqi/zhongduwuran.png);
+}
+.aqi_yanzhong{
+	background-image: url(../img/aqi/yanzhong.png);
+}
+
+#aqi_panel{
+	position: fixed;
+	z-index: 901;
+	left: 50%;
+	top: 50%;
+	width: 800px;
+	height: 330px;
+	padding: 10px;
+	margin-left: -410px;
+	margin-top: -175px;
+	display: none;
+}
+.btn_close_aqi{
+    right: 5px;
+    top: 5px;
+    left: auto;
+}
+.aqi_location{
+	background: url(../img/dingwei.png) no-repeat;
+	text-indent: 35px;
+	color: white;
+	height: 30px;
+    line-height: 30px;
+    font-size: 18px;
+    margin-left: 10px;
+}
+.aqi_val_level{
+	width: 280px;
+    margin-left: 60px;
+    margin-right: 20px;
+    display: table-cell;
+}
+.aqi_val{
+	font-size: 100px;
+    margin-right: 10px;
+}
+.aqi_wrap{
+	display: table;
+}
+.aqi_level{
+	position: relative;
+    min-width: 90px;
+    border-radius: 3px;
+    background-color: red;
+    height: 42px;
+    bottom: -80px;
+    text-align: center;
+    line-height: 40px;
+    color: black;
+    font-size: 40px;
+}
+.aqi_level:after{
+	content: 'AQI';
+    position: absolute;
+    top: -44px;
+    color: rgba(255, 255, 255, 0.5);
+    left: 50%;
+    margin-left: -37px;
+}
+.aqi_info{
+	width: 33%;
+	text-align: center;
+	font-size: 18px;
+}
+.aqi_desc{
+	width: 400px;
+    font-size: 18px;
+    margin: 0;
+    vertical-align: middle;
+    display: table-cell;
+}
+.aqi_info div{
+	width: 80px;
+	height: 80px;
+	border: 6px solid rgb(0, 228, 0);
+	border-radius: 46px;
+	display: table;
+	margin: 5px auto;
+}
+.aqi_info div p{
+	display: table-cell;
+	vertical-align: middle;
+}
+.aqi_info_wrap{
+	width: 90%;
+	margin: 0 auto;
+}
+
+.box_dialog{
+	display: fixed;
+	left: 50%;
+	top: 50%;
+	display: none;
+}
+.box_btn_close {
+	right: 5px;
+	top: 5px;
+	left: auto;
+}
+#tongji_panel{
+	width: 600px;
+	height: 300px;
+	margin-left: -330px;
+	margin-top: -160px;
+	color: white;
+	font-size: 18px;
+	padding: 10px 30px;
+}
+.tongji_desc em{
+	color: orange;
+	font-style: normal;
+}
+.tongji_bar_wrap{
+	width: 25%;
+	height: 120px;
+	float: left;
+	display: table;
+	position: relative;
+}
+.tongji_bar{
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+}
+.tongji_bar_wrap p{
+	display: table-cell;
+	text-align: center;
+	vertical-align: middle;
+}
+.tongji_desc{
+	padding: 10px 20px;
+}
+.tongji_title{
+	text-align: center;
+	margin: 10px;
+}
+.tongji_bar_container{
+	height: 120px;
 }

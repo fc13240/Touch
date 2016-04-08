@@ -40,10 +40,14 @@ $(function() {
 	})();
     var _blurWorker;
     var map;
-    W.define('imgs', ['blurWorker', 'maps'], function(blurWorker, maps) {
+    // W.define('imgs', ['blurWorker', 'maps'], function(blurWorker, maps) {
+    // 	_blurWorker = blurWorker;
+    // 	map = maps;
+    // });
+    W.require.bind(null, ['blurWorker', 'maps'], function(blurWorker, maps) {
     	_blurWorker = blurWorker;
     	map = maps;
-    });
+    })();
     var cache_img = {};
     function loadAndCacheImg(url, opacityScale, cb){
     	if(cache_img[url]){

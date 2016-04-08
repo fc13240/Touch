@@ -1,4 +1,4 @@
-!function(){
+$(function(){
 	/*时间格式化*/
 	Date.prototype.format = function(format,is_not_second){
 		format || (format = 'yyyy-MM-dd hh:mm:ss');
@@ -28,11 +28,12 @@
 	var URL_TYPHOON = 'http://typhoon.weather.gov.cn/Typhoon/data/';
 	var URL_LIST = URL_TYPHOON + 'typhoonList.xml?'+Math.random();
 	var cache_typhoon = {};
-	var is_debug = true;
+	var is_debug = false;
 	try {
-		var mainfest = require('nw.gui').App.manifest;
-		is_debug = !!mainfest.release;
-	} catch(e) {}
+		is_debug = !!require('./conf').debug;
+	} catch(e) {
+		console.log(e);
+	}
 	function _getTyphoonList(cb, is_active){
 		function _getList(list){
 			if(is_active){
@@ -520,7 +521,6 @@
 			    tooltip : {
 			        trigger: 'axis',
 			        formatter: function (params,ticket,callback) {
-			        	console.log(arguments);
 			        	var data = params[0];
 
 			        	return xLabelData[data.dataIndex]+'<br/>'+data.seriesName+':'+data.value+'m/s';
@@ -685,8 +685,18 @@
 	});	
 
 	var map;
-	W.define('typhoon', ["maps"], function(maps) {
-		map = maps;
+	// W.define('typhoon', ["maps"], function(maps) {
+	// 	map = maps;
+	// 	map.on('zoomstart', function(){
+	// 		if(_prev_marker){
+	// 			var option = _prev_marker.options.icon.options;
+	// 			option.html = '';
+	// 			_prev_marker.setIcon(L.divIcon(option));
+	// 		}
+	// 	});
+	// });
+	W.require.bind(null, ['maps'], function(maps) {
+    	map = maps;
 		map.on('zoomstart', function(){
 			if(_prev_marker){
 				var option = _prev_marker.options.icon.options;
@@ -694,8 +704,7 @@
 				_prev_marker.setIcon(L.divIcon(option));
 			}
 		});
-	});
-	
+    })();
 	window.Typhoon = {
 		init: function() {
 			$wrap_typhoon.show();
@@ -718,4 +727,4 @@
 			}
 		}
 	}
-}()
+})

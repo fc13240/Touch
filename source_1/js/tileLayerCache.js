@@ -54,7 +54,7 @@
 	}
 	function _getCachePath(url, option) {
 		var key = encrypt(url);
-		var src = path.join(os.tmpDir(), 'cwtv', key, option.s+'', option.z+'', option.x+'', option.y+'.png');
+		var src = path.join(os.tmpDir(), 'cwtv', 'map', key, option.s+'', option.z+'', option.x+'', option.y+'.png');
 		
 		return src;
 	}
