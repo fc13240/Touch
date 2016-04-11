@@ -27,6 +27,8 @@
     <script src="./js/camera.js"></script>
     <script src="./js/micaps.js"></script>
 	<script src="./js/paint.js"></script>
+    <script src="./js/map.js"></script>
+    <script src="./js/iscroll.js"></script>
     <script src="./js/index.js"></script>
 </head>
 
@@ -214,7 +216,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="preload" ng-hide="1">
+		<!-- <div class="preload" ng-hide="1">
 			<div class="tool_btn tool_brush on"></div>
 			<div class="tool_btn tool_hand on"></div>
 			<li class="tool_btn tool_btn_pro tool_radar on"></li>
@@ -223,8 +225,43 @@
 			<li class="tool_btn tool_btn_pro tool_typhoon on"></li>
 			<img ng-src="./img/legend_wind.png"/>
 			<img ng-src="./img/legend_radar.png"/>
-		</div>
-		<ul class="box box_tool">
+		</div> -->
+        <div class="tool_wrap">
+            <div class="tool_set_top">
+                <div class="tool_arrow_top"></div>
+                <div class="tool_set_top_wrap" id="tool_set_top_wrap">
+                    <ul class="tool_product_list">
+                        <li>1</li>
+                        <li>2</li>
+                        <li>3</li>
+                        <li>4</li>
+                        <li>5</li>
+                        <li>6</li>
+                        <li>7</li>
+                        <li>8</li>
+                        <li>9</li>
+                        <li>10</li>
+                        <li>11</li>
+                        <li>12</li>
+                        <li>13</li>
+                        <li>14</li>
+                        <li>15</li>
+                        <li>16</li>
+                        <li>17</li>
+                        <li>18</li>
+                        <li>19</li>
+                        <li>20</li>
+                    </ul>
+                </div>
+                <div class="tool_arrow_bottom"></div>  
+            </div>
+            <div class="tool_set_bottom">
+                <div class="tool_btn tool_brush"></div>
+                <div class="tool_btn tool_hand"></div>
+                <div class="tool_btn tool_changemap"></div>
+            </div>
+        </div>
+		<!-- <ul class="box box_tool" style="display: none;">
 			<li class="tool_top">
 				<div class="tool_btn tool_brush"></div>
 				<div class="tool_btn tool_hand"></div>
@@ -234,7 +271,7 @@
 			<li class="tool_btn tool_btn_pro tool_wind"  data-name="wind"><span></span></li>
 			<li class="tool_btn tool_btn_pro tool_typhoon"  data-name="typhoon"></li>
             <li class="tool_btn tool_btn_pro tool_carame"  data-name="carame">实景天气</li>
-		</ul>
+		</ul> -->
 		<div class="box box_player" ng-show="show_player">
 			<div class="player_btn" ng-class="{playing:playing}"></div>
 			<div class="player_progressbar_wrap">

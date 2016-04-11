@@ -3158,7 +3158,7 @@ EMBED_MODE = !0, document.addEventListener("DOMContentLoaded", W.require.bind(nu
 			}
 		}
 	}), /*! */
-	W.define("maps", ["rootScope", "settings", "object", "broadcast"], function(a, b, c, d) {
+	W.define("maps", ["rootScope", "settings", "object", "broadcast", 'storage'], function(a, b, c, d, storage) {
 		var e = {
 			hereterrain: "https://{s}.aerial.maps.cit.api.here.com/maptile/2.1/maptile/newest/terrain.day/{z}/{x}/{y}/256/png8?" + a.hereMapsID,
 			heresat: "https://{s}.aerial.maps.cit.api.here.com/maptile/2.1/maptile/newest/satellite.day/{z}/{x}/{y}/256/png8?" + a.hereMapsID,
@@ -3261,6 +3261,16 @@ EMBED_MODE = !0, document.addEventListener("DOMContentLoaded", W.require.bind(nu
 			},
 			initTiles: function() {
 				var c = e[b.get("map")];
+				var map_conf = storage.get('_map_conf');
+				var conf;
+				if (map_conf) {
+					conf = map_conf
+				} else {
+					conf = {
+						url: 'http://api.tiles.mapbox.com/v4/ludawei.mn69agep/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibHVkYXdlaSIsImEiOiJldzV1SVIwIn0.-gaUYss5MkQMyem_IOskdA&v=1.1',
+						subdomains: "1234"
+					}
+				}
 				L.TileLayer.multi({
 					11: {
 						url: a.tileServer + (a.useRetina ? "rtnv3" : "v5") + "/{z}/{x}/{y}.jpg",
@@ -3270,10 +3280,7 @@ EMBED_MODE = !0, document.addEventListener("DOMContentLoaded", W.require.bind(nu
 						url: c,
 						subdomains: "1234"
 					},
-					11: {
-						url: 'http://api.tiles.mapbox.com/v4/ludawei.mn69agep/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibHVkYXdlaSIsImEiOiJldzV1SVIwIn0.-gaUYss5MkQMyem_IOskdA&v=1.1',
-						subdomains: "1234"
-					}
+					11: conf
 				}, {
 					detectRetina: a.useRetina,
 					minZoom: 3,

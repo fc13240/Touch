@@ -1,4 +1,5 @@
 $(function() {
+	var $doc = $(document);
 	var _getCanvasWind = (function() {
 		var $canvasWind;
 		return function() {
@@ -58,22 +59,37 @@ $(function() {
 	});
 	var $box_tool = $('.box_tool');
 	// 风场按钮
-	$box_tool.find('.tool_wind').click(Wind.show);
-	$box_tool.find('.tool_typhoon').click(function() {
+	$('.tool_wind').click(Wind.show);
+	$('.tool_typhoon').click(function() {
 		Typhoon.init();
 	});
-	$box_tool.find('.tool_radar').click(function() {
+	$('.tool_radar').click(function() {
 		Imgs.init('radar');
 	});
-	$box_tool.find('.tool_cloud').click(function() {
+	$('.tool_cloud').click(function() {
 		Imgs.init('cloud');
 	});
 
+	var iscroll = new IScroll('#tool_set_top_wrap', {
+		mouseWheel: true, 
+		click: true,
+		momentum: false,
+		snap: 'li'
+	});
+	$('.tool_arrow_top').click(function() {
+		iscroll.prev();
+	});
+	$('.tool_arrow_bottom').click(function() {
+		iscroll.next();
+	});
+	$('.tool_product_list li').click(function() {
+		console.log($(this).html());
+	});
 	var $mask = $('#mask');
 	var paint_can_use = false;
 	var show_mask = true;
 	var $canvas_brush = $('#canvas_brush');
-	var $tool_brush = $box_tool.find('.tool_brush').click(function() {
+	var $tool_brush = $('.tool_brush').click(function() {
 		$(this).toggleClass('on');
 		if(paint_can_use){
 			Paint.clear();
@@ -88,7 +104,7 @@ $(function() {
 		
 		paint_can_use = !paint_can_use;
 	});
-	var $tool_hand = $box_tool.find('.tool_hand').click(function() {
+	var $tool_hand = $('.tool_hand').click(function() {
 		if (show_mask) {
 			$mask.hide();
 		} else {
@@ -99,6 +115,9 @@ $(function() {
 		if(paint_can_use){
 			$tool_brush.click();
 		}
+	});
+	$('.tool_changemap').click(function() {
+		$doc.trigger('changemap');
 	});
 
 	!function(){

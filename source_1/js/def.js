@@ -163,7 +163,7 @@ function(a) {
 			callback: f,
 			dependencies: d
 		});
-		for (var h in e) e[h].wasLoaded || console.warn("DI warning: module " + h + " defined but not loaded")
+		// for (var h in e) e[h].wasLoaded || console.warn("DI warning: module " + h + " defined but not loaded")
 	}
 	var e = {};
 	a.W || (a.W = {}), d.modules = e, a.W.require = d, a.W.define = b

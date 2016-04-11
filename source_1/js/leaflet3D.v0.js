@@ -1238,7 +1238,7 @@
 					c = this._getTileSize();
 				return a.multiplyBy(c).subtract(b)
 			},
-			getTileUrl: function(a) {console.log(a);
+			getTileUrl: function(a) {
 				return e.Util.template(this._url, e.extend({
 					s: this._getSubdomain(a),
 					z: a.z,

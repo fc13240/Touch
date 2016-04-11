@@ -93,41 +93,12 @@ ol {
     background-position: center center;
     background-repeat: no-repeat;
     width: 200px;
-    height: 100px;
+    height: 80px;
     position: relative;
     padding: 10px 0;
 }
-
-.tool_radar {
-    background-image: url(../img/tool_radar.png);
-}
-
-.tool_cloud {
-    background-image: url(../img/tool_cloud.png);
-}
-
-.tool_wind {
-    background-image: url(../img/tool_wind.png);
-}
-
-.tool_typhoon {
-    background-image: url(../img/tool_typhoon.png);
-}
-
-.tool_radar.on {
-    background-image: url(../img/tool_radar_on.png);
-}
-
-.tool_cloud.on {
-    background-image: url(../img/tool_cloud_on.png);
-}
-
-.tool_wind.on {
-    background-image: url(../img/tool_wind_on.png);
-}
-
-.tool_typhoon.on {
-    background-image: url(../img/tool_typhoon_on.png);
+.tool_btn.on{
+    background-color: rgba(8, 8, 9, 0.6);
 }
 
 .tool_top {
@@ -136,38 +107,38 @@ ol {
 }
 
 .tool_brush,
-.tool_hand {
+.tool_hand,
+.tool_changemap {
     float: left;
     position: relative;
-    width: 50%;
+    width: 100%;
     padding: 0;
+    background-size: 100px auto;
+    background-position: center center;
 }
 
-.tool_brush {
-    background-image: url(../img/tool_brush.png);
-}
-
-.tool_brush.on {
-    background-image: url(../img/tool_brush_on.png);
-}
-
-.tool_brush:after {
+.tool_brush:after,
+.tool_hand:after {
     content: '';
     position: absolute;
-    right: -1px;
-    top: 0;
-    width: 1px;
-    height: 92%;
-    top: 4%;
-    background-color: rgba(255, 255, 255, 0.6);
+    bottom: -1px;
+    left: 0;
+    height: 1px;
+    width: 92%;
+    background-image: url(../img/tool_split.png);
+    background-size: 100%;
 }
 
 .tool_hand {
     background-image: url(../img/tool_hand.png);
 }
-
-.tool_hand.on {
-    background-image: url(../img/tool_hand_on.png);
+.tool_brush {
+    border-radius: 0 5px 0 0;
+    background-image: url(../img/tool_brush.png);
+}
+.tool_changemap {
+    border-radius: 0 0 5px 0;
+    background-image: url(../img/tool_changemap.png);
 }
 
 #map_container {
@@ -900,3 +871,73 @@ ol {
 .tongji_bar_container {
     height: 120px;
 }
+
+
+.tool_wrap{
+    position: fixed;
+    top: 30px;
+    bottom: 30px;
+    z-index: 905;
+    height: auto;
+    width: 80px;
+}
+.tool_set_top,
+.tool_set_bottom{
+    position: absolute;
+    width: 100%;
+    background-size: 100% 100%;
+    border-radius: 0px 5px 5px 0;
+}
+.tool_set_top{
+    top: 0;
+    bottom: 250px;
+    height: auto;
+    background-image: url(../img/bg_tools_top.png);
+}
+.tool_set_bottom{
+    bottom: 0;
+    height: 240px;
+    background-image: url(../img/bg_tools_bottom.png);
+}
+
+.tool_arrow_top,
+.tool_arrow_bottom{
+    position: absolute;
+    width: 100%;
+    height: 24px;
+    background: url(../img/bg_tools_arrow.png) no-repeat;
+    cursor: pointer;
+}
+.tool_arrow_top{
+    top: 10px;
+    background-position: center 0;
+}
+.tool_arrow_bottom{
+    bottom: 10px;
+    background-position: center -45px;
+}
+.tool_set_top_wrap{
+    position: absolute;
+    top: 40px;
+    bottom: 40px;
+    height: auto;
+    width: 100%;
+    overflow: hidden;
+}
+.tool_product_list li{
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    background-color: red;
+    margin: 5px auto;
+}
+
+
+/*rewrite leaflet style {*/
+.leaflet-control-layers-toggle{
+    background: none;
+}
+.leaflet-control-layers{
+    display: none;
+}
+/*rewrite leaflet style }*/
