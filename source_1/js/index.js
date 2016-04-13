@@ -17,26 +17,93 @@ $(function() {
 			_getCanvasWind().hide();
 		}
 	}
-	var CONF_LEGENDNAME = {
-		wind: './img/legend_wind.png',
-		radar: './img/legend_radar.png',
-		typhoon: './img/legend_typhoon.png'
-	};
-	var title_url_pre = './img/title_';
-	var CONF_TITLE = {
-		wind: title_url_pre + 'wind.png',
-		radar: title_url_pre + 'radar.png',
-		cloud: title_url_pre + 'cloud.png',
-		typhoon: ''
-	}
-	var $box_title_container = $('.box_title_container');
-	var $legend = $('.legend');
-	// 清除所有操作
-	$('.tool_btn_pro').click(function() {
+	var CONF_PRODUCT = [{
+		name: '风场',
+		img: 'wind',
+		click: Wind.show
+	}, {
+		name: '台风',
+		img: 'typhoon',
+		click: Typhoon.init
+	}, {
+		name: '雷达',
+		img: 'radar',
+		click: function() {
+			Imgs.init('radar');
+		}
+	}, {
+		name: '云图',
+		img: 'cloud',
+		click: function() {
+			Imgs.init('cloud');
+		}
+	}, {
+		name: '实景天气',
+		img: 'camera',
+		click: function() {
+			Camera.init();
+		}
+	}, {
+		name: '天气统计',
+		img: 'tongji',
+		click: function() {
+			Micaps.init('tongji');
+		}
+	}, {
+		name: '全国霾区预报',
+		img: 'haze',
+		click: function() {
+			Micaps.init('haze');
+		}
+	}, {
+		name: '全国雾区预报',
+		img: 'fog',
+		click: function() {
+			Micaps.init('fog');
+		}
+	}, {
+		name: '空气质量',
+		img: 'aqi',
+		click: function() {
+			Micaps.init('aqi');
+		}
+	}, {
+		name: '未来三天降水量预报',
+		img: 'rain',
+		click: function() {
+			Micaps.init('rain3d');
+		}
+	}, {
+		name: '亚欧地面场分析',
+		img: 'tqfx',
+		click: function() {
+			Micaps.init('xsc');
+		}
+	}, {
+		name: '亚欧高空场500hPa',
+		img: 'tqfx',
+		click: function() {
+			Micaps.init('xsc500');
+		}
+	}];
+
+	var html_product_list = '';
+	$.each(CONF_PRODUCT, function(i, v) {
+		var html = '<span>'+v.name+'</span>';
+		var img = v.img;
+		if (img !== undefined) {
+			html = '<img src="./img/product/'+img+'.png"/>';
+		}
+		html_product_list += '<li title="'+v.name+'">'+html+'</li>';
+	});
+	var $tool_tip = $('.tool_tip');
+	var $tool_product_list = $('.tool_product_list').html(html_product_list);
+	$tool_product_list.find('li').click(function() {
 		Wind.hide();
 		Typhoon.clear();
-		Imgs.remove();
+		Imgs.clear();
 		Paint.clear();
+		Camera.clear();
 		$('.load_progress_wrap').hide();
 		$(this).addClass('on').siblings().removeClass('on');
 
@@ -56,19 +123,49 @@ $(function() {
 		} else {
 			$legend.hide();
 		}
+
+
+		var conf = CONF_PRODUCT[$(this).index()];
+		if (conf) {
+			var fn = conf.click;
+			fn && fn();
+		}
+	}).on('mouseenter', function() {
+		var $this = $(this);
+		$tool_tip.text($this.attr('title')).css({
+			top: $this.offset().top - $this.height()/2
+		}).fadeIn();
+	}).on('mouseleave', function() {
+		$tool_tip.hide();
 	});
-	var $box_tool = $('.box_tool');
-	// 风场按钮
-	$('.tool_wind').click(Wind.show);
-	$('.tool_typhoon').click(function() {
-		Typhoon.init();
-	});
-	$('.tool_radar').click(function() {
-		Imgs.init('radar');
-	});
-	$('.tool_cloud').click(function() {
-		Imgs.init('cloud');
-	});
+
+	var CONF_LEGENDNAME = {
+		wind: './img/legend_wind.png',
+		radar: './img/legend_radar.png',
+		typhoon: './img/legend_typhoon.png'
+	};
+	var title_url_pre = './img/title_';
+	var CONF_TITLE = {
+		wind: title_url_pre + 'wind.png',
+		radar: title_url_pre + 'radar.png',
+		cloud: title_url_pre + 'cloud.png',
+		typhoon: ''
+	}
+	var $box_title_container = $('.box_title_container');
+	var $legend = $('.legend');
+	
+	// var $box_tool = $('.box_tool');
+	// // 风场按钮
+	// $('.tool_wind').click(Wind.show);
+	// $('.tool_typhoon').click(function() {
+	// 	Typhoon.init();
+	// });
+	// $('.tool_radar').click(function() {
+	// 	Imgs.init('radar');
+	// });
+	// $('.tool_cloud').click(function() {
+	// 	Imgs.init('cloud');
+	// });
 
 	var iscroll = new IScroll('#tool_set_top_wrap', {
 		mouseWheel: true, 

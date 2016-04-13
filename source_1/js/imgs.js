@@ -357,7 +357,7 @@ $(function() {
 		getOverlays: function(){
 			return imageOverlays;
 		},
-		remove: function(){
+		clear: function(){
 			isNormal = false;
 			progress.reset();
 			var tmp;

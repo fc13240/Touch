@@ -28,7 +28,6 @@ $(function() {
     			}
     		});
     	}
-    	console.log(current_index);
     	$(document).on('changemap', function() {
     		var next_index = current_index+1;
     		if (next_index >= len) {

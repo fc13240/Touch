@@ -49,7 +49,7 @@ $(function() {
                 inited = true;
             });            
         },
-        remove: function(params) {
+        clear: function(params) {
             var tmp;
             while((tmp = _overlays.shift())) {
                 map.removeLayer(tmp);

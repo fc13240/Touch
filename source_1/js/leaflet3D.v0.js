@@ -8021,7 +8021,7 @@
 		return b[c]
 	},
 	setUrl: function() {},
-	getTileUrl: function(a) {console.log(a);
+	getTileUrl: function(a) {
 		var b = this._getZoomForUrl(),
 			c = this._tileDefs[b];
 		return this._adjustTilePoint(a), L.Util.template(c.url, L.extend({
