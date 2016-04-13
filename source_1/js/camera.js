@@ -1,19 +1,6 @@
 $(function() {
     var DATA_URL = 'http://decision.tianqi.cn//data/video/videoweather.html';
     
-    var _cache = {};
-    function _getData(cb) {
-        var val = _cache[DATA_URL];
-        if (val) {
-            cb(val);
-        } else {
-            $.getJSON(DATA_URL, function(data) {
-                _cache[DATA_URL] = data;
-                
-                cb(data);       
-            });
-        }
-    }
     var map;
     var _overlays = [];
     W.require.bind(null, ['maps'], function(a) {
@@ -24,13 +11,9 @@ $(function() {
     var $btn_close_video = $('.btn_close_video').click(function() {
         $video_player.hide().find('source').removeAttr('src');
     });
-    var inited = false;
     window.Camera = {
         init: function() {
-            if (inited) {
-                return;
-            }
-            _getData(function(data) {
+            Util.req(DATA_URL, function(err, data) {
                 $.each(data, function(i, v) {
                     var myIcon = L.icon({
                         iconUrl: 'img/weather_camera_icon.png',
@@ -46,7 +29,6 @@ $(function() {
                         _overlays.push(marker);
                     });
                 });
-                inited = true;
             });            
         },
         clear: function(params) {

@@ -15,26 +15,7 @@ $(function() {
 		return {
 			get: function(url, callback){
 				url = pre_url+url;
-				// 对请求进行缓存
-				var cache_val = proxy_cache[url];
-				if(cache_val){
-					callback && callback(cache_val);
-				}else{
-					$.get(url, function(data){
-						try{
-							var tmp = $.parseJSON(data);
-						} catch(e){}
-						if (tmp) {
-							data = tmp;
-						}
-						proxy_cache[url] = data;
-						callback && callback(data);
-					});
-					// http.get(url).success(function(data){
-					// 	proxy_cache[url] = data;
-					// 	callback && callback(data);
-					// });
-				}
+				Util.req(url, callback);
 			}
 		}
 	})();
@@ -327,7 +308,7 @@ $(function() {
 			isNormal = true;
 			if('radar' == productname){
 				var url = 'http://api.tianqi.cn:8070/v1/img.py';
-				proxy.get(url, function(data){
+				proxy.get(url, function(err, data){
 					var list = data.radar_img;
 					list.url = url;
 					initData(list, 4);
@@ -335,7 +316,7 @@ $(function() {
 			}else if('cloud' == productname){
 				var url = 'http://radar.tianqi.cn/radar/imgs.php?type=cloud_new';
 				// var url = 'http://10.14.85.116/php/radar/imgs.php?type=cloud';
-				proxy.get(url, function(data){
+				proxy.get(url, function(err, data){
 					var list = [];
 					var items = data.l;
 					for(var i = items.length-1; i>=0; i--){

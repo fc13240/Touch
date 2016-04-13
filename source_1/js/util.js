@@ -77,7 +77,7 @@
 	var APPID = 'fx8fj7ycj8fhbgdt';
 	function _encryURL(url) {
 	    var myDate = new Date();
-        var date = myDate.format('yyyyMMddhhmm');
+        var date = myDate.format('yyyyMMdd');
 	    url += (~url.indexOf('?')?'&':'?') + 'date='+date+'&appid='+APPID;
 	    var hmac = crypto.createHmac('sha1', PRIVATE_KEY);
 	    hmac.write(url);
@@ -95,17 +95,50 @@
 
 	var _reqCache = (function() {
 		var _cache = {};
-		return function(url, cb) {
+		var uniqueUrl;
+		var fn = function(url, option, cb) {
+			if (typeof option == 'function') {
+				cb = option;
+				option = null;
+			}
+			option = $.extend(true, {
+				type: 'json',
+				unique: true
+			}, option);
+
+			if (option.unique) {
+				uniqueUrl = url;
+			}
 			var val = _cache[url];
 			if (val) {
+				var def = $.Deferred();
+				def.resolve(val); // 兼容$.when使用Deferred
 				cb && cb(null, val);
+				return def;
 			} else {
-				$.getJSON(url, function(data) {
+				return $.get(url, function(data) {
+					if (option.type == 'json') {
+						if (typeof data == 'string') {
+							try {
+								data = $.parseJSON(data);
+							} catch(e){}
+						}
+					}
 					_cache[url] = data;
-					cb && cb(null, data);
+					if (uniqueUrl == url) {
+						cb && cb(null, data);
+					} else {
+						console.log(uniqueUrl, url);
+					}
 				}).error(cb);
 			}
 		}
+		fn.text = function(url, cb) {
+			return fn(url, {
+				type: 'text'
+			}, cb);
+		}
+		return fn;
 	})();
 	
 

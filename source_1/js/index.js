@@ -94,7 +94,7 @@ $(function() {
 		if (img !== undefined) {
 			html = '<img src="./img/product/'+img+'.png"/>';
 		}
-		html_product_list += '<li title="'+v.name+'">'+html+'</li>';
+		html_product_list += '<li data-tip="'+v.name+'">'+html+'</li>';
 	});
 	var $tool_tip = $('.tool_tip');
 	var $tool_product_list = $('.tool_product_list').html(html_product_list);
@@ -104,6 +104,7 @@ $(function() {
 		Imgs.clear();
 		Paint.clear();
 		Camera.clear();
+		Micaps.clear();
 		$('.load_progress_wrap').hide();
 		$(this).addClass('on').siblings().removeClass('on');
 
@@ -132,8 +133,8 @@ $(function() {
 		}
 	}).on('mouseenter', function() {
 		var $this = $(this);
-		$tool_tip.text($this.attr('title')).css({
-			top: $this.offset().top - $this.height()/2
+		$tool_tip.text($this.data('tip')).css({
+			top: $this.position().top + $this.height() / 2 + $('#tool_set_top_wrap').position().top - 15
 		}).fadeIn();
 	}).on('mouseleave', function() {
 		$tool_tip.hide();

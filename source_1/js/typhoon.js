@@ -28,7 +28,7 @@ $(function(){
 	// http://typhoon.nmc.cn/weatherservice/typhoon/jsons/list_default?t=1460511040067&callback=typhoon_jsons_list_default
 	// http://typhoon.nmc.cn/weatherservice/typhoon/jsons/view_2300503?t=1460511769078&callback=typhoon_jsons_view_2300503
 	var URL_TYPHOON = 'http://typhoon.nmc.cn/weatherservice/typhoon/jsons/';
-	var URL_LIST = URL_TYPHOON + 'list_default?'+Math.random();
+	var URL_LIST = URL_TYPHOON + 'list_default';
 	var cache_typhoon = {};
 	var is_debug = false;
 	try {
@@ -65,7 +65,7 @@ $(function(){
 		if(val_cache){
 			_getList(val_cache);
 		}else{
-			$.get(URL_LIST, function(result){
+			Util.req.text(URL_LIST, function(err, result){
 				// [2301121,"MELOR","茉莉",1527,"1527",null,"名字来源于：马来西亚 意为：一种花","stop"]
 				result = _formatData(result);
 				var typhoonList = [];
@@ -144,7 +144,7 @@ $(function(){
 				typhoonCode = [typhoonCode];
 			}
 			$.each(typhoonCode, function(i, v){
-				deferredArr.push($.get(URL_TYPHOON + 'view_' + v + '?'+Math.random()));
+				deferredArr.push(Util.req.text(URL_TYPHOON + 'view_' + v ));
 			});
 			$.when.apply($, deferredArr).done(function(){
 				var items = [];
@@ -166,6 +166,7 @@ $(function(){
 						max_lat = lat;
 					}
 				}
+				console.log(arguments);
 				var result_arr = arguments;
 				for(var i = 0, args = deferredArr.length == 1? [arguments]: arguments, j = args.length; i<j; i++){
 					var result = args[i][0];
@@ -697,7 +698,7 @@ $(function(){
 		var $btn_close_typhoon_chart = $('#btn_close_typhoon_chart').click(function(){
 			$(this).parent().hide();
 		});
-		// $.getScript('./js/echarts.js', function(){
+		// Util.req.textScript('./js/echarts.js', function(){
 			require_web.config({
 		        paths: {
 		            echarts: './js/'

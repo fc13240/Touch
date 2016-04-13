@@ -668,12 +668,6 @@ ol {
     display: none;
 }
 
-.btn_close_video {
-    right: 5px;
-    top: 5px;
-    left: auto;
-}
-
 .station {
     width: 80px;
     height: 80px;
@@ -735,21 +729,20 @@ ol {
     margin-top: -175px;
     display: none;
 }
-
-.btn_close_aqi {
-    right: 5px;
-    top: 5px;
-    left: auto;
-}
-
 .aqi_location {
-    background: url(../img/dingwei.png) no-repeat;
-    text-indent: 35px;
     color: white;
     height: 30px;
     line-height: 30px;
     font-size: 18px;
-    margin-left: 10px;
+    text-align: center;
+}
+.aqi_location:before{
+    content: '';
+    background: url(../img/dingwei.png) no-repeat;
+    height: 30px;
+    width: 30px;
+    vertical-align: -7px;
+    display: inline-block;
 }
 
 .aqi_val_level {
@@ -830,11 +823,6 @@ ol {
     display: none;
 }
 
-.box_btn_close {
-    right: 5px;
-    top: 5px;
-    left: auto;
-}
 
 #tongji_panel {
     width: 600px;
@@ -941,15 +929,16 @@ ol {
 .tool_product_list li{
     cursor: pointer;
     width: 100%;
-    height: 50px;
+    height: 80px;
     /*background-color: red;*/
-    margin: 5px auto;
+    margin: 0px auto;
     text-align: center;
     position: relative;
 }
 .tool_product_list li img{
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
+    margin-top: 10px;
 }
 
 .tool_tip{

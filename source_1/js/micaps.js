@@ -123,19 +123,6 @@ $(function() {
     // 天气统计
     var global_data_tongji;
     var $tongji_panel = $('#tongji_panel');
-    // $tongji_panel.css('left', 99999).show();
-    // $tongji_panel.find('.tongji_bar').each(function() {
-    // 	var $this = $(this);
-
-    // 	var ring = new Util.UI.Ring({
-    // 		container: $this,
-    // 		circlePercent: {
-    // 			color: $this.data('color')
-    // 		}
-    // 	});
-    // 	$this.data('ring', ring);
-    // });
-    // $tongji_panel.removeAttr('style');
     function _tongji() {
     	if (!global_data_tongji) {
     		return;
@@ -332,8 +319,6 @@ $(function() {
 				});
 			}
 		},
-		remove: function() {
-			
-		}
+		clear: _clear
 	}
 })
