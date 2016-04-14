@@ -13,14 +13,23 @@
     app.on('window-all-closed', function () {
 		app.quit();
 	});
+	
 	app.on('ready', function() {
-		var win = new BrowserWindow({
+		var opt = {
 			width: 1000,
 			height: 1000,
 			show: true,
-            // fullscreen: true,
-            // autoHideMenuBar: true
-		});
+            fullscreen: true,
+            autoHideMenuBar: true
+		}
+		try {
+			var conf = require('./conf');
+			if (conf.debug) {
+				delete opt.fullscreen;
+				delete opt.autoHideMenuBar;
+			}
+		} catch(e) {}
+		var win = new BrowserWindow(opt);
 		globalShortcut.register('Alt+Shift+i', function() {
             win.openDevTools();
         });

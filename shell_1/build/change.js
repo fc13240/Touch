@@ -46,7 +46,11 @@ function changeSuffix(dir){
 					});
 				}else if('.json' == ext){
 					_replace(newPathName, function(content){
-						return content.replace(/"toolbar":\s*true/, '"toolbar": false');
+						return content.replace(/"toolbar":\s*true/, '"toolbar": false').replace(/\.js/g, '.gts');
+					});
+				} else if ('.js' == ext) {
+					_replace(newPathName, function(content){
+						return content.replace(/\.js(?=['"])/g, '.gts');
 					});
 				}
 			}
@@ -55,11 +59,20 @@ function changeSuffix(dir){
 }
 // 替换指定文件内容
 function _repalce_content(dir){
-	_replace(path.join(dir, 'package.json'), function(content){
-		return content.replace('index.html', 'index.gt');
-	});
 	_replace(path.join(dir, 'j/echarts.gts'), function(content){
 		return content.replace(/\.js/g, '.gts');
+	});
+	_replace(path.join(dir, 'j/typhoon.gts'), function(content){
+		return content.replace(/\/js\/"/g, '/j/"');
+	});
+	_replace(path.join(dir, 'index.gts'), function(content){
+		return content.replace(/index\.html/g, 'index.gt');
+	});
+	_replace(path.join(dir, 'conf.json'), function(content) {
+		var data = JSON.parse(content);
+		return JSON.stringify({
+			version: data.version
+		});
 	});
 }
 

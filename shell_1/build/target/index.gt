@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Windyty, wind map &amp; forecast</title>
+    <title>蓝PI触屏</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
     <meta name="geoip" content="114.247.188.89,39.9289,116.3883,CN,Beijing">
@@ -11,17 +11,24 @@
     <script src="./gfs/minifest.gts"></script>
     <script>
     var W = {
-        version: ''
+        version: '5.3.4'
     }
     </script> 
 	<script src="./j/def.gts"></script>
     <script src="./j/jquery-1.8.2.gts"></script> 
+    <script src="./j/util.gts"></script>
 	<script src="./j/echarts.gts"></script>
     <script src="./j/leaflet3D.v0.gts"></script>
+    <script src="./j/tileLayerCache.gts"></script>
     <script src="./j/embed.gts"></script>
+    <script src="./j/text.gts"></script>
 	<script src="./j/typhoon.gts"></script>
 	<script src="./j/imgs.gts"></script>
+    <script src="./j/camera.gts"></script>
+    <script src="./j/micaps.gts"></script>
 	<script src="./j/paint.gts"></script>
+    <script src="./j/map.gts"></script>
+    <script src="./j/iscroll.gts"></script>
     <script src="./j/index.gts"></script>
 </head>
 
@@ -186,7 +193,7 @@
         </form>
     </div>
     <div id="embed-header-container">
-        <a href="https://www.windyty.com/" target="wind" id="embed-title" title="Windyty, wind forecast"><img class="logo" src="/img/logo_windyty_11.svg"></a>
+        <a href="https://www.windyty.com/" target="wind" id="embed-title" title="Windyty, wind forecast"></a>
         <div id="title" style="display:none"></div>
     </div>
     <div id="note" class="shy"><span id="note-message" data-t="E_MESSAGE"></span>&nbsp;<a href="https://www.windyty.com/" target="wind">www.windyty.com</a></div>
@@ -200,35 +207,32 @@
 			<canvas id="canvas_brush"  style="width:100%;height: 100%" ng-show="paint_can_use"></canvas>
 		</div>
     	<div class="load_progress_wrap"></div>
-    	<div class="box_title_container">
+    	<div class="box_title_container" style="display: block;">
 			<div class="box box_title">
-				<img ng-src="{{title_img}}"/>
+				<!-- <img ng-src="{{title_img}}"/> -->
+                <span class="product_name">产品测试</span>
 				<div class="time" ng-show="showtime">
 					<span id="time_top"></span>
 					<span id="time_bottom"></span>
 				</div>
 			</div>
 		</div>
-		<div class="preload" ng-hide="1">
-			<div class="tool_btn tool_brush on"></div>
-			<div class="tool_btn tool_hand on"></div>
-			<li class="tool_btn tool_btn_pro tool_radar on"></li>
-			<li class="tool_btn tool_btn_pro tool_cloud on"></li>
-			<li class="tool_btn tool_btn_pro tool_wind on"></li>
-			<li class="tool_btn tool_btn_pro tool_typhoonon"></li>
-			<img ng-src="./img/legend_wind.png"/>
-			<img ng-src="./img/legend_radar.png"/>
-		</div>
-		<ul class="box box_tool">
-			<li class="tool_top">
-				<div class="tool_btn tool_brush"></div>
-				<div class="tool_btn tool_hand"></div>
-			</li>
-			<li class="tool_btn tool_btn_pro tool_radar"  data-name="radar"><span></span></li>
-			<li class="tool_btn tool_btn_pro tool_cloud"  data-name="cloud"><span></span></li>
-			<li class="tool_btn tool_btn_pro tool_wind"  data-name="wind"><span></span></li>
-			<li class="tool_btn tool_btn_pro tool_typhoon"  data-name="typhoon"></li>
-		</ul>
+        <div class="tool_wrap">
+            <div class="tool_set_top">
+                <div class="tool_arrow_top"></div>
+                <div class="tool_tip">云图</div>
+                <div class="tool_set_top_wrap" id="tool_set_top_wrap">
+                    <ul class="tool_product_list">
+                    </ul>
+                </div>
+                <div class="tool_arrow_bottom"></div>  
+            </div>
+            <div class="tool_set_bottom">
+                <div class="tool_btn tool_brush"></div>
+                <div class="tool_btn tool_hand"></div>
+                <div class="tool_btn tool_changemap"></div>
+            </div>
+        </div>
 		<div class="box box_player" ng-show="show_player">
 			<div class="player_btn" ng-class="{playing:playing}"></div>
 			<div class="player_progressbar_wrap">
@@ -247,6 +251,41 @@
 		</div>
 		<div class="box wrap_typhoon_chart"><div class="unit">(米/秒)</div><div class="typhoon_name"></div><div id="typhoon_chart"></div><div id="btn_close_typhoon_chart"></div></div>
 		<div class="legend" ng-show="legend_name"><img ng-src="./img/{{legend_name}}.png"/></div>
+        
+        <div id="video_player" class="box box_dialog">
+            <div class="box_btn_close btn_close_video"></div>
+            <video autoplay="autoplay" preload="auto" loop='5' width="100%" height="100%" >
+				<source type="video/mp4">
+			</video>
+        </div>
+        <div id="aqi_panel" class="box box_dialog">
+            <div class="box_btn_close btn_close_aqi"></div>
+            <div class="aqi_location"></div>
+            <div class="clear aqi_wrap">
+                <div class="fl aqi_val_level">
+                    <div class="fl aqi_val"></div>
+                    <div class="fl aqi_level"></div>
+                </div>
+                <p class="aqi_desc"></p>
+            </div>    
+            <div class="clear aqi_info_wrap">
+                <div class="fl aqi_info"><div><p><span class="aqi_val_aqi"></span></p></div>全国AQI排名</div>
+                <div class="fl aqi_info"><div><p><span class="aqi_val_pm25"></span><br/>μg/m3</p></div>PM2.5</div>
+                <div class="fl aqi_info"><div><p><span class="aqi_val_pm10"></span><br/>μg/m3</p></div>PM10</div>
+            </div>
+        </div>
+
+        <div id="tongji_panel" class="box box_dialog">
+            <div class="box_btn_close btn_close_tongji"></div>
+            <div class="tongji_title"></div>
+            <div class="clear tongji_bar_container">
+                <!-- <div class="tongji_bar_wrap"><div class="tongji_bar" data-color="#ffff00"></div><p>雪<br/>0天</p></div>
+                <div class="tongji_bar_wrap"><div class="tongji_bar" data-color="green"></div><p></p></div>
+                <div class="tongji_bar_wrap"><div class="tongji_bar" data-color="#00ffff"></div><p></p></div>
+                <div class="tongji_bar_wrap"><div class="tongji_bar" data-color="#ff00ff"></div><p></p></div> -->
+            </div>
+            <div class="tongji_desc"></div>
+        </div>
     </div>
 </body>
 

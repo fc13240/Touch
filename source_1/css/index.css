@@ -2,7 +2,10 @@ body {
     font: 14px/1.6 "Microsoft Yahei", "SimSun", "宋体", "Arial", "HELVETICA", "sans-serif", "Tahoma";
     background-color: #fff;
 }
-
+@font-face {
+    font-family: "productName";
+    src: url('../font/han_yi_zong_yi_ti_jian.TTF') format('truetype');
+}
 ul,
 ol {
     list-style: none;
@@ -669,14 +672,20 @@ ol {
 }
 
 .station {
-    width: 80px;
-    height: 80px;
+    width: 104px;
+    height: 120px;
     background-color: #E7410D;
-    border-radius: 40px;
+    /*border-radius: 40px;*/
     text-align: center;
-    line-height: 80px;
-    border: 1px solid white;
+    /*border: 1px solid white;*/
     font-size: 22px;
+    background: url(../img/icon_tongji.png) no-repeat center 3px;
+    background-size: auto 100%;
+    display: table;
+}
+.station p{
+    display: table-cell;
+    vertical-align: middle;
 }
 
 .station_aqi {
@@ -833,6 +842,16 @@ ol {
     font-size: 18px;
     padding: 10px 30px;
 }
+#tongji_panel.loading{
+    background-image: url(../img/loading.gif);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 40px auto;
+}
+#tongji_panel.loading .tongji_bar_container,
+#tongji_panel.loading .tongji_desc{
+    display: none;
+}
 
 .tongji_desc em {
     color: orange;
@@ -953,7 +972,7 @@ ol {
     color: #000;
     background-color: #ADB7C6;
     border-radius: 0 3px 3px 0;
-    white-space:nowrap;
+    white-space: nowrap;
     padding: 0 4px;
     display: none;
 }
@@ -979,7 +998,45 @@ ol {
 .guardLine_48{
     color: green;
 }
+.product_name{
+    font-family: 'productName';
+    font-size: 86px;
+    color: white;
+    float: left;
+}
 
+.loading_tip{
+    position: fixed;
+    left: 0;
+    top: 50%;
+    height: 40px;
+    line-height: 40px;
+    margin-top: -15px;
+    z-index: 1001;
+    width: 100%;
+    font-size: 20px;
+    text-align: center;
+}
+.loading_tip > div{
+    position: static;
+    min-width: 200px;
+    margin: 0 auto;
+    display: inline-block;
+    padding: 0 20px;
+    white-space: nowrap;
+}
+.loading_tip > div:before{
+    content: '';
+    width: 30px;
+    height: 30px;
+    background-image: url(../img/loading.gif);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 30px auto;
+    display: inline-block;
+    vertical-align: -6px;
+    margin-right: 4px;
+}
 /*rewrite leaflet style {*/
 .leaflet-control-layers-toggle{
     background: none;
@@ -988,3 +1045,7 @@ ol {
     display: none;
 }
 /*rewrite leaflet style }*/
+
+http://webst04.is.autonavi.com/appmaptile?x=13488&y=6207&z=14&lang=zh_cn&size=1&scale=1&style=8
+http://webst04.is.autonavi.com/appmaptile?x=6739&y=3100&z=13&lang=zh_cn&size=1&scale=1&style=8
+http://webst04.is.autonavi.com/appmaptile?style=6&x=6739&y=3100&z=13

@@ -141,12 +141,16 @@ $(function() {
 		_each(arr_stations, function(i, v) {
 			var p = L.latLng(v.lat, v.lon);
 			if (bound.contains(p)) {
-				var myIcon = L.divIcon({className: 'station', html: v.name, iconSize: L.point(80, 80)});
+				var myIcon = L.divIcon({className: 'station', html: '<p>'+v.name+'</p>', iconSize: L.point(80, 90)});
 				var marker = L.marker(p, {icon: myIcon, zIndexOffset: 10}).addTo(map).on('click', function() {
 					$tongji_panel.show();
 					var $tongji_bar_container = $tongji_panel.find('.tongji_bar_container').html('');
 					$tongji_panel.find('.tongji_title').html(v.name+' '+v.stationid);
-					Util.req(Util.encryURL('http://scapi.weather.com.cn/weather/historycount?stationid='+v.stationid+'&areaid='+v.areaid), function(err, data) {
+					$tongji_panel.addClass('loading');
+					Util.req(Util.encryURL('http://scapi.weather.com.cn/weather/historycount?stationid='+v.stationid+'&areaid='+v.areaid), {
+						loading: false
+					}, function(err, data) {
+						$tongji_panel.removeClass('loading');
 						var days = data.days;
 						var starttime = data.starttime;
 						var endtime = data.endtime;
@@ -299,16 +303,19 @@ $(function() {
     		_aqi();
     	}
     }
+    function _reset() {
+    	map.off('zoomend', _tongji);
+		map.off('dragend', _tongji);
+		global_data_tongji = null;
+		global_data_aqi = null;
+    }
 	window.Micaps = {
 		init: function(productName) {
 			var confOfProduct = conf[productName];
 			if (confOfProduct) {
 				Util.req(Util.encryURL(confOfProduct.dataurl), function(err, data) {
 					console.log(err, data);
-					map.off('zoomend', _tongji);
-    				map.off('dragend', _tongji);
-    				global_data_tongji = null;
-    				global_data_aqi = null;
+					_reset();
 					if (err) {
 						alert(productName+'数据请求出现错误！');
 					} else {
@@ -319,6 +326,9 @@ $(function() {
 				});
 			}
 		},
-		clear: _clear
+		clear: function() {
+			_reset();
+			_clear();
+		}
 	}
 })

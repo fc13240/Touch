@@ -1,53 +1,65 @@
 !function(G) {
-	var request = require('request');
-	var fs = require('fs');
-	var path = require('path');
-	var URL = require('url');
-	var os = require('os');
-	var crypto = require('crypto');
+	if (is_native) {
+		var ext = require.extensions;
+		ext['.gts'] = ext['.js'];
+		var request = require('request');
+		var fs = require('fs');
+		var path = require('path');
+		var URL = require('url');
+		var os = require('os');
+		var crypto = require('crypto');
 
-	var TMP_DIR = path.join(os.tmpDir(), 'cwtv');
-	function mkdirSync(mkPath) {
-		try{
-			var parentPath = path.dirname(mkPath);
-			if(!fs.existsSync(parentPath)){
-				mkdirSync(parentPath);
-			}
-			if(!fs.existsSync(mkPath)){
-				fs.mkdirSync(mkPath);
-			}
-			return true;
-		}catch(e){}
-	}
-
-	function _download(url, savepath, cb) {
-		if (typeof savepath == 'function') {
-			cb = savepath;
-			savepath = '';
+		var TMP_DIR = path.join(os.tmpDir(), 'cwtv');
+		function mkdirSync(mkPath) {
+			try{
+				var parentPath = path.dirname(mkPath);
+				if(!fs.existsSync(parentPath)){
+					mkdirSync(parentPath);
+				}
+				if(!fs.existsSync(mkPath)){
+					fs.mkdirSync(mkPath);
+				}
+				return true;
+			}catch(e){}
 		}
-		savepath = path.join(TMP_DIR, savepath);
 
-		var info = URL.parse(url);
-		var filename = path.basename(info.pathname);
-		var new_path = path.join(savepath, filename);
+		function _download(url, savepath, cb) {
+			if (typeof savepath == 'function') {
+				cb = savepath;
+				savepath = '';
+			}
+			savepath = path.join(TMP_DIR, savepath);
 
-		if (fs.existsSync(new_path)) {
-			cb && cb(new_path);
-		} else {
-			mkdirSync(savepath);
+			var info = URL.parse(url);
+			var filename = path.basename(info.pathname);
+			var new_path = path.join(savepath, filename);
 
-			var ws = fs.createWriteStream(new_path);
-			request(url).pipe(ws);
-			ws.on('finish', function() {
+			if (fs.existsSync(new_path)) {
 				cb && cb(new_path);
-			})
+			} else {
+				mkdirSync(savepath);
+
+				var ws = fs.createWriteStream(new_path);
+				request(url).pipe(ws);
+				ws.on('finish', function() {
+					cb && cb(new_path);
+				})
+			}
+		}
+	} else {
+		function _download(url, savepath, cb) {
+			if (typeof savepath == 'function') {
+				cb = savepath;
+				savepath = '';
+			}
+			cb && cb(url);
 		}
 	}
+
+
 	_download.video = function(url, cb) {
 		_download(url, 'video', cb);
 	}
-
-
 	/*时间格式化*/
 	Date.prototype.format = Date.prototype.format || function(format,is_not_second){
 		format || (format = 'yyyy-MM-dd hh:mm:ss');
@@ -103,7 +115,8 @@
 			}
 			option = $.extend(true, {
 				type: 'json',
-				unique: true
+				unique: true,
+				loading: true
 			}, option);
 
 			if (option.unique) {
@@ -116,6 +129,10 @@
 				cb && cb(null, val);
 				return def;
 			} else {
+				if (option.loading) {
+					Loading.req();	
+				}
+				
 				return $.get(url, function(data) {
 					if (option.type == 'json') {
 						if (typeof data == 'string') {
@@ -126,6 +143,7 @@
 					}
 					_cache[url] = data;
 					if (uniqueUrl == url) {
+						Loading.hide();
 						cb && cb(null, data);
 					} else {
 						console.log(uniqueUrl, url);
@@ -226,12 +244,34 @@
 		}
 	}
 
+	var Loading = (function() {
+		var $div_loading;
+		var fn = function(title) {
+			if (!$div_loading) {
+				$div_loading = $('<div>').addClass('loading_tip').appendTo('body');
+			}
+			title = title || '正在加载';
+			$div_loading.html('<div class="box">'+title+'</div>').fadeIn();
+		}
+		fn.req = function() {
+			fn('正在请求数据');
+		}
+		fn.deal = function() {
+			fn('正在处理');
+		}
+		fn.hide = function() {
+			$div_loading.hide();
+		}
+		return fn;
+	})();
+	// Loading();
 	G.Util = {
 		download: _download,
 		encryURL: _encryURL,
 		req: _reqCache,
 		UI: {
 			Ring: Ring
-		}
+		},
+		Loading: Loading
 	}
 }(this);

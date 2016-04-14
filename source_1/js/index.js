@@ -19,20 +19,24 @@ $(function() {
 	}
 	var CONF_PRODUCT = [{
 		name: '风场',
+		title: '地面流场示意图',
 		img: 'wind',
 		click: Wind.show
 	}, {
 		name: '台风',
+		title: '实时台风路径',
 		img: 'typhoon',
 		click: Typhoon.init
 	}, {
 		name: '雷达',
+		title: '全国雷达拼图',
 		img: 'radar',
 		click: function() {
 			Imgs.init('radar');
 		}
 	}, {
 		name: '云图',
+		title: '中国区域卫星云图',
 		img: 'cloud',
 		click: function() {
 			Imgs.init('cloud');
@@ -45,6 +49,7 @@ $(function() {
 		}
 	}, {
 		name: '天气统计',
+		title: '实时天气统计',
 		img: 'tongji',
 		click: function() {
 			Micaps.init('tongji');
@@ -63,6 +68,7 @@ $(function() {
 		}
 	}, {
 		name: '空气质量',
+		title: '全国实时空气质量',
 		img: 'aqi',
 		click: function() {
 			Micaps.init('aqi');
@@ -79,13 +85,11 @@ $(function() {
 		click: function() {
 			Micaps.init('xsc');
 		}
-	}, {
-		name: '亚欧高空场500hPa',
-		img: 'tqfx',
-		click: function() {
-			Micaps.init('xsc500');
-		}
 	}];
+
+	var $box_title_container = $('.box_title_container'),
+		$title_time = $box_title_container.find('.time'),
+		$product_name = $box_title_container.find('.product_name');
 
 	var html_product_list = '';
 	$.each(CONF_PRODUCT, function(i, v) {
@@ -105,18 +109,15 @@ $(function() {
 		Paint.clear();
 		Camera.clear();
 		Micaps.clear();
+
+		$box_title_container.hide();
+		$title_time.hide();
+		$product_name.hide();
+
 		$('.load_progress_wrap').hide();
 		$(this).addClass('on').siblings().removeClass('on');
 
 		var name = $(this).data('name');
-		var title_img = CONF_TITLE[name];
-		if (title_img) {
-			$box_title_container.show();
-			$box_title_container.find('img').attr('src', title_img);
-		} else {
-			$box_title_container.hide();
-		}
-		$box_title_container.find('.time').hide();
 
 		var legend = CONF_LEGENDNAME[name];
 		if (legend) {
@@ -128,6 +129,11 @@ $(function() {
 
 		var conf = CONF_PRODUCT[$(this).index()];
 		if (conf) {
+			var title = conf.title || conf.name;
+			if (title) {
+				$box_title_container.show();
+				$product_name.text(title).show();
+			}
 			var fn = conf.click;
 			fn && fn();
 		}

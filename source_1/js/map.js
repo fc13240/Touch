@@ -4,7 +4,9 @@ $(function() {
     		subdomains: 'abc'
     	}),
     	two = L.tileLayer('http://api.tiles.mapbox.com/v4/ludawei.mn69agep/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibHVkYXdlaSIsImEiOiJldzV1SVIwIn0.-gaUYss5MkQMyem_IOskdA&v=1.1');
-    	
+    	one = L.tileLayer('http://webst0{s}.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&style=6', {
+            subdomains: '1234'
+        });
     	var map_url = storage.get('map_url');
 
     	window.one = one;
