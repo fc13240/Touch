@@ -125,21 +125,19 @@
 			var val = _cache[url];
 			if (val) {
 				var def = $.Deferred();
-				def.resolve(val); // 兼容$.when使用Deferred
+				def.resolve([val]); // 兼容$.when使用Deferred
 				cb && cb(null, val);
 				return def;
 			} else {
 				if (option.loading) {
 					Loading.req();	
 				}
-				
-				return $.get(url, function(data) {
-					if (option.type == 'json') {
-						if (typeof data == 'string') {
-							try {
-								data = $.parseJSON(data);
-							} catch(e){}
-						}
+				var is_json = option.type == 'json';
+				return $[is_json? 'getJSON': 'get'](url, function(data) {
+					if (is_json && typeof data == 'string') {
+						try {
+							data = $.parseJSON(data);
+						} catch(e){}
 					}
 					_cache[url] = data;
 					if (uniqueUrl == url) {

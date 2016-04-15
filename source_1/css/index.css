@@ -598,7 +598,8 @@ ol {
 }
 
 #btn_close_typhoon_chart,
-.box_btn_close {
+.box_btn_close,
+.alarm_detail a.leaflet-popup-close-button {
     position: absolute;
     left: 15px;
     top: 15px;
@@ -619,7 +620,8 @@ ol {
 }
 
 #btn_close_typhoon_chart:hover,
-.box_btn_close:hover {
+.box_btn_close:hover,
+.alarm_detail a.leaflet-popup-close-button:hover {
     -webkit-animation-name: 'rotate';
     -webkit-animation-duration: 0.5s;
     -webkit-animation-timing-function: linear;
@@ -1037,6 +1039,29 @@ ol {
     vertical-align: -6px;
     margin-right: 4px;
 }
+
+.alarm_layer img{
+    width: 100%;
+    height: auto;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    left: 50%;
+}
+.alarm_detail{
+    font-size: 18px;
+}
+.alarm_detail_title{
+    height: 70px;
+    line-height: 70px;
+    font-size: 24px;
+    padding-right: 10px;
+    text-align: right;
+}
+.alarm_detail_desc{
+    padding: 10px;
+    background-color: #312739;
+}
 /*rewrite leaflet style {*/
 .leaflet-control-layers-toggle{
     background: none;
@@ -1044,8 +1069,17 @@ ol {
 .leaflet-control-layers{
     display: none;
 }
+.alarm_detail .leaflet-popup-content-wrapper{
+    background-color: rgba(0, 0, 0, 0);
+}
+.alarm_detail .leaflet-popup-content p{
+    margin: 0;
+}
+.alarm_detail .leaflet-popup-tip-container{
+    display: none;
+}
+.alarm_detail a.leaflet-popup-close-button,
+.alarm_detail a.leaflet-popup-close-button:hover{
+    color: rgba(0, 0, 0, 0);
+}
 /*rewrite leaflet style }*/
-
-http://webst04.is.autonavi.com/appmaptile?x=13488&y=6207&z=14&lang=zh_cn&size=1&scale=1&style=8
-http://webst04.is.autonavi.com/appmaptile?x=6739&y=3100&z=13&lang=zh_cn&size=1&scale=1&style=8
-http://webst04.is.autonavi.com/appmaptile?style=6&x=6739&y=3100&z=13

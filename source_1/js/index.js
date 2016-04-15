@@ -48,6 +48,13 @@ $(function() {
 			Camera.init();
 		}
 	}, {
+		name: '预警',
+		img: 'alarm',
+		title: '全国气象灾害预警',
+		click: function() {
+			Alarm.init();
+		}
+	}, {
 		name: '天气统计',
 		title: '实时天气统计',
 		img: 'tongji',
@@ -109,6 +116,7 @@ $(function() {
 		Paint.clear();
 		Camera.clear();
 		Micaps.clear();
+		Alarm.clear();
 
 		$box_title_container.hide();
 		$title_time.hide();
@@ -161,18 +169,6 @@ $(function() {
 	var $box_title_container = $('.box_title_container');
 	var $legend = $('.legend');
 	
-	// var $box_tool = $('.box_tool');
-	// // 风场按钮
-	// $('.tool_wind').click(Wind.show);
-	// $('.tool_typhoon').click(function() {
-	// 	Typhoon.init();
-	// });
-	// $('.tool_radar').click(function() {
-	// 	Imgs.init('radar');
-	// });
-	// $('.tool_cloud').click(function() {
-	// 	Imgs.init('cloud');
-	// });
 
 	var iscroll = new IScroll('#tool_set_top_wrap', {
 		mouseWheel: true, 
@@ -185,9 +181,6 @@ $(function() {
 	});
 	$('.tool_arrow_bottom').click(function() {
 		iscroll.next();
-	});
-	$('.tool_product_list li').click(function() {
-		console.log($(this).html());
 	});
 	var $mask = $('#mask');
 	var paint_can_use = false;

@@ -166,7 +166,6 @@ $(function(){
 						max_lat = lat;
 					}
 				}
-				console.log(arguments);
 				var result_arr = arguments;
 				for(var i = 0, args = deferredArr.length == 1? [arguments]: arguments, j = args.length; i<j; i++){
 					var result = args[i][0];
@@ -232,7 +231,6 @@ $(function(){
 						}
 					}
 				}
-				console.log(items);
 				var item_last = items[items.length - 1];
 				$.each(item_last.forecast, function(i, v){
 					_init(v.lng, v.lat);
