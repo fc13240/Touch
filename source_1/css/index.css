@@ -1090,16 +1090,19 @@ ol {
     color: rgba(0, 0, 0, 0);
 }
 /*rewrite leaflet style }*/
-
-#globe_wrap{
+.cesium-credit-textContainer{
+    display: none;
+}
+#globe_wrap,
+#terrain_wrap {
     width: 100%;
     height: 100%;
     position: absolute;
     left: 0;
     top: 0;
     z-index: 201;
-    /*background-color: rgb(0, 26, 34);
-    background: url('../img/sky.jpg');
-    color: white;
-    background-size: 100%;*/
+    display: none;
+}
+#terrain_wrap{
+    background-color: rgba(0, 0, 0, 0.8);
 }

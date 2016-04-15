@@ -21,6 +21,7 @@ $(function() {
         		})
 
         		WE.polygon(arr, {
+        			color: v.c,
         			opacity: 0,
         			weight: 0.00001,
         			fill: true,

@@ -98,6 +98,12 @@ $(function() {
 		click: function() {
 			Micaps.init('xsc');
 		}
+	}, {
+		name: '3d效果展示',
+		img: '3d',
+		click: function() {
+			Terrain.init();
+		}
 	}];
 
 	var $box_title_container = $('.box_title_container'),
@@ -127,6 +133,7 @@ $(function() {
 		Micaps.clear();
 		Alarm.clear();
 		Globe.clear();
+		Terrain.clear();
 
 		$box_title_container.hide();
 		$title_time.hide();

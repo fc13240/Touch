@@ -32,6 +32,10 @@
     <script src="./js/alarm.js"></script>
     <script src="./js/iscroll.js"></script>
     <script src="./js/globe.js"></script>
+    <script src="./js/3d/three.js"></script>
+    <script src="./js/3d/TrackballControls.js"></script> 
+    <script src="./js/3d/TerrainLoader.js"></script>
+    <script src="./js/terrain.js"></script>
     <script src="./js/index.js"></script>
 </head>
 
@@ -206,6 +210,7 @@
 
     <div class="other full_wrap">
         <div id="globe_wrap"></div>
+        <div id="terrain_wrap"></div>
         <div id="btn_close"></div>
 	    <div id="mask" ng-show="show_mask">
 			<canvas id="canvas_brush"  style="width:100%;height: 100%" ng-show="paint_can_use"></canvas>

@@ -1848,8 +1848,9 @@ CESIUM_BASE_URL = ('https:' == document.location.protocol ? 'https:' : 'http:') 
 			}, y.prototype.wasCreatedByUpsampling = function() {
 				return this._createdByUpsampling
 			}, y
-		}), r("Core/loadImage", ["../ThirdParty/when", "./defaultValue", "./defined", "./DeveloperError", "./isCrossOriginUrl"], function(e, t, r, i, n) {
+		}), (console.log(e), console.log(t), console.log(r)), r("Core/loadImage", ["../ThirdParty/when", "./defaultValue", "./defined", "./DeveloperError", "./isCrossOriginUrl"], function(e, t, r, i, n) {
 			"use strict";
+
 			var o = /^data:/,
 				a = function(s, l) {
 					if (!r(s)) throw new i("url is required.");
@@ -1861,6 +1862,7 @@ CESIUM_BASE_URL = ('https:' == document.location.protocol ? 'https:' : 'http:') 
 					})
 				};
 			return a.createImage = function(e, t, r) {
+				console.log('load', e, t, r);
 				var i = new Image;
 				i.onload = function() {
 					r.resolve(i)
