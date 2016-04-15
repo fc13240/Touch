@@ -1,3 +1,6 @@
+html,body{
+    height: 100%;
+}
 body {
     font: 14px/1.6 "Microsoft Yahei", "SimSun", "宋体", "Arial", "HELVETICA", "sans-serif", "Tahoma";
     background-color: #fff;
@@ -23,7 +26,10 @@ ol {
 .fr {
     float: right;
 }
-
+.full_wrap{
+    width: 100%;
+    height: 100%;
+}
 #buts {
     position: absolute;
     top: 0;
@@ -42,6 +48,7 @@ ol {
     position: relative;
     left: 50%;
     float: left;
+    z-index: 909;
 }
 
 .box_title {
@@ -155,7 +162,7 @@ ol {
     height: 100%;
     left: 0;
     top: 0;
-    z-index: 109;
+    z-index: 501;
 }
 
 .box_player {
@@ -1083,3 +1090,16 @@ ol {
     color: rgba(0, 0, 0, 0);
 }
 /*rewrite leaflet style }*/
+
+#globe_wrap{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 201;
+    /*background-color: rgb(0, 26, 34);
+    background: url('../img/sky.jpg');
+    color: white;
+    background-size: 100%;*/
+}

@@ -81,6 +81,12 @@ $(function() {
 			Micaps.init('aqi');
 		}
 	}, {
+		name: '全国空气污染气象条件预报',
+		img: 'air_pollute',
+		click: function() {
+			Globe.init();
+		}
+	}, {
 		name: '未来三天降水量预报',
 		img: 'rain',
 		click: function() {
@@ -108,6 +114,9 @@ $(function() {
 		html_product_list += '<li data-tip="'+v.name+'">'+html+'</li>';
 	});
 	var $tool_tip = $('.tool_tip');
+	$doc.on('click', function() {
+		$tool_tip.hide();
+	});
 	var $tool_product_list = $('.tool_product_list').html(html_product_list);
 	$tool_product_list.find('li').click(function() {
 		Wind.hide();
@@ -117,6 +126,7 @@ $(function() {
 		Camera.clear();
 		Micaps.clear();
 		Alarm.clear();
+		Globe.clear();
 
 		$box_title_container.hide();
 		$title_time.hide();

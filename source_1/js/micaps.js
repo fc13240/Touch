@@ -7,8 +7,13 @@ $(function() {
 		},
 		'fog': {
 			name: '全国雾区预报',
-			dataurl: 'http://scapi.weather.com.cn/weather/micapsfile?fileMark=kqzl_24,kqzl_48,kqzl_72&isChina=true',
+			dataurl: 'http://scapi.weather.com.cn/weather/micapsfile?fileMark=fog_fc&isChina=true',
 			type: 'micaps'	
+		},
+		'aqi_wr': {
+			name: '空气污染气象条件预报',
+			dataurl: 'http://scapi.weather.com.cn/weather/micapsfile?fileMark=kqzl_24,kqzl_48,kqzl_72&isChina=true',
+			type: '3d'
 		},
 		'aqi': {
 			name: '空气质量',
@@ -314,7 +319,7 @@ $(function() {
 			var confOfProduct = conf[productName];
 			if (confOfProduct) {
 				Util.req(Util.encryURL(confOfProduct.dataurl), function(err, data) {
-					console.log(err, data);
+					// console.log(err, data);
 					_reset();
 					if (err) {
 						alert(productName+'数据请求出现错误！');
@@ -329,6 +334,12 @@ $(function() {
 		clear: function() {
 			_reset();
 			_clear();
+		},
+		getConf: function(name) {
+			var c = conf[name];
+			if (c) {
+				return c;
+			}
 		}
 	}
 })

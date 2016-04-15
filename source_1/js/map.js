@@ -14,6 +14,19 @@ $(function() {
 		    "one": one,
 		    "two": two
 		};
+        Util.map = {
+            getConf: function() {
+                var conf = storage.get('_map_conf');
+                if (!conf) {
+                    conf = {
+                        url: one._url,
+                        subdomains: one.options.subdomains
+                    }
+                }
+                return conf;
+            }
+        }
+
     	L.control.layers(baseMaps).addTo(map);
 
     	var $map_types = $('.leaflet-control-layers-selector');
