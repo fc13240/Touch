@@ -475,7 +475,7 @@ $(function(){
 		name: '强台风',
 		color: 'rgba(230,38,135, 0.8)'
 	}, {
-		val: [51.0],
+		val: [51.0, 99],
 		code: 'SuperTY',
 		name: '超强台风',
 		color: 'rgba(126,64,149, 0.8)'
