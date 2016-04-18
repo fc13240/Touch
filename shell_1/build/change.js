@@ -59,15 +59,15 @@ function changeSuffix(dir){
 }
 // 替换指定文件内容
 function _repalce_content(dir){
-	_replace(path.join(dir, 'j/echarts.gts'), function(content){
-		return content.replace(/\.js/g, '.gts');
-	});
-	_replace(path.join(dir, 'j/typhoon.gts'), function(content){
-		return content.replace(/\/js\/"/g, '/j/"');
-	});
-	_replace(path.join(dir, 'index.gts'), function(content){
-		return content.replace(/index\.html/g, 'index.gt');
-	});
+	// _replace(path.join(dir, 'j/echarts.gts'), function(content){
+	// 	return content.replace(/\.js/g, '.gts');
+	// });
+	// _replace(path.join(dir, 'j/typhoon.gts'), function(content){
+	// 	return content.replace(/\/js\/"/g, '/j/"');
+	// });
+	// _replace(path.join(dir, 'index.gts'), function(content){
+	// 	return content.replace(/index\.html/g, 'index.gt');
+	// });
 	_replace(path.join(dir, 'conf.json'), function(content) {
 		var data = JSON.parse(content);
 		return JSON.stringify({
@@ -80,6 +80,6 @@ var args = [].slice.call(process.argv);
 //命令行进行指定文件压缩
 if(args.length > 2){
 	var dir = args[2];
-	changeSuffix(dir);
+	// changeSuffix(dir);
 	_repalce_content(dir);
 }

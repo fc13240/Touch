@@ -51,12 +51,9 @@
 		}
 		return '';
 	}
-	function _getKey(url, option) {
-		return encrypt(url+([option.s, option.x, option.y, option.z].join('_')));
-	}
 	function _getCachePath(url, option) {
 		var key = encrypt(url);
-		var src = path.join(os.tmpDir(), 'cwtv', 'map', key, option.s+'', option.z+'', option.x+'', option.y+'.png');
+		var src = path.join(os.tmpDir(), 'cwtv', 'map', key, option.z+'', option.x+'', option.y+'.png');
 		
 		return src;
 	}

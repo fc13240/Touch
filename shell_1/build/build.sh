@@ -4,7 +4,7 @@ TARGET_32_DIR=$SHELLPATH/ia32
 TARGET_64_DIR=$SHELLPATH/x64
 SOURCE_PATH=$(cd $SHELLPATH; cd ../../source_1; pwd)
 
-rm -rf $TARGET_PATH/*
+# rm -rf $TARGET_PATH/*
 rm -rf $TARGET_64_DIR
 rm -rf $TARGET_32_DIR
 #1. compress files
@@ -13,7 +13,7 @@ node /f/source/node_projects/compresser/ $SOURCE_PATH $TARGET_PATH/
 #3. change.js
 node $SHELLPATH/change.js $TARGET_PATH
 
-echo '{"main": "index.gts"}' > $TARGET_PATH/package.json
+echo '{"main": "index.js"}' > $TARGET_PATH/package.json
 
 mkdir -p $TARGET_64_DIR/
 mkdir -p $TARGET_32_DIR/
