@@ -28,18 +28,20 @@
 
 		mkdirSync(path.dirname(save_file_name));
 		fs.writeFileSync(save_file_name, img_data);
+
+		return img_data;
 	}
 	var saveImg = (function() {
 		var canvas = L.DomUtil.create("canvas");
 		var cxt = canvas.getContext('2d');
-		return function(savepath, img, fn) {
+		return function(savepath, img, fn, is_return_data) {
 			canvas.width = img.width;
 			canvas.height = img.height;
 			cxt.drawImage(img, 0, 0);
 			var dataURL = canvas.toDataURL('image/png');
 
-			saveBase64(savepath, dataURL);
-			fn && fn (dataURL);
+			var data = saveBase64(savepath, dataURL);
+			fn && fn (is_return_data?data: dataURL);
 		}
 	})();
 	var DEFAULT_PRIVATE_KEY = 'cwtv'
@@ -95,24 +97,74 @@
 				y: b.y
 			}, _this.options);
 
-			if (/^http/.test(src)) {
-				var _cachePath = _getCachePath(c.url, option);
-				var img = new Image();
-				img.onload = function() {
-					saveImg(_cachePath, img);
-					a.src = _cachePath;
-					_this._tileOnLoad.apply(a);
-				}
-				img.src = src;
-				console.log('loadImg = ', src);
-			} else {
-				a.onload = _this._tileOnLoad;
-				a.src = src;
-			}
+			_getImg(src, c.url, option, function(_cachePath) {
+				a.src = _cachePath;
+				_this._tileOnLoad.apply(a);
+			});
 			_this.fire("tileloadstart", {
 				tile: a,
 				url: src
 			})
 		}
 	});
+
+	function _getImg(src, url, option, onload) {
+		var src_return = src;
+		var img = new Image();
+		var is_net = /^http/.test(src);
+		var is_cache = false;
+		if (is_net) {
+			var _cachePath = _getCachePath(url, option);
+			if (fs.existsSync(_cachePath)) {
+				src_return = src = _cachePath;
+				is_cache = true;
+				console.log('_cachePath = ', _cachePath);
+			}
+		}
+		
+		img.onload = function() {
+			if (is_net && !is_cache) {
+				console.log('loadimage = ', src);
+				saveImg(_cachePath, img);
+				// src_return = _cachePath;
+			}
+			onload && onload.call(this, src_return);
+		}
+		img.crossOrigin = '';
+		img.src = src;
+		return src_return;
+	}
+
+	Util.TileLayer = {
+		// 为3D地图添加瓦片缓存机制
+		cache: function(TileMapServiceImageryProvider, Aa) {
+			// var fn_requestImage = TileMapServiceImageryProvider.prototype.requestImage;
+			TileMapServiceImageryProvider.prototype.requestImage = function(a, b, c) {
+				var x = a, y = b, z = c;
+				if (c < this.minimumLevel || c > this.maximumLevel) return this.sb;
+				var d = this.url.replace("{z}", c.toFixed(0)),
+					d = d.replace("{x}", a.toFixed(0)),
+					d = d.replace("{y}", (this.Lc ? (1 << c) - b - 1 : b).toFixed(0));
+
+				var sub = this.Sb[Aa(a + b + c, this.Sb.length)];
+				0 < this.Sb.length && (d = d.replace("{sub}", sub));
+				a = this.Ja ? this.Ja.getURL(d) : d;
+				// var fn = Cesium.ImageryProvider.loadImage(this, a)
+				// console.log(fn);
+				
+
+				var def = $.Deferred();
+				_getImg(a, this.url.replace('{sub}', '{s}'), {
+					s: sub,
+					x: x,
+					y: y,
+					z: z
+				}, function(_cachePath) {
+					def.resolve(this);
+				});
+
+				return def;
+			}
+		}
+	}
 }()

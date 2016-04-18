@@ -27,7 +27,9 @@ $(function() {
 		},
 		'xsc': {
 			name: '亚欧地面场分析',
-			dataurl: 'http://scapi.weather.com.cn/weather/micapsfile?fileMark=h000&isChina=false',
+			// dataurl: 'http://scapi.weather.com.cn/weather/micapsfile?fileMark=h000&isChina=false',
+			dataurl: './data/xsc.json',
+			is_file: true,
 			type: 'micaps'
 		},
 		'xsc500': {
@@ -111,7 +113,7 @@ $(function() {
 		if(lines) {
 			_each(lines, function(i, v) {
 				var arr = [];
-        		_each(v.items, function(ii, point) {
+        		_each(v.items || v.point, function(ii, point) {
         			arr.push([point.y, point.x]);
         		})
 				var polyline = L.polyline(arr, {
@@ -318,8 +320,14 @@ $(function() {
 		init: function(productName) {
 			var confOfProduct = conf[productName];
 			if (confOfProduct) {
-				Util.req(Util.encryURL(confOfProduct.dataurl), function(err, data) {
-					// console.log(err, data);
+				var url = confOfProduct.dataurl;
+				if (!confOfProduct.is_file) {
+					url = Util.encryURL(url);
+				}
+				Util.req(url, {
+					dealError: false
+				}, function(err, data) {
+					console.log(err, data);
 					_reset();
 					if (err) {
 						alert(productName+'数据请求出现错误！');

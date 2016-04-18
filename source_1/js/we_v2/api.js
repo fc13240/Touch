@@ -1848,7 +1848,7 @@ CESIUM_BASE_URL = ('https:' == document.location.protocol ? 'https:' : 'http:') 
 			}, y.prototype.wasCreatedByUpsampling = function() {
 				return this._createdByUpsampling
 			}, y
-		}), (console.log(e), console.log(t), console.log(r)), r("Core/loadImage", ["../ThirdParty/when", "./defaultValue", "./defined", "./DeveloperError", "./isCrossOriginUrl"], function(e, t, r, i, n) {
+		}), r("Core/loadImage", ["../ThirdParty/when", "./defaultValue", "./defined", "./DeveloperError", "./isCrossOriginUrl"], function(e, t, r, i, n) {
 			"use strict";
 
 			var o = /^data:/,
@@ -1862,7 +1862,6 @@ CESIUM_BASE_URL = ('https:' == document.location.protocol ? 'https:' : 'http:') 
 					})
 				};
 			return a.createImage = function(e, t, r) {
-				console.log('load', e, t, r);
 				var i = new Image;
 				i.onload = function() {
 					r.resolve(i)
@@ -42177,8 +42176,12 @@ CESIUM_BASE_URL = ('https:' == document.location.protocol ? 'https:' : 'http:') 
 			d = d.replace("{y}", (this.Lc ? (1 << c) - b - 1 : b).toFixed(0));
 		0 < this.Sb.length && (d = d.replace("{sub}", this.Sb[Aa(a + b + c, this.Sb.length)]));
 		a = this.Ja ? this.Ja.getURL(d) : d;
-		return Cesium.ImageryProvider.loadImage(this, a)
+		var fn = Cesium.ImageryProvider.loadImage(this, a)
+		return fn;
 	};
+
+	// 添加瓦片的缓存机制
+	Util.TileLayer.cache($c, Aa);
 
 	function X(a) {
 		this.u = a;

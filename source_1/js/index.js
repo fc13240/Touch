@@ -125,6 +125,8 @@ $(function() {
 	});
 	var $tool_product_list = $('.tool_product_list').html(html_product_list);
 	$tool_product_list.find('li').click(function() {
+		Util.Loading.hide();
+		
 		Wind.hide();
 		Typhoon.clear();
 		Imgs.clear();

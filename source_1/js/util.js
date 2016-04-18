@@ -46,6 +46,19 @@
 				})
 			}
 		}
+		var remote = require('remote');
+
+		var dialog = remote.require('dialog');
+		var win_instance = remote.getCurrentWindow();
+		alert = function(msg) {
+			dialog.showMessageBox(win_instance, {
+				type: 'info',
+				buttons: ['yes'],
+				title: '系统提示',
+				message: msg,
+				icon: null
+			});
+		}
 	} else {
 		function _download(url, savepath, cb) {
 			if (typeof savepath == 'function') {
@@ -116,7 +129,8 @@
 			option = $.extend(true, {
 				type: 'json',
 				unique: true,
-				loading: true
+				loading: true,
+				dealError: true,//是否自动处理错误
 			}, option);
 
 			if (option.unique) {
@@ -146,7 +160,13 @@
 					} else {
 						console.log(uniqueUrl, url);
 					}
-				}).error(cb);
+				}).error(function(req, status, error) {
+					Loading.hide();
+					if (option.dealError) {
+						alert('数据请求出现错误！');
+					}
+					cb && cb(error);
+				});
 			}
 		}
 		fn.text = function(url, cb) {
@@ -258,7 +278,7 @@
 			fn('正在处理');
 		}
 		fn.hide = function() {
-			$div_loading.hide();
+			$div_loading && $div_loading.hide();
 		}
 		return fn;
 	})();
