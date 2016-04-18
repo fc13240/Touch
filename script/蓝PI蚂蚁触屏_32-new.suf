@@ -6,9 +6,9 @@
 <ArchiveFiles>
 <FileData>
 <FldRef>1</FldRef>
-<FullName/>
+<FullName>F:\source\node_projects\CWTV\shell\build\ia32\*.*</FullName>
 <FileName>*.*</FileName>
-<Source>F:\source\node_projects\CWTV\shell_1\build\ia32</Source>
+<Source>F:\source\node_projects\CWTV\shell\build\ia32</Source>
 <Ext>*</Ext>
 <RTSource>Archive</RTSource>
 <Desc/>
@@ -2722,7 +2722,7 @@ g_HandleSystemReboot();
 </SessionVar>
 <SessionVar>
 <Name>%ProductVer%</Name>
-<Value>0.7.1</Value>
+<Value>0.7.2</Value>
 <Type>1</Type>
 </SessionVar>
 <SessionVar>
@@ -2780,7 +2780,7 @@ g_HandleSystemReboot();
 <PostBuildProg/>
 <PostBuildCmdLine/>
 <PostBuildWait>0</PostBuildWait>
-<Filename>蓝PI蚂蚁触屏_32_v0.7.1.exe</Filename>
+<Filename>蓝PI蚂蚁触屏_32_v0.7.2.exe</Filename>
 <OutputFolder>E:\docs\2015\工作文档\气象频道\触屏项目\安装包</OutputFolder>
 <SegmentSizeMode>0</SegmentSizeMode>
 <CustomSegSize>0</CustomSegSize>

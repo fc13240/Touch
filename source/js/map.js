@@ -8,7 +8,8 @@ $(function() {
             subdomains: '1234'
         });
         one = L.tileLayer('https://api.mapbox.com/styles/v1/tonnyzhang/cin5pprd300r1c9mazwc36fdm/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidG9ubnl6aGFuZyIsImEiOiI2NmJhMzA0NmFlNmQ4ODZhNjU4MGI1NjRlYWVlZTMyMyJ9.cPEAjBxm7y0auxAuINcPLw');
-    	var map_url = storage.get('map_url');
+        
+        var map_url = storage.get('map_url');
 
     	window.one = one;
     	var baseMaps = {
