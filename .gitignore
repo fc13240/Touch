@@ -2,11 +2,4 @@ shell/build/target/
 shell/testdata/data/
 shell/testdata/data_clip/
 
-shell_1/build/target/
-shell_1/build/target/
-shell_1/build/ia32/
-shell_1/build/x64/
-shell_1/testdata/data/
-shell_1/testdata/data_clip/
-
 script/Autosave/
