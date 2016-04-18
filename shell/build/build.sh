@@ -2,7 +2,7 @@ SHELLPATH=$(cd `dirname $0`; pwd)
 TARGET_PATH=$SHELLPATH/target
 TARGET_32_DIR=$SHELLPATH/ia32
 TARGET_64_DIR=$SHELLPATH/x64
-SOURCE_PATH=$(cd $SHELLPATH; cd ../../source_1; pwd)
+SOURCE_PATH=$(cd $SHELLPATH; cd ../../source; pwd)
 
 # rm -rf $TARGET_PATH/*
 rm -rf $TARGET_64_DIR
