@@ -5,6 +5,7 @@
     if (!is_native) {
         return;
     }
+
 	var fs = require('fs');
 	var path = require('path');
 	var crypto = require('crypto');
@@ -70,7 +71,7 @@
 			}, this.options);
 			var _cachePath = _getCachePath(c.url, option);
 			if (fs.existsSync(_cachePath)) {
-				console.log('_cachePath = ', _cachePath);
+				Util.log('_cachePath = ', _cachePath);
 				return _cachePath;
 			} else {
 				var url = L.Util.template(c.url, option);
@@ -115,13 +116,13 @@
 			if (fs.existsSync(_cachePath)) {
 				src_return = src = _cachePath;
 				is_cache = true;
-				console.log('_cachePath = ', _cachePath);
+				Util.log('_cachePath = ', _cachePath);
 			}
 		}
 		
 		img.onload = function() {
 			if (is_net && !is_cache) {
-				console.log('loadimage = ', src);
+				Util.log('loadimage = ', src);
 				saveImg(_cachePath, img);
 				// src_return = _cachePath;
 			}

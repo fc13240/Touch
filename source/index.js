@@ -22,9 +22,10 @@
             fullscreen: true,
             autoHideMenuBar: true
 		}
+		var IS_DEBUG = false;
 		try {
 			var conf = require('./conf');
-			if (conf.debug) {
+			if ((IS_DEBUG = conf.debug)) {
 				delete opt.fullscreen;
 				delete opt.autoHideMenuBar;
 			}
@@ -34,6 +35,7 @@
             win.openDevTools();
         });
 		win.loadURL(path.join('file://' , __dirname, 'index.html'));
+		
 		win.show();
 	});
 }();

@@ -1,4 +1,12 @@
 !function(G) {
+	var _log = function(){}
+	try {
+		if (require('./conf').debug && 0) {
+			_log = function() {
+				console.log.apply(console, arguments);
+			}
+		}
+	} catch(e){}
 	if (is_native) {
 		var ext = require.extensions;
 		ext['.gts'] = ext['.js'];
@@ -290,6 +298,7 @@
 		UI: {
 			Ring: Ring
 		},
-		Loading: Loading
+		Loading: Loading,
+		log: _log
 	}
 }(this);

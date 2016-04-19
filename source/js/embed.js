@@ -2499,7 +2499,7 @@ EMBED_MODE = !0, document.addEventListener("DOMContentLoaded", W.require.bind(nu
 				for (v = 0, w = 0; E > v; v++) D(B, C, w, F) || (w += 6);
 				x = w / 6, y && (E = 0 | x, D = E > x ? g : h), l.lineWidth = u.getLineWidth.call(u, t), l.fillStyle = "rgba(0, 0, 0," + u.getBlendingAlpha.call(u, t) + ")";
 				var I = y ? q() : j;
-				! function J() {
+				! function J() {console.log('run')
 					p = setTimeout(function() {
 						s(), J()
 					}, 40)
@@ -2512,7 +2512,7 @@ EMBED_MODE = !0, document.addEventListener("DOMContentLoaded", W.require.bind(nu
 			p = null,
 			q = null,
 			r = !1;
-		return a.on("particlesAnimation", function(a) {
+		return a.on("particlesAnimation", function(a) {console.log(a);
 			"off" === a ? (k.style.opacity = 0, r = !0, q = setTimeout(d, 1500)) : (r = !1, clearTimeout(q), j(), k.style.opacity = 1)
 		}), c.on("movestart", d), {
 			run: j,
