@@ -118,11 +118,75 @@ $(function() {
         		})
 				var polyline = L.polyline(arr, {
         			stroke: true,
-        			color: '#1010FF',
+        			color: '#fff',
         			weight: 2
         		}).addTo(map);
 
         		_overlays.push(polyline);
+
+        		var flags = v.flags;
+				if(flags && flags.items && flags.items.length > 0){
+					var text = flags.text;
+					_each(flags.items, function(i, v){
+						var marker = L.marker([v.y, v.x], {icon: L.divIcon({
+							iconSize: L.point(40, 40),
+							className: 'micaps_text',
+							html: '<span style="font-weight:normal;font-size: 20px;">'+text+'</span>'
+						})}).addTo(map);
+						_overlays.push(marker);
+					});
+				}
+			});
+		}
+		var symbols = data.symbols;
+		if(symbols){
+			_each(symbols, function(i, v){
+				var type = v.type;
+
+				var text = '',
+					color = '',
+					fontSize = 30,
+					styleExtra = null,
+					offset = null,
+					fontWeight = '';
+
+				if('60' == type){
+					text = 'H';
+					color = 'red';
+				}else if('61' == type){
+					text = 'L';
+					color = 'blue';
+				}else if('37' == type){
+					text = '台';
+					color = 'green';
+				}else if('48' == type){
+					fontWeight = 'font-weight: bold;';
+					text = v.text;
+					fontSize = 14;
+					styleExtra = {
+						shadowBlur: 4,
+						shadowColor: '#ffffff'
+					};
+					offset = {
+						x: 0,
+						y: -24
+					};
+
+					// var marker = L.marker([v.y, v.x], {icon: L.divIcon({
+					// 	className: 'micaps_text',
+					// 	html: '╳'
+					// })}).addTo(map);
+
+					// _overlays.push(marker);
+				}
+				if(text){
+					var marker = L.marker([v.y, v.x], {icon: L.divIcon({
+						iconSize: L.point(40, 40),
+						className: 'micaps_text',
+						html: '<span style="color: '+color+'">'+text+'</span>'
+					})}).addTo(map);
+					_overlays.push(marker);
+				}
 			});
 		}
     }

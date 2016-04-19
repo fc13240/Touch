@@ -1106,3 +1106,11 @@ ol {
 #terrain_wrap{
     background-color: rgba(0, 0, 0, 0.8);
 }
+
+.micaps_text{
+    font-size: 34px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 40px;
+    height: 40px;
+}

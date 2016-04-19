@@ -46,11 +46,14 @@ $(function() {
 			while((tmp = markers.shift())){
 				maps.removeLayer(tmp);
 			}
-			for(var i in LNGLAT_PROVINCE){
-				var val = LNGLAT_PROVINCE[i];
-				var myIcon = L.divIcon({className: 'map_label level_'+maps.getZoom(), html: '<span>'+i+'</span>'});
-				var marker = L.marker([val[1], val[0]], {icon: myIcon}).addTo(maps);
-				markers.push(marker);
+			var zoom = maps.getZoom();
+			if (zoom > 3) {
+				for(var i in LNGLAT_PROVINCE){
+					var val = LNGLAT_PROVINCE[i];
+					var myIcon = L.divIcon({className: 'map_label level_'+zoom, html: '<span>'+i+'</span>'});
+					var marker = L.marker([val[1], val[0]], {icon: myIcon}).addTo(maps);
+					markers.push(marker);
+				}
 			}
 		}
 		addProvinceName();
