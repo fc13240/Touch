@@ -2,37 +2,32 @@
 <html lang="en">
 
 <head>
-    <title>Windyty, wind map &amp; forecast</title>
+    <title>蓝PI触屏</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
     <meta name="geoip" content="114.247.188.89,39.9289,116.3883,CN,Beijing">
-    <link href="./css/embed.css?timestamp=1950" rel="stylesheet" type="text/css">
+    <link href="./css/embed.css" rel="stylesheet" type="text/css">
     <link href="./css/index.css" rel="stylesheet" type="text/css">
     <script src="./gfs/minifest.js"></script>
     <script>
     var W = {
         version: '5.3.4'
     }
-    </script>
-    <!-- <script src="./js/def.js"></script>
-    <script src="./js/leaflet3D.v0.js"></script>
-    <script src="./js/embed.js?timestamp=1950"></script>
-    <script src="./js/jquery-1.8.2.js"></script>  -->
-
-    <script src="./js/def.js"></script>
+    </script> 
+	<script src="./js/def.js"></script>
     <script src="./js/jquery-1.8.2.js"></script> 
-    <script src="./js/util.js"></script>
-    <script src="./js/echarts.js"></script>
+    <!-- <script src="./js/util.js"></script> -->
+	<!-- <script src="./js/echarts.js"></script> -->
     <script src="./js/leaflet3D.v0.js"></script>
-    <script src="./js/tileLayerCache.js"></script>
-    <script src="./js/WE_v2/api.js"></script>
+    <!-- <script src="./js/tileLayerCache.js"></script> -->
+    <!-- <script src="./js/WE_v2/api.js"></script> -->
     <script src="./js/embed.js"></script>
-    <script src="./js/text.js"></script>
-    <script src="./js/typhoon.js"></script>
-    <script src="./js/imgs.js"></script>
+    <!-- <script src="./js/text.js"></script>
+	<script src="./js/typhoon.js"></script>
+	<script src="./js/imgs.js"></script>
     <script src="./js/camera.js"></script>
     <script src="./js/micaps.js"></script>
-    <script src="./js/paint.js"></script>
+	<script src="./js/paint.js"></script>
     <script src="./js/map.js"></script>
     <script src="./js/alarm.js"></script>
     <script src="./js/iscroll.js"></script>
@@ -40,7 +35,7 @@
     <script src="./js/3d/three.js"></script>
     <script src="./js/3d/TrackballControls.js"></script> 
     <script src="./js/3d/TerrainLoader.js"></script>
-    <script src="./js/terrain.js"></script>
+    <script src="./js/terrain.js"></script> -->
     <script src="./js/index.js"></script>
 </head>
 
@@ -204,7 +199,6 @@
             </div>
         </form>
     </div>
-    <div id="legend" class="shy"></div>
     <div id="embed-header-container">
         <a href="https://www.windyty.com/" target="wind" id="embed-title" title="Windyty, wind forecast"></a>
         <div id="title" style="display:none"></div>
@@ -214,25 +208,24 @@
     <canvas id="jpg_decoder" style="display: none"></canvas>
     <div id="intent" style="display: none"></div>
 
-
     <div class="other full_wrap">
         <div id="globe_wrap"></div>
         <div id="terrain_wrap"></div>
         <div id="btn_close"></div>
-        <div id="mask" ng-show="show_mask">
-            <canvas id="canvas_brush"  style="width:100%;height: 100%" ng-show="paint_can_use"></canvas>
-        </div>
-        <div class="load_progress_wrap"></div>
-        <div class="box_title_container">
-            <div class="box box_title">
-                <!-- <img ng-src="{{title_img}}"/> -->
+	    <div id="mask" ng-show="show_mask">
+			<canvas id="canvas_brush"  style="width:100%;height: 100%" ng-show="paint_can_use"></canvas>
+		</div>
+    	<div class="load_progress_wrap"></div>
+    	<div class="box_title_container">
+			<div class="box box_title">
+				<!-- <img ng-src="{{title_img}}"/> -->
                 <span class="product_name"></span>
-                <div class="time" ng-show="showtime">
-                    <span id="time_top"></span>
-                    <span id="time_bottom"></span>
-                </div>
-            </div>
-        </div>
+				<div class="time" ng-show="showtime">
+					<span id="time_top"></span>
+					<span id="time_bottom"></span>
+				</div>
+			</div>
+		</div>
         <div class="tool_wrap">
             <div class="tool_set_top">
                 <div class="tool_arrow_top"></div>
@@ -249,30 +242,30 @@
                 <div class="tool_btn tool_changemap"></div>
             </div>
         </div>
-        <div class="box box_player" ng-show="show_player">
-            <div class="player_btn" ng-class="{playing:playing}"></div>
-            <div class="player_progressbar_wrap">
-                <div class="player_progressbar">
-                    <div class="player_progressbar_progress">
-                        <div class="player_progressbar_flag"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="wrap_typhoon" ng-show="show_typhoon">
-            <div class="btn_typhoon_list">
-            </div>
-            <ul class="box typhoon_list" >
-            </ul>
-        </div>
-        <div class="box wrap_typhoon_chart"><div class="unit">(米/秒)</div><div class="typhoon_name"></div><div id="typhoon_chart"></div><div id="btn_close_typhoon_chart"></div></div>
-        <div class="legend" ng-show="legend_name"><img ng-src="./img/{{legend_name}}.png"/></div>
+		<div class="box box_player" ng-show="show_player">
+			<div class="player_btn" ng-class="{playing:playing}"></div>
+			<div class="player_progressbar_wrap">
+				<div class="player_progressbar">
+					<div class="player_progressbar_progress">
+						<div class="player_progressbar_flag"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="wrap_typhoon" ng-show="show_typhoon">
+			<div class="btn_typhoon_list">
+			</div>
+			<ul class="box typhoon_list" >
+			</ul>
+		</div>
+		<div class="box wrap_typhoon_chart"><div class="unit">(米/秒)</div><div class="typhoon_name"></div><div id="typhoon_chart"></div><div id="btn_close_typhoon_chart"></div></div>
+		<div class="legend" ng-show="legend_name"><img ng-src="./img/{{legend_name}}.png"/></div>
         
         <div id="video_player" class="box box_dialog">
             <div class="box_btn_close btn_close_video"></div>
             <video autoplay="autoplay" preload="auto" loop='5' width="100%" height="100%" >
-                <source type="video/mp4">
-            </video>
+				<source type="video/mp4">
+			</video>
         </div>
         <div id="aqi_panel" class="box box_dialog">
             <div class="box_btn_close btn_close_aqi"></div>

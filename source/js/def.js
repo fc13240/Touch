@@ -170,6 +170,7 @@ function(a) {
 }(window) /*! */
 
 var is_native = typeof global !== 'undefined' && typeof global.process !== 'undefined';
+var IS_BIG_SCREEN = screen.width > 1920 || 1;
 !function(){
 	var fn_error = function(e){
 		console.log('sysErr',e.stack);
