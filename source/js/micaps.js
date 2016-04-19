@@ -159,26 +159,27 @@ $(function() {
 				}else if('37' == type){
 					text = '台';
 					color = 'green';
-				}else if('48' == type){
-					fontWeight = 'font-weight: bold;';
-					text = v.text;
-					fontSize = 14;
-					styleExtra = {
-						shadowBlur: 4,
-						shadowColor: '#ffffff'
-					};
-					offset = {
-						x: 0,
-						y: -24
-					};
-
-					// var marker = L.marker([v.y, v.x], {icon: L.divIcon({
-					// 	className: 'micaps_text',
-					// 	html: '╳'
-					// })}).addTo(map);
-
-					// _overlays.push(marker);
 				}
+				// else if('48' == type){
+				// 	fontWeight = 'font-weight: bold;';
+				// 	text = v.text;
+				// 	fontSize = 14;
+				// 	styleExtra = {
+				// 		shadowBlur: 4,
+				// 		shadowColor: '#ffffff'
+				// 	};
+				// 	offset = {
+				// 		x: 0,
+				// 		y: -24
+				// 	};
+
+				// 	// var marker = L.marker([v.y, v.x], {icon: L.divIcon({
+				// 	// 	className: 'micaps_text',
+				// 	// 	html: '╳'
+				// 	// })}).addTo(map);
+
+				// 	// _overlays.push(marker);
+				// }
 				if(text){
 					var marker = L.marker([v.y, v.x], {icon: L.divIcon({
 						iconSize: L.point(40, 40),

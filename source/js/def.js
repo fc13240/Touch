@@ -169,8 +169,10 @@ function(a) {
 	a.W || (a.W = {}), d.modules = e, a.W.require = d, a.W.define = b
 }(window) /*! */
 
+// 是否是本地应用
 var is_native = typeof global !== 'undefined' && typeof global.process !== 'undefined';
-var IS_BIG_SCREEN = screen.width > 1920 || 1;
+// 是否是大屏设备
+var IS_BIG_SCREEN = screen.width > 1920;
 !function(){
 	var fn_error = function(e){
 		console.log('sysErr',e.stack);

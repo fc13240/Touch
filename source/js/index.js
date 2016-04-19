@@ -1,4 +1,7 @@
 $(function() {
+	if (IS_BIG_SCREEN) {
+		$('body').addClass('big_screen');
+	}
 	var $doc = $(document);
 	var _getCanvasWind = (function() {
 		var $canvasWind;

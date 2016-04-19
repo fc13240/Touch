@@ -1114,3 +1114,9 @@ ol {
     line-height: 40px;
     height: 40px;
 }
+
+
+/*rewrite big_screen */
+.big_screen .alarm_layer img{
+    width: 200%;
+}
