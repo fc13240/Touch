@@ -38,4 +38,7 @@
 		
 		win.show();
 	});
+
+	// 启动处理缓存和日志文件的子进程
+	require('child_process').fork(path.join(__dirname, 'cache'));
 }();

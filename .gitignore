@@ -1,10 +1,5 @@
 shell/build/target/
-<<<<<<< HEAD
 shell/build/ia32/
 shell/build/x64/
-=======
-shell/testdata/data/
-shell/testdata/data_clip/
->>>>>>> bf76af0eb631d4045d51d0de49b959f7f5b94bb9
 
 script/Autosave/

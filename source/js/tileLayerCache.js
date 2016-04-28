@@ -7,56 +7,9 @@
     }
 
 	var fs = require('fs');
-	var path = require('path');
-	var crypto = require('crypto');
-	var os = require('os');
-
-	function mkdirSync(mkPath) {
-		try{
-			var parentPath = path.dirname(mkPath);
-			if(!fs.existsSync(parentPath)){
-				mkdirSync(parentPath);
-			}
-			if(!fs.existsSync(mkPath)){
-				fs.mkdirSync(mkPath);
-			}
-			return true;
-		}catch(e){}
-	}
-	function saveBase64(save_file_name, img_data){
-		img_data = img_data.substring(img_data.indexOf('base64,') + 7);
-		img_data = new Buffer(img_data, 'base64');
-
-		mkdirSync(path.dirname(save_file_name));
-		fs.writeFileSync(save_file_name, img_data);
-
-		return img_data;
-	}
-	var saveImg = (function() {
-		var canvas = L.DomUtil.create("canvas");
-		var cxt = canvas.getContext('2d');
-		return function(savepath, img, fn, is_return_data) {
-			canvas.width = img.width;
-			canvas.height = img.height;
-			cxt.drawImage(img, 0, 0);
-			var dataURL = canvas.toDataURL('image/png');
-
-			var data = saveBase64(savepath, dataURL);
-			fn && fn (is_return_data?data: dataURL);
-		}
-	})();
-	var DEFAULT_PRIVATE_KEY = 'cwtv'
-	var encrypt = function(str, key){
-		if(str && str.toString){
-			return crypto.createHash('sha1').update(str.toString() + (key||DEFAULT_PRIVATE_KEY)).digest('hex');
-		}
-		return '';
-	}
 	function _getCachePath(url, option) {
-		var key = encrypt(url);
-		var src = path.join(os.tmpDir(), 'cwtv', 'map', key, option.z+'', option.x+'', option.y+'.png');
-		
-		return src;
+		var key = Util.md5(url);
+		return Util.getCachePath('map', key, option.z+'', option.x+'', option.y+'.png');
 	}
 	L.TileLayer.Multi.include({
 		getTileUrl: function(a) {
@@ -95,9 +48,14 @@
 				y: b.y
 			}, _this.options);
 
-			_getImg(src, c.url, option, function(_cachePath) {
-				a.src = _cachePath;
-				_this._tileOnLoad.apply(a);
+			Util.img.load(src, {
+				fn_cache: function() {
+					return _getCachePath(c.url, option)
+				},
+				onload: function(_cachePath) {
+					a.src = _cachePath;
+					_this._tileOnLoad.apply(a);
+				}
 			});
 			_this.fire("tileloadstart", {
 				tile: a,
@@ -105,34 +63,6 @@
 			})
 		}
 	});
-
-	function _getImg(src, url, option, onload) {
-		var src_return = src;
-		var img = new Image();
-		var is_net = /^http/.test(src);
-		var is_cache = false;
-		if (is_net) {
-			var _cachePath = _getCachePath(url, option);
-			if (fs.existsSync(_cachePath)) {
-				src_return = src = _cachePath;
-				is_cache = true;
-				Util.log('_cachePath = ', _cachePath);
-			}
-		}
-		
-		img.onload = function() {
-			if (is_net && !is_cache) {
-				Util.log('loadimage = ', src);
-				saveImg(_cachePath, img);
-				// src_return = _cachePath;
-			}
-			onload && onload.call(this, src_return);
-		}
-		img.crossOrigin = '';
-		img.src = src;
-		return src_return;
-	}
-
 	Util.TileLayer = {
 		// 为3D地图添加瓦片缓存机制
 		cache: function(TileMapServiceImageryProvider, Aa) {

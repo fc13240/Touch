@@ -21,86 +21,86 @@ $(function() {
 	})();
     var _blurWorker;
     var map;
-    // W.define('imgs', ['blurWorker', 'maps'], function(blurWorker, maps) {
-    // 	_blurWorker = blurWorker;
-    // 	map = maps;
-    // });
     W.require.bind(null, ['blurWorker', 'maps'], function(blurWorker, maps) {
     	_blurWorker = blurWorker;
     	map = maps;
     })();
     var cache_img = {};
     function loadAndCacheImg(url, opacityScale, cb){
-    	if(cache_img[url]){
-    		return cb();
-    	}
-    	var img = new Image();
-    	img.crossOrigin = 'anonymous';
-    	var worker = _blurWorker;
-    	img.onload = function(){
-    		var t = this;
-    		if(is_native && opacityScale != 1){
-	    		var canvas = document.createElement('canvas');
-	    		var w = t.width, h = t.height;
-	    		var TOSIZE = 1400;
-	    		if(w>h){
-	    			var scale = w/TOSIZE;
-	    			w = TOSIZE;
-	    			h /= scale;
-	    		}else{
-	    			var scale = h/TOSIZE;
-	    			h = TOSIZE;
-	    			w /= scale;
-	    		}
-	    		w = parseInt(w);
-	    		h = parseInt(h);
-	    		// w *= 2;
-	    		// h *= 2;
-	    		canvas.width = w;
-	    		canvas.height = h;
+    	if (is_native) {
+    		Util.img.load(url, {
+    			fn_cache: function() {
+    				var url_new = url;
+    				// 重写云图缓存名
+    				if (/product\/cloudnew/.test(url_new)) {
+    					var index = url_new.indexOf('?');
+    					if (index > -1) {
+    						url_new = url_new.substring(0, index);
+    					}
+    				}
+    				return Util.img.getCachePath(url_new);
+    			},
+    			fn_deal: function(img, onafterdeal) {
+    				if (opacityScale != 1) {
+    					var canvas = document.createElement('canvas');
+			    		var w = img.width, h = img.height;
+			    		var TOSIZE = 1400;
+			    		if(w>h){
+			    			var scale = w/TOSIZE;
+			    			w = TOSIZE;
+			    			h /= scale;
+			    		}else{
+			    			var scale = h/TOSIZE;
+			    			h = TOSIZE;
+			    			w /= scale;
+			    		}
+			    		w = parseInt(w);
+			    		h = parseInt(h);
+			    		// w *= 2;
+			    		// h *= 2;
+			    		canvas.width = w;
+			    		canvas.height = h;
 
-	    		var cxt = canvas.getContext('2d');
-	    		cxt.drawImage(img, 0, 0, w, h);
-    			var imagedata = cxt.getImageData(0, 0, w, h);
-    			// var data_arr = imagedata.data;
-    			// for(var i = 0, j = data_arr.length; i<j; i+= 4){
-    			// 	data_arr[i+3] = Math.min(data_arr[i+3] *opacityScale, 255);
-    			// }
-    			if(worker){
-    				worker.onmessage = function(a) {
-    					var data_arr = a.data.data;
-		    			for(var i = 0, j = data_arr.length; i<j; i+= 4){
-		    				data_arr[i+3] = Math.min(data_arr[i+3] *opacityScale, 255);
-		    			}
-    					cxt.putImageData(a.data, 0, 0);
-	    				cache_img[url] = canvas.toDataURL("image/png");
-	    				cb();
-						// E || J[K].putImageData(a.data, 0, 0)
-					}
+			    		var cxt = canvas.getContext('2d');
+			    		cxt.drawImage(img, 0, 0, w, h);
+		    			var imagedata = cxt.getImageData(0, 0, w, h);
 
-    				worker.postMessage({
-						imageData: imagedata,
-						width: w,
-						height: h,
-						radius: 2
-					});
-					return;
-    			}else{
-	    			cxt.putImageData(imagedata, 0, 0);
-	    			cache_img[url] = canvas.toDataURL("image/png");
-	    		}
-    		}else{
-    			cache_img[url] = url;
-    		}
-    		
-    		cb();
-    	}
-    	img.onerror = function(){
-    		cache_img[url] = '';
-    		cb();
-    	}
+		    			var worker = Util.getBlurWorker();
+			    		if(worker){
+		    				worker.onmessage = function(a) {
+		    					cxt.putImageData(a.data, 0, 0);
 
-    	img.src = url;
+								onafterdeal && onafterdeal(canvas.toDataURL("image/png"));
+
+								worker.terminate();
+							}
+
+		    				worker.postMessage({
+								imageData: imagedata,
+								width: w,
+								height: h,
+								radius: 2,
+								opacityScale: opacityScale
+							});
+							return;
+		    			}else{
+			    			cxt.putImageData(imagedata, 0, 0);
+			    			cache_img[url] = canvas.toDataURL("image/png");
+			    		}
+    				}
+    			},
+    			onload: function(img_path) {
+    				cache_img[url] = img_path;
+    				cb(img_path);
+    			}
+    		});
+    	} else {
+    		if(cache_img[url]){
+	    		return cb();
+	    	}
+
+	    	cache_img[url] = url;
+    	}
     }
     var progress = (function() {
     	var $box_player = $('.box_player')
@@ -194,6 +194,7 @@ $(function() {
     })();
     var $load_progress_wrap = $('.load_progress_wrap');
     var $doc = $(document).on('load_progress', function(e, per) {
+    	console.log('progress', per, isNormal);
     	if (!isNormal) {
     		return;
     	}
@@ -237,26 +238,24 @@ $(function() {
     	var len = list.length;
     	var loadedNum = 0;
     	function cb(){
-    		loadedNum += 1;
+    		loadedNum += 1;console.log(loadedNum/len)
     		$doc.trigger('load_progress', loadedNum/len);
     		if(loadedNum >= len){
     			cache_list[key] = true;
     			callback();
-    		} else {
-    			_run();
     		}
     	}
     	$doc.trigger('load_progress', 0);
-    	function _run () {
-    		var item = list.shift();
-    		if (item) {
-    			loadAndCacheImg(item[0], opacityScale, cb);
-    		}
-    	}
-    	_run();
-    	// for(var i = 0, j = len; i<j; i++){
-    	// 	loadAndCacheImg(list[i][0], opacityScale, cb);
+    	// function _run () {
+    	// 	var item = list.shift();
+    	// 	if (item) {
+    	// 		loadAndCacheImg(item[0], opacityScale, cb);
+    	// 	}
     	// }
+    	// _run();
+    	for(var i = 0, j = len; i<j; i++){
+    		loadAndCacheImg(list[i][0], opacityScale, cb);
+    	}
     }
 	function initData(list, opacityScale, bounds_default){
 		loadImgs(list, opacityScale, function(){
