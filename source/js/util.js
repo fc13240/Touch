@@ -435,20 +435,13 @@
 				return _getImgCachePath(src);
 			};
 			var _cachePath = fn_cache();
-			console.log(_cachePath);
+			// console.log(_cachePath);
 			if (fs.existsSync(_cachePath)) {
 				src_return = src = _cachePath;
 				is_cache = true;
-				_log('_cachePath = ', _cachePath);
-
-				var img = new Image();
-				img.src = _cachePath;
-				onload && onload.call(img, _cachePath);
-				return _cachePath;
 			}
 		}
 		
-
 		var img = new Image();
 		img.onload = function() {
 			if (is_net && !is_cache) {

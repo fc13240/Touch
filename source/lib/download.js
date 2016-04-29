@@ -14,22 +14,24 @@
 		var list = queue.splice(0, NUM_THREAD - num_dealing);
 		var len = list.length;
 		num_dealing += len;
+		function _down(a) {
+			console.log('download', a);
+			num_dealing--;
+			num_downloaded++;
+
+			typeof show_result == 'function' && show_result({
+				downloaded: num_downloaded
+			});
+			setTimeout(_deal, 0);
+		}
 		for (var i = 0; i<len; i++) {
 			var conf = list[i];
 			Util.img.load(conf.src, {
 				fn_cache: function() {
 					return conf.cache;
 				},
-				onload: function(a) {
-					console.log('download', a);
-					num_dealing--;
-					num_downloaded++;
-
-					typeof show_result == 'function' && show_result({
-						downloaded: num_downloaded
-					});
-					setTimeout(_deal, 0);
-				}
+				onload: _down,
+				onerror: _down
 			});
 		}
 	}

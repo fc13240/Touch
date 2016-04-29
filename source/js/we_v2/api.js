@@ -7,7 +7,7 @@
  */
 
 CESIUM_BASE_URL = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//www.webglearth.com/v2/';
-var CESIUM_UTIL_WHEN ;
+
 
 ! function() {
 	var e, t, r;
@@ -358,7 +358,7 @@ var CESIUM_UTIL_WHEN ;
 					} else i = r[1];
 				for (; n > o; ++o) o in t && (i = e(i, t[o], o, t));
 				return i
-			}, (CESIUM_UTIL_WHEN = e), e
+			}, e
 		})
 	}("function" == typeof r && r.amd ? r : function(e) {
 		"object" == typeof exports ? module.exports = e() : this.when = e()
@@ -16926,7 +16926,7 @@ var CESIUM_UTIL_WHEN ;
 					p = i._gl,
 					v = p.TEXTURE_2D,
 					g = p.createTexture();
-				p.activeTexture(p.TEXTURE0), p.bindTexture(v, g), r(a) ? (p.pixelStorei(p.UNPACK_PREMULTIPLY_ALPHA_WEBGL, m), p.pixelStorei(p.UNPACK_FLIP_Y_WEBGL, f), r(a.arrayBufferView) ? p.texImage2D(v, 0, h, s, u, 0, h, d, a.arrayBufferView) : r(a.framebuffer) ? (a.framebuffer !== i.defaultFramebuffer && a.framebuffer._bind(), p.copyTexImage2D(v, 0, h, a.xOffset, a.yOffset, s, u, 0), a.framebuffer !== i.defaultFramebuffer && a.framebuffer._unBind()) : console.log(a), p.texImage2D(v, 0, h, h, d, a)) : p.texImage2D(v, 0, h, s, u, 0, h, d, null), p.bindTexture(v, null), this._context = i, this._textureFilterAnisotropic = i._textureFilterAnisotropic, this._textureTarget = v, this._texture = g, this._pixelFormat = h, this._pixelDatatype = d, this._width = s, this._height = u, this._dimensions = new e(s, u), this._preMultiplyAlpha = m, this._flipY = f, this._sampler = void 0, this.sampler = void 0
+				p.activeTexture(p.TEXTURE0), p.bindTexture(v, g), r(a) ? (p.pixelStorei(p.UNPACK_PREMULTIPLY_ALPHA_WEBGL, m), p.pixelStorei(p.UNPACK_FLIP_Y_WEBGL, f), r(a.arrayBufferView) ? p.texImage2D(v, 0, h, s, u, 0, h, d, a.arrayBufferView) : r(a.framebuffer) ? (a.framebuffer !== i.defaultFramebuffer && a.framebuffer._bind(), p.copyTexImage2D(v, 0, h, a.xOffset, a.yOffset, s, u, 0), a.framebuffer !== i.defaultFramebuffer && a.framebuffer._unBind()) : p.texImage2D(v, 0, h, h, d, a)) : p.texImage2D(v, 0, h, s, u, 0, h, d, null), p.bindTexture(v, null), this._context = i, this._textureFilterAnisotropic = i._textureFilterAnisotropic, this._textureTarget = v, this._texture = g, this._pixelFormat = h, this._pixelDatatype = d, this._width = s, this._height = u, this._dimensions = new e(s, u), this._preMultiplyAlpha = m, this._flipY = f, this._sampler = void 0, this.sampler = void 0
 			};
 			return i(f.prototype, {
 				sampler: {
@@ -27130,7 +27130,7 @@ var CESIUM_UTIL_WHEN ;
 				return c
 			}, $.prototype.createCubeMap = function(e) {
 				function t(e, t) {
-					t.arrayBufferView ? v.texImage2D(e, 0, h, c, c, 0, h, d, t.arrayBufferView) : console.log(t),v.texImage2D(e, 0, h, h, d, t)
+					t.arrayBufferView ? v.texImage2D(e, 0, h, c, c, 0, h, d, t.arrayBufferView) : v.texImage2D(e, 0, h, h, d, t)
 				}
 				e = n(e, n.EMPTY_OBJECT);
 				var r, i, a = e.source;
@@ -30248,7 +30248,6 @@ var CESIUM_UTIL_WHEN ;
 				function i() {
 					e.state = D.TRANSITIONING;
 					var i = n.requestImage(e.x, e.y, e.level);
-					console.log(A);
 					return a(i) ? (a(n.getTileCredits) && (e.credits = n.getTileCredits(e.x, e.y, e.level)), A(i, t, r), void 0) : (e.state = D.UNLOADED, void 0)
 				}
 				var n = this._imageryProvider,
@@ -43325,11 +43324,11 @@ var CESIUM_UTIL_WHEN ;
 			this.jb = e.createTexture();
 			e.activeTexture(e.TEXTURE0);
 			e.pixelStorei(e.UNPACK_FLIP_Y_WEBGL, 1);
-			e.bindTexture(e.TEXTURE_2D, this.jb);console.log(u)
+			e.bindTexture(e.TEXTURE_2D, this.jb);
 			e.texImage2D(e.TEXTURE_2D, 0, e.RGBA, e.RGBA, e.UNSIGNED_BYTE, u);
 			e.texParameteri(e.TEXTURE_2D, e.TEXTURE_MAG_FILTER, e.LINEAR);
 			e.texParameteri(e.TEXTURE_2D, e.TEXTURE_MIN_FILTER, e.LINEAR)
-		}, this);console.log(b);
+		}, this);
 		u.src = b;
 		d = c("precision lowp float;varying vec2 vTextureCoord;uniform sampler2D uSampler;void main(){gl_FragColor\x3dtexture2D(uSampler,vTextureCoord);}", e.FRAGMENT_SHADER);
 		f = c("precision mediump float;attribute vec3 aVertexPosition;attribute vec2 aTextureCoord;uniform mat4 uMVMatrix;uniform mat4 uPMatrix;uniform float uAspect;varying vec2 vTextureCoord;void main(){gl_Position\x3duPMatrix*uMVMatrix*vec4(aVertexPosition,1.0);gl_Position.x*\x3duAspect;gl_Position.z\x3d0.0;vTextureCoord\x3daTextureCoord;}",

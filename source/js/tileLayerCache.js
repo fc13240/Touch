@@ -63,78 +63,11 @@
 			})
 		}
 	});
-	function _loadImage(src_img, url) {
-		// return function() {
-			return CESIUM_UTIL_WHEN(CESIUM_UTIL_WHEN(src_img, function(src) {
-				var deferred = CESIUM_UTIL_WHEN.defer();
-
-				Util.img.load(src, {
-					fn_cache: function() {
-						return _getCachePath(url, {
-							s: sub,
-							x: x,
-							y: y,
-							z: z
-						})
-					},
-					onload: function(_cachePath) {
-						console.log('3d', _cachePath);
-						deferred.resolve(this);
-					},
-					onerror: function(e) {
-						console.log('tonny', e);
-						deferred.reject(this, e);
-					}
-				});
-
-				return deferred.promise;
-			}), function(src) {console.log('src', src);
-				return src;
-			}, function(e) {
-				CESIUM_UTIL_WHEN.reject(e);
-			});
-		// }
-	}
-	function requestFunction(src_img, src_cache) {
-		return CESIUM_UTIL_WHEN(src_img, function(src) {
-			var deferred = CESIUM_UTIL_WHEN.defer();
-
-			Util.img.load(src, {
-				fn_cache: function() {
-					return src_cache
-				},
-				onload: function(_cachePath) {
-					console.log('3d', _cachePath);
-					deferred.resolve(this);
-				},
-				onerror: function(e) {
-					console.log('tonny', e);
-					deferred.reject(this, e);
-				}
-			});
-
-			return deferred.promise;
-		});
-	}
-	function throttleRequestByServer(src_img, src_cache) {
-		return CESIUM_UTIL_WHEN(requestFunction(src_img, src_cache), function(src) {
-			console.log('src', src);
-			return src;
-		}, function(e) {
-			CESIUM_UTIL_WHEN.reject(e);
-		});
-	}
-	function _loadImage(src_img, src_cache) {
-		return throttleRequestByServer(src_img, src_cache);
-	}
 	Util.TileLayer = {
 		// 为3D地图添加瓦片缓存机制
 		cache: function(TileMapServiceImageryProvider, Aa) {
-			window.test = TileMapServiceImageryProvider;
 			// var fn_requestImage = TileMapServiceImageryProvider.prototype.requestImage;
 			TileMapServiceImageryProvider.prototype.requestImage = function(a, b, c) {
-				console.log(this)
-				console.log('3d', a, b, c);
 				var x = a, y = b, z = c;
 				if (c < this.minimumLevel || c > this.maximumLevel) return this.sb;
 				var d = this.url.replace("{z}", c.toFixed(0)),
@@ -146,110 +79,27 @@
 				a = this.Ja ? this.Ja.getURL(d) : d;
 				// var fn = Cesium.ImageryProvider.loadImage(this, a)
 				// console.log(fn);
-				// return fn;
 				
 				var url = this.url.replace('{sub}', '{s}');
+				var def = $.Deferred();
+				Util.img.load(a, {
+					fn_cache: function() {
+						return _getCachePath(url, {
+							s: sub,
+							x: x,
+							y: y,
+							z: z
+						});
+					},
+					onload: function(_cachePath) {
+						def.resolve(this);
+					},
+					onerror: function(e) {
+						def.resolve(e);
+					}
+				});
 
-				var fn = _loadImage(a, _getCachePath(url, {
-					s: sub,
-					x: x,
-					y: y,
-					z: z
-				}));
-				console.log('fn', fn);
-				return fn;
-				// try{
-				// 	var fn = CESIUM_UTIL_WHEN(function() {
-				// 		var deferred = CESIUM_UTIL_WHEN.defer();
-
-				// 		Util.img.load(src, {
-				// 			fn_cache: function() {
-				// 				return _getCachePath(url, {
-				// 					s: sub,
-				// 					x: x,
-				// 					y: y,
-				// 					z: z
-				// 				})
-				// 			},
-				// 			onload: function(_cachePath) {
-				// 				console.log('3d', _cachePath);
-				// 				deferred.resolve(_cachePath);
-				// 			},
-				// 			onerror: function(e) {
-				// 				console.log('tonny', e);
-				// 				deferred.reject(this, e);
-				// 			}
-				// 		});
-
-				// 		return deferred.promise;
-				// 	}, function(src) {
-				// 		return src;
-				// 	}, function(e) {
-				// 		return CESIUM_UTIL_WHEN.reject(e);
-				// 	});
-				// 	// var fn = CESIUM_UTIL_WHEN(a, function(src) {
-				// 	// 	var deferred = CESIUM_UTIL_WHEN.defer();
-
-				// 	// 	// setTimeout(function() {
-				// 	// 		Util.img.load(src, {
-				// 	// 			fn_cache: function() {
-				// 	// 				return _getCachePath(url, {
-				// 	// 					s: sub,
-				// 	// 					x: x,
-				// 	// 					y: y,
-				// 	// 					z: z
-				// 	// 				})
-				// 	// 			},
-				// 	// 			onload: function(_cachePath) {
-				// 	// 				console.log('3d', _cachePath);
-				// 	// 				deferred.resolve(_cachePath);
-				// 	// 			},
-				// 	// 			onerror: function(e) {
-				// 	// 				console.log('tonny', e);
-				// 	// 				deferred.reject(this, e);
-				// 	// 			}
-				// 	// 		});
-				// 	// 	// }, 3000);
-
-				// 	// 	return deferred.promise;
-				// 	// })
-				// }catch(e){
-				// 	console.error(e);
-				// }
-
-				// console.log('fn', fn);
-				// return fn;
-
-				// var def = $.Deferred();
-				// var url = this.url.replace('{sub}', '{s}');
-				// console.log('3d', a);
-				// Util.img.load(a, {
-				// 	fn_cache: function() {
-				// 		return _getCachePath(url, {
-				// 			s: sub,
-				// 			x: x,
-				// 			y: y,
-				// 			z: z
-				// 		})
-				// 	},
-				// 	onload: function(_cachePath) {
-				// 		console.log('3d', _cachePath);
-				// 		def.resolve(_cachePath);
-				// 	},
-				// 	onerror: function(e) {
-				// 		def.reject(e);
-				// 	}
-				// });
-				// // _getImg(a, this.url.replace('{sub}', '{s}'), {
-				// // 	s: sub,
-				// // 	x: x,
-				// // 	y: y,
-				// // 	z: z
-				// // }, function(_cachePath) {
-				// // 	def.resolve(this);
-				// // });
-
-				// return def.promise();
+				return def;
 			}
 		}
 	}
