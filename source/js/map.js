@@ -30,9 +30,10 @@ $(function() {
             getConf: function() {
                 var conf = storage.get('_map_conf');
                 if (!conf) {
+                    var first_conf = map_conf.maps[0]
                     conf = {
-                        url: one._url,
-                        subdomains: one.options.subdomains
+                        url: first_conf.url,
+                        subdomains: first_conf.subdomains || ''
                     }
                 }
                 return conf;

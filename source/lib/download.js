@@ -102,7 +102,7 @@
 	var min_zoom = map_conf.zoom_min || 3;
 	var max_zoom = map_conf.zoom_max || 11;
 	map_conf.maps.forEach(function(conf) {
-		download(conf.url, min_zoom, max_zoom);
+		download(conf.url, 1, max_zoom);
 	});
 	for (var i in cache) {
 		url_list.push(i);

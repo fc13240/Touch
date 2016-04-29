@@ -425,6 +425,7 @@
 	}
 	function _loadImg(src, option) {
 		var onload = option.onload;
+		var onerror = option.onerror;
 		var fn_deal = option.fn_deal;
 		var src_return = src;
 		var is_net = /^http/.test(src);
@@ -434,12 +435,15 @@
 				return _getImgCachePath(src);
 			};
 			var _cachePath = fn_cache();
+			console.log(_cachePath);
 			if (fs.existsSync(_cachePath)) {
 				src_return = src = _cachePath;
 				is_cache = true;
 				_log('_cachePath = ', _cachePath);
 
-				onload && onload(_cachePath);
+				var img = new Image();
+				img.src = _cachePath;
+				onload && onload.call(img, _cachePath);
 				return _cachePath;
 			}
 		}
@@ -452,7 +456,9 @@
 				if (fn_deal) {
 					fn_deal(img, function(img_data) {
 						_saveImg(_cachePath, img_data);
-						onload && onload(_cachePath);
+						var img = new Image();
+						img.src = _cachePath;
+						onload && onload.call(img, _cachePath);
 					});
 					return;
 				}
@@ -461,10 +467,10 @@
 			}
 			onload && onload.call(this, src_return);
 		}
-		img.onerror = function() {
-			onload && onload(src_return);
+		img.onerror = function(e) {
+			onerror && onerror.call(this, e);
 		}
-		img.crossOrigin = '';
+		// img.crossOrigin = '';
 		img.src = src;
 		return src_return;
 	}
