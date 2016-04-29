@@ -1,7 +1,7 @@
 !function(G) {
 	var _log = function(){}
 	try {
-		if (require('./conf').debug && 0) {
+		if (require('./conf').debug) {
 			_log = function() {
 				console.log.apply(console, arguments);
 			}
@@ -350,8 +350,8 @@
 			}
 		}
 
-		var _URL = window.URL || window.webkitURL;
-		window.BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder
+		var _URL = G.URL || G.webkitURL;
+		G.BlobBuilder = G.BlobBuilder || G.WebKitBlobBuilder || G.MozBlobBuilder
 		return function() {
 			try {
 				var str_fn = "(" + fn_worker.toString() + ")()";
@@ -437,7 +437,7 @@
 			if (fs.existsSync(_cachePath)) {
 				src_return = src = _cachePath;
 				is_cache = true;
-				Util.log('_cachePath = ', _cachePath);
+				_log('_cachePath = ', _cachePath);
 
 				onload && onload(_cachePath);
 				return _cachePath;
@@ -448,7 +448,7 @@
 		var img = new Image();
 		img.onload = function() {
 			if (is_net && !is_cache) {
-				Util.log('loadimage = ', src);
+				_log('loadimage = ', src);
 				if (fn_deal) {
 					fn_deal(img, function(img_data) {
 						_saveImg(_cachePath, img_data);
@@ -461,12 +461,15 @@
 			}
 			onload && onload.call(this, src_return);
 		}
+		img.onerror = function() {
+			onload && onload(src_return);
+		}
 		img.crossOrigin = '';
 		img.src = src;
 		return src_return;
 	}
 	// Loading();
-	G.Util = {
+	module.exports = G.Util = {
 		download: _download,
 		encryURL: _encryURL,
 		req: _reqCache,

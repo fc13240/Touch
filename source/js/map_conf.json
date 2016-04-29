@@ -1,0 +1,9 @@
+{
+	"maps": [{
+		"url": "https://api.mapbox.com/styles/v1/tonnyzhang/cin5pprd300r1c9mazwc36fdm/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidG9ubnl6aGFuZyIsImEiOiI2NmJhMzA0NmFlNmQ4ODZhNjU4MGI1NjRlYWVlZTMyMyJ9.cPEAjBxm7y0auxAuINcPLw"
+	}, {
+		"url": "http://api.tiles.mapbox.com/v4/ludawei.mn69agep/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibHVkYXdlaSIsImEiOiJldzV1SVIwIn0.-gaUYss5MkQMyem_IOskdA&v=1.1"
+	}],
+	"zoom_min": 3,
+	"zoom_max": 11
+}

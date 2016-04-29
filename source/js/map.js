@@ -1,21 +1,31 @@
 $(function() {
 	W.require.bind(null, ['maps', 'storage'], function(map, storage) {
-    	var one = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-    		subdomains: 'abc'
-    	}),
-    	two = L.tileLayer('http://api.tiles.mapbox.com/v4/ludawei.mn69agep/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibHVkYXdlaSIsImEiOiJldzV1SVIwIn0.-gaUYss5MkQMyem_IOskdA&v=1.1');
-    	one = L.tileLayer('http://webst0{s}.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&style=6', {
-            subdomains: '1234'
-        });
-        one = L.tileLayer('https://api.mapbox.com/styles/v1/tonnyzhang/cin5pprd300r1c9mazwc36fdm/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidG9ubnl6aGFuZyIsImEiOiI2NmJhMzA0NmFlNmQ4ODZhNjU4MGI1NjRlYWVlZTMyMyJ9.cPEAjBxm7y0auxAuINcPLw');
+  //   	var one = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+  //   		subdomains: 'abc'
+  //   	}),
+  //   	two = L.tileLayer('http://api.tiles.mapbox.com/v4/ludawei.mn69agep/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibHVkYXdlaSIsImEiOiJldzV1SVIwIn0.-gaUYss5MkQMyem_IOskdA&v=1.1');
+  //   	one = L.tileLayer('http://webst0{s}.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&style=6', {
+  //           subdomains: '1234'
+  //       });
+  //       one = L.tileLayer('https://api.mapbox.com/styles/v1/tonnyzhang/cin5pprd300r1c9mazwc36fdm/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidG9ubnl6aGFuZyIsImEiOiI2NmJhMzA0NmFlNmQ4ODZhNjU4MGI1NjRlYWVlZTMyMyJ9.cPEAjBxm7y0auxAuINcPLw');
         
-        var map_url = storage.get('map_url');
+  //       var map_url = storage.get('map_url');
 
-    	window.one = one;
-    	var baseMaps = {
-		    "one": one,
-		    "two": two
-		};
+  //   	window.one = one;
+  //   	var baseMaps = {
+		//     "one": one,
+		//     "two": two
+		// };
+
+        var baseMaps = {};
+        var map_conf = require('./js/map_conf');
+        if (map_conf) {
+            $.each(map_conf.maps, function(i, conf) {
+                baseMaps[i] = L.tileLayer(conf.url, {
+                    subdomains: conf.subdomains || ''
+                });
+            })
+        }
         Util.map = {
             getConf: function() {
                 var conf = storage.get('_map_conf');
