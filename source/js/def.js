@@ -173,6 +173,7 @@ function(a) {
 var is_native = typeof global !== 'undefined' && typeof global.process !== 'undefined';
 // 是否是大屏设备
 var IS_BIG_SCREEN = screen.width > 1920;
+var IS_SHOW_WIND = false;
 !function(){
 	var fn_error = function(e){
 		console.log('sysErr',e.stack);

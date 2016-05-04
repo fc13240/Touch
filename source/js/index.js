@@ -12,14 +12,27 @@ $(function() {
 			return $canvasWind;
 		}
 	})();
-	var Wind = {
-		show: function() {
-			_getCanvasWind().show();
-		},
-		hide: function() {
-			_getCanvasWind().hide();
+	
+	var Wind = (function() {
+		var windAnimation;
+		W.require.bind(null, ['animation'], function(animation) {
+	    	windAnimation = animation;
+	    	windAnimation && windAnimation.stop();
+	    })();
+		return {
+			show: function() {
+				IS_SHOW_WIND = true;
+				_getCanvasWind().show();
+				windAnimation && windAnimation.run();
+			},
+			hide: function() {
+				IS_SHOW_WIND = false;
+				_getCanvasWind().hide();
+
+				windAnimation && windAnimation.stop();
+			}
 		}
-	}
+	})();
 	var CONF_PRODUCT = [{
 		name: '风场',
 		title: '地面流场示意图',

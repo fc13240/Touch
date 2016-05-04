@@ -50,6 +50,7 @@ $(function() {
 				}).addTo(earth);
 			}
 			earth.setView(earth_conf.center, earth_conf.zoom);
+			earth.resumeRendering();
 			// var p = map.getCenter();
 			// earth.setView([p.lat, p.lng], 3);
 
@@ -77,6 +78,7 @@ $(function() {
 	  //       });
 		}, clear: function() {
 			$globe_wrap.hide();
+			earth && earth.pauseRendering();
 		}
 	}
 })

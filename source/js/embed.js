@@ -2521,10 +2521,25 @@ W.define("animation", ["broadcast", "object", "globe"], function(a, b, c) {
 		p = null,
 		q = null,
 		r = !1;
+	var argv_run;
 	return a.on("particlesAnimation", function(a) {
 		"off" === a ? (k.style.opacity = 0, r = !0, q = setTimeout(d, 1500)) : (r = !1, clearTimeout(q), j(), k.style.opacity = 1)
 	}), c.on("movestart", d), {
-		run: j,
+		run: function() {
+			// NOTE: 这里通过全局变量IS_SHOW_WIND控制是否对风场进行处理
+			// 		 主要是为了优化不显示风场时整个页面的性能
+			var argv = [].slice.apply(arguments);
+			if (argv.length < 1 && argv_run) {
+				argv = argv_run;
+			} else {
+				argv_run = argv;
+			}
+			if (window.IS_SHOW_WIND) {
+				j.apply(this, argv);
+			} else {
+				d();
+			}
+		},
 		stop: d
 	}
 }), /*! */

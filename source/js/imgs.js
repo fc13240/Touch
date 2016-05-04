@@ -194,7 +194,6 @@ $(function() {
     })();
     var $load_progress_wrap = $('.load_progress_wrap');
     var $doc = $(document).on('load_progress', function(e, per) {
-    	console.log('progress', per, isNormal);
     	if (!isNormal) {
     		return;
     	}
@@ -238,7 +237,7 @@ $(function() {
     	var len = list.length;
     	var loadedNum = 0;
     	function cb(){
-    		loadedNum += 1;console.log(loadedNum/len)
+    		loadedNum += 1;
     		$doc.trigger('load_progress', loadedNum/len);
     		if(loadedNum >= len){
     			cache_list[key] = true;
