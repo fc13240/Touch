@@ -31,6 +31,12 @@
 			}
 		} catch(e) {}
 		var win = new BrowserWindow(opt);
+		var content = win.webContents;
+
+		content.on('dom-ready', function() {
+			content.executeJavaScript('var PACKAGE = '+(conf? JSON.stringify(conf):'null'));
+		});
+
 		globalShortcut.register('Alt+Shift+i', function() {
             win.openDevTools();
         });
