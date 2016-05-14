@@ -5,9 +5,9 @@
 	// "use strict";
 
 	var path = require('path');
-	var app = require('app');
 	var electron = require('electron');
-	var BrowserWindow = require('browser-window');
+	var app = electron.app;
+	var BrowserWindow = electron.BrowserWindow;
     var globalShortcut = electron.globalShortcut;
     
     app.on('window-all-closed', function () {

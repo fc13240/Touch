@@ -54,9 +54,10 @@
 				})
 			}
 		}
-		var remote = require('remote');
+		var electron = require('electron');
+		var remote = electron.remote;
 
-		var dialog = remote.require('dialog');
+		var dialog = electron.dialog;
 		var win_instance = remote.getCurrentWindow();
 		alert = function(msg) {
 			dialog.showMessageBox(win_instance, {

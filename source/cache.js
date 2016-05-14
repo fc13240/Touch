@@ -60,7 +60,7 @@
 		var files = readdir(path.join(os.tmpDir(), 'cwtv', dir), {
 			mtime: true
 		});
-		files.forEach(function(file) {
+		files && files.length > 0 && files.forEach(function(file) {
 			if (now - file.mtime > CONST_TIME_CACHE) {
 				rmfileSync(file.name);
 			}
