@@ -18,7 +18,7 @@
 		var opt = {
 			width: 1000,
 			height: 1000,
-			show: true,
+			show: false,
             fullscreen: true,
             autoHideMenuBar: true
 		}
@@ -40,9 +40,16 @@
 		globalShortcut.register('Alt+Shift+i', function() {
             win.openDevTools();
         });
-		win.loadURL(path.join('file://' , __dirname, 'index.html'));
 		
-		win.show();
+		
+		require('request')('https://embed.windyty.com/gfs/minifest.js', function(err, res, body) {
+			if (!err) {
+				require('fs').writeFileSync(path.join(__dirname, './gfs/minifest.js'), body);
+			}
+
+			win.loadURL(path.join('file://' , __dirname, 'index.html'));
+			win.show();
+		});
 	});
 
 	// 启动处理缓存和日志文件的子进程
