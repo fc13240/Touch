@@ -42,6 +42,7 @@
         });
 		
 		
+		// 加载配置文件
 		require('request')('https://embed.windyty.com/gfs/minifest.js', function(err, res, body) {
 			if (!err) {
 				require('fs').writeFileSync(path.join(__dirname, './gfs/minifest.js'), body);
