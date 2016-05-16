@@ -42,15 +42,8 @@
         });
 		
 		
-		// 加载配置文件
-		require('request')('https://embed.windyty.com/gfs/minifest.js', function(err, res, body) {
-			if (!err) {
-				require('fs').writeFileSync(path.join(__dirname, './gfs/minifest.js'), body);
-			}
-
-			win.loadURL(path.join('file://' , __dirname, 'index.html'));
-			win.show();
-		});
+		win.loadURL(path.join('file://' , __dirname, 'index.html'));
+		win.show();
 	});
 
 	// 启动处理缓存和日志文件的子进程
