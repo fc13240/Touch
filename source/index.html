@@ -14,8 +14,8 @@
         version: '5.3.4'
     }
     </script>
-    <script src="./js/def.js"></script>
     <script src="./js/jquery-1.8.2.js"></script> 
+    <script src="./js/def.js"></script>
     <script src="./js/util.js"></script>
     <script src="./js/echarts.js"></script>
     <script src="./js/leaflet3D.v0.js"></script>
@@ -31,7 +31,7 @@
     <script src="./js/map.js"></script>
     <script src="./js/alarm.js"></script>
     <script src="./js/iscroll.js"></script>
-    <script src="./js/globe.js"></script>
+    <!-- <script src="./js/globe.js"></script> -->
     <script src="./js/3d/three.js"></script>
     <script src="./js/3d/TrackballControls.js"></script> 
     <script src="./js/3d/TerrainLoader.js"></script>
@@ -230,19 +230,21 @@
         </div>
         <div class="tool_wrap">
             <div class="tool_set_top">
-                <div class="tool_arrow_top"></div>
-                <div class="tool_tip">云图</div>
+                <!-- <div class="tool_arrow_top"></div> -->
+                <!-- <div class="tool_tip">云图</div> -->
                 <div class="tool_set_top_wrap" id="tool_set_top_wrap">
                     <ul class="tool_product_list">
                     </ul>
                 </div>
-                <div class="tool_arrow_bottom"></div>  
+                <!-- <div class="tool_arrow_bottom"></div>   -->
             </div>
             <div class="tool_set_bottom">
                 <div class="tool_btn tool_brush"></div>
                 <div class="tool_btn tool_hand"></div>
                 <div class="tool_btn tool_changemap"></div>
             </div>
+            <ul class="tool_sub_list">
+            </ul>
         </div>
         <div class="box box_player" ng-show="show_player">
             <div class="player_btn" ng-class="{playing:playing}"></div>

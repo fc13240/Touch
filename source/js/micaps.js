@@ -13,16 +13,31 @@ $(function() {
 		'aqi_wr': {
 			name: '空气污染气象条件预报',
 			dataurl: 'http://scapi.weather.com.cn/weather/micapsfile?fileMark=kqzl_24,kqzl_48,kqzl_72&isChina=true',
-			type: '3d'
+			type: 'micaps'
 		},
 		'aqi': {
 			name: '空气质量',
 			dataurl: 'http://scapi.weather.com.cn/weather/getaqiobserve',
 			type: 'aqi'
 		},
-		'rain3d': {
-			name: '未来三天降水量预报',
-			dataurl: 'http://scapi.weather.com.cn/weather/micapsfile?fileMark=js_24_fc,js_48_fc,js_72_fc&isChina=true',
+		// 'rain3d': {
+		// 	name: '未来三天降水量预报',
+		// 	dataurl: 'http://scapi.weather.com.cn/weather/micapsfile?fileMark=js_24_fc,js_48_fc,js_72_fc&isChina=true',
+		// 	type: 'micaps'
+		// },
+		'rain3d_24': {
+			name: '未来24小时降水量预报',
+			dataurl: 'http://scapi.weather.com.cn/weather/micapsfile?fileMark=js_24_fc&isChina=true',
+			type: 'micaps'
+		},
+		'rain3d_48': {
+			name: '未来48小时降水量预报',
+			dataurl: 'http://scapi.weather.com.cn/weather/micapsfile?fileMark=js_48_fc&isChina=true',
+			type: 'micaps'
+		},
+		'rain3d_72': {
+			name: '未来72小时降水量预报',
+			dataurl: 'http://scapi.weather.com.cn/weather/micapsfile?fileMark=js_72_fc&isChina=true',
 			type: 'micaps'
 		},
 		'xsc': {

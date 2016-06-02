@@ -1,5 +1,5 @@
 $(function() {
-    var DATA_URL = 'http://decision.tianqi.cn//data/video/videoweather.html';
+    var DATA_URL = 'http://decision.tianqi.cn//data/video/videoweather.html?'+Math.random();
     
     var map;
     var _overlays = [];

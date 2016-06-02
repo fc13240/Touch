@@ -2071,22 +2071,29 @@ W.define("particles", ["rootScope", "Class"], function(a, b) {
 			// 只对大屏进行处理
 			if (IS_BIG_SCREEN) {
 				conf.forEach(function(v, i) {
-					conf[i] = v * 3;
+					conf[i] = v * 2.5;
 				});
 			}
 			return conf;
 		})(),
-		// NOTE: 这里可控制粒子数量
+		// NOTE: 这里可控制粒子数量, constant越大点越少
 		multiplier: {
-			constant: IS_BIG_SCREEN? 50 * 3: 50,
+			constant: IS_BIG_SCREEN? 50 * 3: 70,
 			pow: 1.6,
 			zoom: 2
 		},
-		velocity: {
-			constant: 70,
-			pow: 1.6,
-			zoom: 3
-		}
+		// NOTE: 暂时在这里控制线条的长度
+		velocity: (function() {
+			return IS_BIG_SCREEN? {
+				constant: 40,
+				pow: 1.2,
+				zoom: 3
+			}: {
+				constant: 50,
+				pow: 1.4,
+				zoom: 3
+			}
+		})()
 	}), d.wind.globe = W.Particles.globe.extend({
 		animation: "wind",
 		multiplier: {

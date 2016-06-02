@@ -173,6 +173,18 @@ function(a) {
 var is_native = typeof global !== 'undefined' && typeof global.process !== 'undefined';
 // 是否是大屏设备
 var IS_BIG_SCREEN = screen.width > 1920;
+!function() {
+	if (is_native) {
+		var ele = require('electron');
+		var argv = ele.remote.process.argv;
+		for (var i = 0, j = argv.length; i<j; i++) {
+			if (argv[i].indexOf('--BIGSCREEN') > -1) {
+				IS_BIG_SCREEN = true;
+				break;
+			}
+		}
+	}
+}()
 var IS_SHOW_WIND = false;
 !function(){
 	var fn_error = function(e){
