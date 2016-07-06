@@ -62,6 +62,14 @@ $(function() {
 				Imgs.init('radar');
 			}
 		}, {
+			name: '风场+台风',
+			title: '地面流场及台风路径',
+			img: 'wind_typhoon',
+			click: function() {
+				Wind.show();
+				Typhoon.init();
+			}
+		}, {
 			name: '风场',
 			title: '流场示意图',
 			img: 'wind',

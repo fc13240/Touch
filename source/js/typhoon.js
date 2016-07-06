@@ -371,7 +371,9 @@ $(function(){
 			marker_typhoon.__typhoon_info = typhoon_info;
 			marker_typhoon.on('click', function(){
 				var v = marker_typhoon.__typhoon_info;
-				_initChart(marker_typhoon.__items, v.cnName+'(第'+v.index+'号台风'+v.enName+')');
+
+				var title_chart = (v.cnName||'')+'('+(!v.index? v.enName:'第'+v.index+'号台风'+v.enName)+')';
+				_initChart(marker_typhoon.__items, title_chart);
 			}).addTo(map);
 			_putCache(marker_typhoon);
 			_putCache(_addTyphoonPoint(item_first, _getPropupHtml(typhoon_info.cnName||typhoon_info.enName)));
@@ -440,7 +442,8 @@ $(function(){
 		$btn_typhoon_list.find('.btn_typhoon.on').each(function(){
 			var code = $(this).data('code');
 			var v = cache_typhoon[code];
-			html_title += '<li>'+v.cnName+'(第'+v.index+'号台风'+v.enName+')</li>';
+
+			html_title += '<li>'+(v.cnName||'')+'('+(!v.index? v.enName:'第'+v.index+'号台风'+v.enName)+')</li>';
 		});
 		if(html_title){
 			$typhoon_list.show();
