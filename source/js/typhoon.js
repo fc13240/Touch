@@ -176,7 +176,7 @@ $(function(){
 							var points = typhoon[8];
 							$.each(points, function(i, v) {
 								var time = new Date(v[2]);
-								time.setHours(time.getHours() + 8);
+								time.setHours(time.getHours());
 								var obj = {
 									time: time,
 									lat: v[5],
@@ -231,10 +231,20 @@ $(function(){
 						}
 					}
 				}
-				var item_last = items[items.length - 1];
-				$.each(item_last.forecast, function(i, v){
-					_init(v.lng, v.lat);
-				});
+				for (var i = items.length - 1; i>=0; i--) {
+					var forecast = items[i].forecast;
+					if (forecast && forecast.length > 0) {
+						items[i].useForecast = true;
+						$.each(forecast, function(i, v){
+							_init(v.lng, v.lat);
+						});
+						break;
+					}
+				}
+				// var item_last = items[items.length - 1];
+				// $.each(item_last.forecast, function(i, v){
+				// 	_init(v.lng, v.lat);
+				// });
 				cache_typhoon['bound_'+typhoonCode] = [[max_lat, min_lng], [min_lat, max_lng]];
 				cache_typhoon[key] = items;
 				cb(items);
@@ -355,9 +365,12 @@ $(function(){
 			var item_first = items[current_index++];
 
 			var numTotal = len;
-			var item_last_forecast = items[last_index].forecast;
-			if(item_last_forecast){
-				numTotal += item_last_forecast.length;
+			for (var i = items.length - 1; i>=0; i--) {
+				var f = items[i].forecast;
+				if (f && f.length > 0) {
+					numTotal += f.length;
+					break;
+				}
 			}
 			var run_delay = Math.min(run_delay_default, Math.ceil(run_time_total/numTotal));
 			var marker_typhoon = L.marker([item_first.lat, item_first.lng], {
@@ -383,6 +396,22 @@ $(function(){
 				var item_start = is_forcast && current_index == 0? last_shikuang_point: items[current_index-1],
 					item_end = items[current_index];
 				if (!item_end) {
+					for (var i_last = items.length - 1, i = i_last; i>=0; i--) {
+						var f = items[i].forecast;
+						if (f && f.length > 0) {
+							if (i != i_last) {
+
+								current_index = 0;
+								last_index = i;
+								last_shikuang_point = items[i];
+								is_forcast = true;
+								is_can_next = true;
+								items = f;
+								_run();
+							}
+							break;
+						}
+					}
 					return;
 				}
 				var option_polyline = {
@@ -412,18 +441,22 @@ $(function(){
 					current_index++;
 					is_can_next = true;
 				}else{
-					items = item_end.forecast;
-					if(items){
+					var forecast = item_end.forecast;
+					if(forecast && forecast.length > 0) {
+						items = forecast;
 						current_index = 0;
 						// items.unshift(item_end);
 						last_index = items.length - 1;
 						is_forcast = true;
-						is_can_next = true;
+						
+					} else {
+						current_index++;
 					}
+					is_can_next = true;
 				}
-				if(is_can_next){
+				// if(is_can_next){
 					run_tt[code] = setTimeout(_run, run_delay);
-				}
+				// }
 			}
 			run_tt[code] = setTimeout(_run, run_delay);
 		});
