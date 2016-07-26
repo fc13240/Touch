@@ -86,7 +86,7 @@ $(function(){
 				});
 				var cache = {};
 				$.each(list, function(i, v){
-					var index = v.index;
+					var index = v.index || v.code;
 					var val = cache[index];
 					if(val){
 						val.push(v);
@@ -118,7 +118,7 @@ $(function(){
 				}
 
 				list_new.sort(function(a, b){
-					return a.index - b.index;
+					return a.code - b.code;
 				});
 				cache_typhoon[URL_LIST] = list_new;
 				_getList(list_new);
@@ -431,7 +431,7 @@ $(function(){
 				if(!is_forcast){
 					marker_typhoon.setLatLng(p_end);
 					var options = marker_typhoon.options.icon.options;
-					options.html = '<div class="rotate"></div>'+_getPropupHtml(item_end.time.format((typhoon_info.cnName||typhoon_info.enName)+'(MM月dd日hh时)'));
+					options.html = '<div class="rotate"></div>'+_getPropupHtml((typhoon_info.cnName||typhoon_info.enName)+item_end.time.format('(MM月dd日hh时)'));
 					marker_typhoon.setIcon(L.divIcon(options));
 
 					last_shikuang_point = p_end;
