@@ -2722,7 +2722,7 @@ g_HandleSystemReboot();
 </SessionVar>
 <SessionVar>
 <Name>%ProductVer%</Name>
-<Value>0.7.10</Value>
+<Value>0.7.11</Value>
 <Type>1</Type>
 </SessionVar>
 <SessionVar>
@@ -2780,7 +2780,7 @@ g_HandleSystemReboot();
 <PostBuildProg/>
 <PostBuildCmdLine/>
 <PostBuildWait>0</PostBuildWait>
-<Filename>蓝PI蚂蚁触屏_32_v0.7.10.exe</Filename>
+<Filename>蓝PI蚂蚁触屏_32_v0.7.11.exe</Filename>
 <OutputFolder>E:\docs\2015\工作文档\气象频道\触屏项目\安装包</OutputFolder>
 <SegmentSizeMode>0</SegmentSizeMode>
 <CustomSegSize>0</CustomSegSize>

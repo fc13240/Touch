@@ -57,7 +57,7 @@
 		var electron = require('electron');
 		var remote = electron.remote;
 
-		var dialog = electron.dialog;
+		var dialog = remote.require('electron').dialog;
 		var win_instance = remote.getCurrentWindow();
 		alert = function(msg) {
 			dialog.showMessageBox(win_instance, {

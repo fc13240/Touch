@@ -1,3 +1,5 @@
+#!/bin/sh
+
 SHELLPATH=$(cd `dirname $0`; pwd)
 TARGET_PATH=$SHELLPATH/target
 TARGET_32_DIR=$SHELLPATH/ia32
