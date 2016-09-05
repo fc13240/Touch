@@ -486,6 +486,9 @@
 				return _getImgCachePath(url);
 			}
 		},
-		getCachePath: _getCachePath
+		getCachePath: _getCachePath,
+		file: {
+			mkdir: mkdirSync
+		}
 	}
 }(this);

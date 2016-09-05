@@ -4,6 +4,7 @@ html,body{
 body {
     font: 14px/1.6 "Microsoft Yahei", "SimSun", "宋体", "Arial", "HELVETICA", "sans-serif", "Tahoma";
     background-color: #fff;
+    -webkit-user-select:none;
 }
 @font-face {
     font-family: "productName";
@@ -1161,9 +1162,20 @@ ol {
     width: 60px;
 }
 .p_big ul li img{
-    margin-top: 5px;
+    margin-top: 10px;
+    width: 40px;
+    height: 40px;
 }
-
+.p_big.on > ul{
+    display: block;
+}
+.p_big.sub_on > ul{
+    display: none;
+}
+.p_big ul.pos_middle {
+    position: fixed;
+    top: 25%;
+}
 #logo{
     position: fixed;
     right: 15px;

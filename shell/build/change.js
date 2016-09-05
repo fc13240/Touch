@@ -70,9 +70,9 @@ function _repalce_content(dir){
 	// });
 	_replace(path.join(dir, 'conf.json'), function(content) {
 		var data = JSON.parse(content);
-		return JSON.stringify({
-			version: data.version
-		});
+		delete data.debug;
+		delete data.DEBUG;
+		return JSON.stringify(data);
 	});
 }
 

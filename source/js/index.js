@@ -2,6 +2,7 @@ $(function() {
 	if (IS_BIG_SCREEN) {
 		$('body').addClass('big_screen');
 	}
+	var WIN_HEIGHT = $(window).height();
 	var $doc = $(document);
 	var _getCanvasWind = (function() {
 		var $canvasWind;
@@ -17,7 +18,7 @@ $(function() {
 		setTimeout(function() {
 			var conf = window.PACKAGE;
 			if (!conf || !conf.debug) {
-				if (new Date().getTime() > new Date('2016/09/30').getTime()) {
+				if (new Date().getTime() > new Date('2016/10/30').getTime()) {
 					alert('软件试用已经结束，请联系相关管理员！');
 					return window.close();
 				}
@@ -177,36 +178,105 @@ $(function() {
 	var $box_title_container = $('.box_title_container'),
 		$title_time = $box_title_container.find('.time'),
 		$product_name = $box_title_container.find('.product_name');
-
-	var html_product_list = '';
-	$.each(CONF_MENU, function(i, v) {
-		var html = '<span>'+v.name+'</span>';
-		var img = v.img;
-		if (img !== undefined) {
-			html = '<img src="./img/product/'+img+'.png"/>';
-		}
-		html += '<ul>';
-		var sub = v.sub;
-		$.each(sub, function(i_sub, v_sub) {
-			html += '<li><img src="./img/product/'+v_sub.img+'.png"/></li>';
-		});
-		html += '</ul>';
-		html_product_list += '<li data-tip="'+v.name+'" class="p_big">'+html+'</li>';
-	});
+	var $tool_product_list = $('.tool_product_list');
 	var $tool_tip = $('.tool_tip');
+
+	function initMenu() {
+		var html_product_list = '';
+		$.each(CONF_MENU, function(i, v) {
+			var html = '<span>'+v.name+'</span>';
+			var img = v.img;
+			if (img !== undefined) {
+				html = '<img src="./img/product/'+img+'.png"/>';
+			}
+			html += '<ul>';
+			var sub = v.sub;
+			$.each(sub, function(i_sub, v_sub) {
+				html += '<li><img src="./img/product/'+v_sub.img+'.png"/></li>';
+			});
+			html += '</ul>';
+			html_product_list += '<li data-tip="'+v.name+'" class="p_big">'+html+'</li>';
+		});
+		$tool_product_list.html(html_product_list);
+
+
+		$tool_product_list.find('ul').each(function() {
+			var $this = $(this);
+			var h = $this.height();
+			if (h > WIN_HEIGHT / 2) {
+				$this.addClass('pos_middle').css('margin-top', -h/4);
+			}
+		});
+	}
+	initMenu();
+
+	BPA.getConf(function(confBPA) {
+		var sub = CONF_MENU[0].sub;
+		var conf = [{
+			type: 'rain',
+			name: '降水',
+			img: 'rain',
+			sub: [
+				{
+					type: 'precipitation1h',
+					name: '1小时'
+				}, {
+					type: 'rainfall3',
+					name: '3小时'
+				}, {
+					type: 'rainfall6',
+					name: '6小时'
+				}, {
+					type: 'rainfall24',
+					name: '24小时'
+				}
+			]
+		}, {
+			type: 'airpressure',
+			img: 'airpressure',
+			name: '气压'
+		}, {
+			type: 'balltemp',
+			img: 'temperature',
+			name: '温度'
+		}, {
+			type: 'humidity',
+			img: 'humidity',
+			name: '相对湿度'
+		}, {
+			type: 'visibility',
+			img: 'visibility',
+			name: '能见度'
+		}, {
+			type: 'windspeed',
+			img: 'windspeed',
+			name: '风速'
+		}];
+		conf[0].sub.forEach(function(d) {
+			var type = d.type;
+			d.click = function() {
+				BPA.init(type)
+			}
+		});
+		conf.forEach(function(d) {
+			d.img = d.img || '3d';
+			if (d.type != 'rain') {
+				d.click = function() {
+					BPA.init(d.type)
+				}
+			}
+			sub.push(d);
+		});
+		initMenu();
+	});
 	$doc.on('click', function() {
 		$tool_tip.hide();
 	});
-	var $tool_product_list = $('.tool_product_list').html(html_product_list);
 
 	var $sub_wrap = $('.p_big ul');
 	$tool_product_list.delegate('li.p_big', 'click', function() {
-		$sub_wrap.hide();
-		var $ul = $(this).find('ul').show();
-		if (!$(this).hasClass('on')) {
-			$ul.find('.on').removeClass('on');
-		}
-		$(this).addClass('on').siblings().removeClass('on').find('.on').removeClass('on');
+		var $this = $(this);
+		$this.removeClass('sub_on').addClass('on').siblings().removeClass('on').find('.on').removeClass('on');
 	});
 	var $tool_sub_list = $('.tool_sub_list');
 	$tool_sub_list.delegate('li', 'click', function(e) {
@@ -224,13 +294,15 @@ $(function() {
 			fn && fn();
 		}
 	});
-	$sub_wrap.find('li').click(function(e) {
+	$tool_product_list.delegate('.p_big ul li', 'click', function(e) {
 		e.stopPropagation();
 		var $this = $(this);
-		$this.parent().hide();
+		// $this.parent().hide();
+		$this.closest('.p_big').addClass('sub_on');
 		Util.Loading.hide();
 		
 		Wind.hide();
+		BPA.clear();
 		Typhoon.clear();
 		Imgs.clear();
 		Paint.clear();
@@ -383,4 +455,6 @@ $(function() {
 			});
 		}
 	}()
+
+	require(require('path').join(__dirname, './js/reporter'));
 })
