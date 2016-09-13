@@ -28,7 +28,7 @@ $(function(){
 	// http://typhoon.nmc.cn/weatherservice/typhoon/jsons/list_default?t=1460511040067&callback=typhoon_jsons_list_default
 	// http://typhoon.nmc.cn/weatherservice/typhoon/jsons/view_2300503?t=1460511769078&callback=typhoon_jsons_view_2300503
 	var URL_TYPHOON = 'http://typhoon.nmc.cn/weatherservice/typhoon/jsons/';
-	var URL_LIST = URL_TYPHOON + 'list_default';
+	var URL_LIST = URL_TYPHOON + 'list_default?'+Math.random();
 	var cache_typhoon = {};
 	var is_debug = false;
 	try {
@@ -144,7 +144,7 @@ $(function(){
 				typhoonCode = [typhoonCode];
 			}
 			$.each(typhoonCode, function(i, v){
-				deferredArr.push(Util.req.text(URL_TYPHOON + 'view_' + v ));
+				deferredArr.push(Util.req.text(URL_TYPHOON + 'view_' + v +'?'+Math.random()));
 			});
 			$.when.apply($, deferredArr).done(function(){
 				var items = [];
