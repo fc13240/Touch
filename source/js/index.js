@@ -18,7 +18,7 @@ $(function() {
 		setTimeout(function() {
 			var conf = window.PACKAGE;
 			if (!conf || !conf.debug) {
-				if (new Date().getTime() > new Date('2016/10/30').getTime()) {
+				if (new Date().getTime() > new Date('2016/12/30').getTime()) {
 					alert('软件试用已经结束，请联系相关管理员！');
 					return window.close();
 				}
@@ -204,7 +204,7 @@ $(function() {
 			var $this = $(this);
 			var h = $this.height();
 			if (h > WIN_HEIGHT / 2) {
-				$this.addClass('pos_middle').css('margin-top', -h/4);
+				$this.addClass('pos_middle').css('top', WIN_HEIGHT/2-$this.parent().offset().top - h/2);
 			}
 		});
 	}

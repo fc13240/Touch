@@ -1172,10 +1172,10 @@ ol {
 .p_big.sub_on > ul{
     display: none;
 }
-.p_big ul.pos_middle {
+/*.p_big ul.pos_middle {
     position: fixed;
     top: 25%;
-}
+}*/
 #logo{
     position: fixed;
     right: 15px;
@@ -1186,4 +1186,73 @@ ol {
 #logo img{
     width: 100%;
     vertical-align: bottom;
+}
+
+@media screen and (max-width : 1200px){
+    .box_title{
+        height: auto;
+    }
+    .product_name{
+        font-size: 50px;
+    }
+    .box_title .time span:first-child{
+        font-size: 24px;
+    }
+    .box_title .time span{
+        font-size: 20px;
+    }
+    .tool_wrap{
+        height: 590px;
+        width: 50px;
+        margin-top: -320px;
+    }
+    .tool_product_list li img{
+        width: 36px;
+        height: 36px;
+    }
+    .tool_product_list li{
+        height: 64px;
+    }
+    .tool_brush, .tool_hand, .tool_changemap{
+        background-size: 60px auto;
+        height: 70px;
+    }
+    .tool_set_bottom{
+        height: 210px;
+    }
+    .p_big ul li{
+        width: 50px;
+        height: 50px;
+    }
+    .p_big ul li img{
+        width: 30px;
+        height: 30px;
+    }
+    .player_btn{
+        width: 60px;
+        height: 60px;
+    }
+    .player_progressbar{
+        margin-top: 20px;
+    }
+    .player_progressbar_flag{
+        right: -30px;
+        top: -10px;
+        width: 40px;
+        height: 40px;
+    }
+    .player_progressbar_wrap{
+        width: 600px;
+    }
+    #logo{
+        width: 120px;
+    }
+    .tool_sub_list li{
+        font-size: 16px;
+        border-radius: 3px;
+    }
+    .btn_typhoon{
+        font-size: 16px;
+        padding: 3px 5px;
+    }
 }
