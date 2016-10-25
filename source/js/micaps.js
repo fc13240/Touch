@@ -207,6 +207,7 @@ $(function() {
 		}
     }
 
+	var iconPoint = $(window).width() < 1024? L.point(40, 45): L.point(80, 90);
     // 天气统计
     var global_data_tongji;
     var $tongji_panel = $('#tongji_panel');
@@ -228,7 +229,7 @@ $(function() {
 		_each(arr_stations, function(i, v) {
 			var p = L.latLng(v.lat, v.lon);
 			if (bound.contains(p)) {
-				var myIcon = L.divIcon({className: 'station', html: '<p>'+v.name+'</p>', iconSize: L.point(80, 90)});
+				var myIcon = L.divIcon({className: 'station', html: '<p>'+v.name+'</p>', iconSize: iconPoint});
 				var marker = L.marker(p, {icon: myIcon, zIndexOffset: 10}).addTo(map).on('click', function() {
 					$tongji_panel.show();
 					var $tongji_bar_container = $tongji_panel.find('.tongji_bar_container').html('');

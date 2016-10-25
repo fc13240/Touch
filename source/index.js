@@ -16,8 +16,8 @@
 	
 	app.on('ready', function() {
 		var opt = {
-			width: 1000,
-			height: 1000,
+			width: 682,
+			height: 512,
 			show: false,
             fullscreen: true,
             autoHideMenuBar: true

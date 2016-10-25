@@ -68,13 +68,13 @@ $(function() {
     		cb && cb(list);
     	});
     }
-
+    var WIDTH_MAX = $(window).width() < 1024? 200: 500;
     function _detail(url, pos) {
     	map.closePopup();
     	req(url, function(err, data) {
 			L.popup({
 				className: 'alarm_detail box',
-				maxWidth: 500,
+				maxWidth: WIDTH_MAX,
 				// keepInView: true
 			}).setLatLng(pos)
 			.setContent('<div class="alarm_detail_title">'+

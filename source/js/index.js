@@ -18,7 +18,7 @@ $(function() {
 		setTimeout(function() {
 			var conf = window.PACKAGE;
 			if (!conf || !conf.debug) {
-				if (new Date().getTime() > new Date('2016/12/30').getTime()) {
+				if (new Date().getTime() > new Date('2017/12/30').getTime()) {
 					alert('软件试用已经结束，请联系相关管理员！');
 					return window.close();
 				}

@@ -1256,3 +1256,126 @@ ol {
         padding: 3px 5px;
     }
 }
+
+@media screen and (max-width : 700px){
+    .box_title{
+        height: auto;
+        padding: 10px;
+    }
+    .tool_set_top{
+        height: 230px;
+    }
+    .product_name{
+        font-size: 24px;
+    }
+    .box_title .time span:first-child{
+        font-size: 16px;
+    }
+    .box_title .time span{
+        font-size: 14px;
+    }
+    .tool_wrap{
+        height: 360px;
+        width: 30px;
+        margin-top: -180px;
+        left: 15px;
+    }
+    .tool_product_list li img{
+        width: 26px;
+        height: 26px;
+    }
+    .tool_product_list li{
+        height: 40px;
+    }
+    .tool_brush, .tool_hand, .tool_changemap{
+        background-size: 40px auto;
+        height: 40px;
+    }
+    .tool_set_bottom{
+        height: 120px;
+    }
+    .p_big ul li{
+        width: 30px;
+        height: 30px;
+    }
+    .p_big ul li img{
+        width: 24px;
+        height: 24px;
+        margin-top: 3px;
+    }
+    .box_player{
+        left: 70px;
+    }
+    .player_btn{
+        width: 40px;
+        height: 40px;
+    }
+    .player_progressbar{
+        margin-top: 16px;
+        height: 10px;
+    }
+    .player_progressbar_flag{
+        right: -10px;
+        top: -6px;
+        width: 20px;
+        height: 20px;
+    }
+    .player_progressbar_wrap{
+        width: 240px;
+    }
+    #logo{
+        width: 90px;
+    }
+    .tool_sub_list li{
+        font-size: 16px;
+        border-radius: 3px;
+    }
+    .btn_typhoon{
+        font-size: 16px;
+        padding: 3px 5px;
+    }
+    .typhoon_list{
+        opacity: 0;
+    }
+    .tool_sub_list{
+        left: 60px;
+        bottom: 20px;
+    }
+    .alarm_detail{
+        font-size: 14px;
+    }
+    .alarm_detail_title{
+        font-size: 16px;
+        height: 50px;
+        line-height: 50px;
+        overflow: hidden;
+        padding-left: 30px;
+    }
+    #btn_close_typhoon_chart, .box_btn_close, .alarm_detail a.leaflet-popup-close-button{
+        width: 20px;
+        height: 20px;
+        left: 10px;
+    }
+
+    #tongji_panel {
+        width: 300px;
+        height: 210px;
+        margin-left: -180px;
+        font-size: 14px;
+        padding: 10px 20px;
+        margin-top: -100px;
+    }
+    #aqi_panel{
+        transform: scale(0.7);
+    }
+    .station{
+        background-size: 100% auto;
+        font-size: 12px;
+    }
+    .tongji_bar_wrap{
+        height: 60px;
+    }
+    .tongji_bar_container{
+        height: 60px;
+    }
+}
