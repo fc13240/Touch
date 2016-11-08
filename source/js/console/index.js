@@ -92,20 +92,30 @@
             
         });
 
-        confUser.menu = data;
-        tool.setConf(confUser);
+        if (data.length > 0) {
+            confUser.menu = data;
+            tool.setConf(confUser);
 
-        dialog.showMessageBox(win, {
-            type: 'info',
-            buttons: ['yes', 'no'],
-            title: '系统提示',
-            message: '配置完成，是否打开主界面？',
-            icon: null
-        }, function(index) {
-            [function() {
-                ipc.send('open.main');
-            }, function() {}][index]();
-        });
+            dialog.showMessageBox(win, {
+                type: 'info',
+                buttons: ['yes', 'no'],
+                title: '系统提示',
+                message: '配置完成，是否打开主界面？',
+                icon: null
+            }, function(index) {
+                [function() {
+                    ipc.send('open.main');
+                }, function() {}][index]();
+            });
+        } else {
+            dialog.showMessageBox(win, {
+				type: 'info',
+				buttons: ['yes'],
+				title: '系统提示',
+				message: "请选中要添加的产品！",
+				icon: null
+			});
+        }
     });
 
     win.show();
