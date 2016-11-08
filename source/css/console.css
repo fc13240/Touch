@@ -1,0 +1,37 @@
+.wrap_product{
+    font-size: 16px;
+    position: absolute;
+    top: 20px;
+    bottom: 60px;
+    height: auto;
+    width: auto;
+    left: 20px;
+    right: 20px;
+    border-bottom: 1px solid #4a4a4a;
+    overflow: auto;
+}
+#contentProduct ul{
+    padding-left: 20px;
+    overflow: hidden;
+}
+#contentProduct ul ul li{
+    float: left;
+    margin: 5px;
+    font-size: 14px;
+}
+.btn_add_big{
+    width: 100px;
+    font-size: 16px;
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    margin-left: -50px;
+}
+
+.ui-state-highlight{
+    box-sizing: border-box;
+    border: 1px dashed #ccc;
+    height: 40px;
+    background: none;
+    min-width: 100px;
+}

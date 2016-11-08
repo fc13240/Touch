@@ -1,4 +1,5 @@
 $(function() {
+	var toolConsole = require('./js/console/tool');
 	if (IS_BIG_SCREEN) {
 		$('body').addClass('big_screen');
 	}
@@ -45,6 +46,30 @@ $(function() {
 			}
 		}
 	})();
+	// var conf = {
+	// 	'实况监测': {
+	// 		name: '实况监测',
+	// 		img: 'b_sk',
+	// 		sub: {
+	// 			'卫星云图': {
+	// 				name: '卫星云图',
+	// 				title: '中国区域卫星云图',
+	// 				img: 'cloud',
+	// 				click: function() {
+	// 					Imgs.init('cloud');
+	// 				}
+	// 			},
+	// 			'雷达图': {
+	// 				name: '雷达图',
+	// 				title: '全国雷达拼图',
+	// 				img: 'radar',
+	// 				click: function() {
+	// 					Imgs.init('radar');
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// }
 	var CONF_MENU = [{
 		name: '实况监测',
 		img: 'b_sk',
@@ -175,6 +200,8 @@ $(function() {
 		}]
 	}];
 
+	var MENU = [];
+
 	var $box_title_container = $('.box_title_container'),
 		$title_time = $box_title_container.find('.time'),
 		$product_name = $box_title_container.find('.product_name');
@@ -182,8 +209,40 @@ $(function() {
 	var $tool_tip = $('.tool_tip');
 
 	function initMenu() {
-		var html_product_list = '';
+		var cache = {};
 		$.each(CONF_MENU, function(i, v) {
+			var id = v.name;
+			cache[id] = v;
+			var sub = v.sub;
+			if (sub && sub.length > 0) {
+				$.each(sub, function(ii, vv) {
+					cache[id + '_' + vv.name] = vv;
+				});
+			}
+		});
+		var menu = toolConsole.getMenuMixture();
+		var menuNew = [];
+		$.each(menu, function(i, v) {
+			var val = cache[v.id];
+			if (val) {
+				var subNew = [];
+				var sub = v.sub;
+				if (sub && sub.length > 0) {
+					$.each(sub, function(ii, vv) {
+						var subVal = cache[vv.id];
+						if (subVal) {
+							subNew.push(subVal);
+						}
+					});
+				}
+				val.sub = subNew;
+				menuNew.push(val);
+			}
+		});
+
+		MENU = menuNew;
+		var html_product_list = '';
+		$.each(menuNew, function(i, v) {
 			var html = '<span>'+v.name+'</span>';
 			var img = v.img;
 			if (img !== undefined) {
@@ -287,7 +346,7 @@ $(function() {
 			index_c = $this.data('c');
 
 		try {
-			var item = CONF_MENU[index_a].sub[index_b].sub[index_c];
+			var item = MENU[index_a].sub[index_b].sub[index_c];
 		} catch(e){}
 		if (item) {
 			var fn = item.click;
@@ -332,7 +391,7 @@ $(function() {
 		$tool_sub_list.html('');
 		var index_big = $this.closest('.p_big').index();
 		var index = $this.index();
-		var conf = CONF_MENU[index_big].sub[index];
+		var conf = MENU[index_big].sub[index];
 		if (conf) {
 			var title = conf.title || conf.name;
 			if (title) {
@@ -380,18 +439,18 @@ $(function() {
 	var $legend = $('.legend');
 	
 
-	var iscroll = new IScroll('#tool_set_top_wrap', {
-		mouseWheel: true, 
-		click: true,
-		momentum: false,
-		snap: 'li'
-	});
-	$('.tool_arrow_top').click(function() {
-		iscroll.prev();
-	});
-	$('.tool_arrow_bottom').click(function() {
-		iscroll.next();
-	});
+	// var iscroll = new IScroll('#tool_set_top_wrap', {
+	// 	mouseWheel: true, 
+	// 	click: true,
+	// 	momentum: false,
+	// 	snap: 'li'
+	// });
+	// $('.tool_arrow_top').click(function() {
+	// 	iscroll.prev();
+	// });
+	// $('.tool_arrow_bottom').click(function() {
+	// 	iscroll.next();
+	// });
 	var $mask = $('#mask');
 	var paint_can_use = false;
 	var show_mask = true;
@@ -450,11 +509,17 @@ $(function() {
 	}();
 	!function(){
 		if(is_native){
+			var electron = require('electron');
 			$('#btn_close').bind('click', function(){
 				window.close();
 			});
+			$('#btn_console').on('click', function() {
+				electron.ipcRenderer.send('open.console');
+			});
+			require(require('path').join(__dirname, './js/reporter'));
+			setTimeout(function() {
+				electron.remote.getCurrentWindow().show();
+			}, 1000);
 		}
-	}()
-
-	require(require('path').join(__dirname, './js/reporter'));
+	}();
 })

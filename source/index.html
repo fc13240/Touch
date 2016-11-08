@@ -31,7 +31,7 @@
     <script src="./js/paint.js"></script>
     <script src="./js/map.js"></script>
     <script src="./js/alarm.js"></script>
-    <script src="./js/iscroll.js"></script>
+    <!--<script src="./js/iscroll.js"></script>-->
     <!-- <script src="./js/globe.js"></script> -->
     <script src="./js/3d/three.js"></script>
     <script src="./js/3d/TrackballControls.js"></script> 
@@ -216,13 +216,13 @@
         <div id="globe_wrap"></div>
         <div id="terrain_wrap"></div>
         <div id="btn_close"></div>
+        <div id="btn_console"></div>
         <div id="mask" ng-show="show_mask">
             <canvas id="canvas_brush"  style="width:100%;height: 100%" ng-show="paint_can_use"></canvas>
         </div>
         <div class="load_progress_wrap"></div>
         <div class="box_title_container">
             <div class="box box_title">
-                <!-- <img ng-src="{{title_img}}"/> -->
                 <span class="product_name"></span>
                 <div class="time" ng-show="showtime">
                     <span id="time_top"></span>
@@ -230,23 +230,24 @@
                 </div>
             </div>
         </div>
-        <div class="tool_wrap">
-            <div class="tool_set_top">
-                <!-- <div class="tool_arrow_top"></div> -->
-                <!-- <div class="tool_tip">云图</div> -->
-                <div class="tool_set_top_wrap" id="tool_set_top_wrap">
-                    <ul class="tool_product_list">
+        <div class="tool_wrap_outer">
+            <div class="tool_wrap_inner">
+                <div class="tool_wrap">
+                    <div class="tool_set_top">
+                        <div class="tool_set_top_wrap" id="tool_set_top_wrap">
+                            <ul class="tool_product_list">
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tool_set_bottom">
+                        <div class="tool_btn tool_brush"></div>
+                        <div class="tool_btn tool_hand"></div>
+                        <div class="tool_btn tool_changemap"></div>
+                    </div>
+                    <ul class="tool_sub_list">
                     </ul>
                 </div>
-                <!-- <div class="tool_arrow_bottom"></div>   -->
             </div>
-            <div class="tool_set_bottom">
-                <div class="tool_btn tool_brush"></div>
-                <div class="tool_btn tool_hand"></div>
-                <div class="tool_btn tool_changemap"></div>
-            </div>
-            <ul class="tool_sub_list">
-            </ul>
         </div>
         <div class="box box_player" ng-show="show_player">
             <div class="player_btn" ng-class="{playing:playing}"></div>
