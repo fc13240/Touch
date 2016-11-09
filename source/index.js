@@ -30,10 +30,6 @@
 			content.executeJavaScript('var PACKAGE = '+(conf? JSON.stringify(conf):'null'));
 		});
 
-		globalShortcut.register('Alt+Shift+i', function() {
-            win.openDevTools();
-        });
-		
 		win.loadURL(path.join('file://' , __dirname, pathName));
 		return win;
 	}
@@ -96,6 +92,10 @@
 		} else {
 			_showMain();
 		}
+		globalShortcut.register('Alt+Shift+i', function() {
+            var win = BrowserWindow.getFocusedWindow();
+			win && win.openDevTools();
+        });
 	});
 
 	// 启动处理缓存和日志文件的子进程

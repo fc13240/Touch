@@ -220,7 +220,7 @@ $(function() {
 				});
 			}
 		});
-		var menu = toolConsole.getMenuMixture();
+		var menu = toolConsole.getMenuFront();
 		var menuNew = [];
 		$.each(menu, function(i, v) {
 			var val = cache[v.id];

@@ -10,13 +10,42 @@
 	<body class="main frameless">
         <div class="content_wrap">
             <tab>
-                <item class="on" data-for="contentProduct">产品配置</item>
+                <item class="on" data-for="contentUser">远程用户</item>
+                <item class="" data-for="contentProduct">产品配置</item>
             </tab>
             <tab-content>
+                <item id="contentUser">
+                    <div class="wrap_user">
+                        <div class="row">
+                            <input class="text_user" type="text" placeholder="登录邮箱" id="userEmail" tabindex="1"/>
+                        </div>
+                        <div class="row">
+                            <input class="text_user" type="password" placeholder="登录密码" id="userPwd" tabindex="2"/>
+                        </div>
+                        <div class="row">
+                            <input type="button" value="登录" id="btnLogin" tabindex="3"/>
+                            <a href="http://bpa.tianqi.cn/user/register" id="btnRegister">注册新用户</a>
+                        </div>
+                    </div>
+                    <div class="loginedInfo">
+                        <div class="btns">
+                            <!--<div class="checkbox">
+                                <input type="checkbox" id="cb_use_remote_menu"/>
+                                <label for="cb_use_remote_menu">加载并使用远程配置</label>
+                            </div>-->
+                            <input type="button" value="重新登录" id="btnReLogin" class="fl"/>
+                            <!--<input type="button" value="加载远程配置" id="btnLoadMenu" class="fr"/>-->
+                        </div>
+                    </div>
+                </item>
                 <item id="contentProduct">
                     <div class="wrap_product">
                         
                     </div>
+                    <div class="checkbox cb_menu">
+                            <input type="checkbox" id="cb_use_remote_menu"/>
+                            <label for="cb_use_remote_menu">加载并使用远程配置</label>
+                        </div>
                     <input type="button" value="保存" id="btn_conf_save" class="btn_add_big"/>
                 </item>
             </tab-content>

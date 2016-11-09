@@ -5,6 +5,7 @@
 
     var userPath = path.join(require('os').homedir(), 'BPA', 'TOUCH');
     var confPath = path.join(userPath, 'user.conf');
+    var confRemotePath = path.join(userPath, 'user.remote.conf');
     var menuPath = path.resolve(__dirname, '../../data/menu.conf');
 
     var Tool = {};
@@ -54,22 +55,26 @@
     Tool.getConf = function() {
         var conf = _getEncodeContent(confPath) || {};
 
-        _menuAddId(conf.menu);
+        // _menuAddId(conf.menu);
         return conf;
+    }
+    function _write(p, content) {
+        content = JSON.stringify(content);
+        fs.writeFileSync(p, _encode(content));
     }
     /**
      * 用户本地配置
      */
     Tool.setConf = function(conf) {
-        var content = JSON.stringify(conf);
-
-        fs.writeFileSync(confPath, _encode(content));
+        _write(confPath, conf);
+    }
+    Tool.setMenuUser = function(menu) {
+        _write(confRemotePath, menu);
     }
 
-    Tool.getMenuMixture = function(isAppend) {
+    Tool.mixtureMenu = function(menu, isAppend) {
         var menuAll = Tool.getMenu();
-        var conf = Tool.getConf() || {};
-        var menu = conf.menu || [];
+        menu = menu || [];
 
         var cache = {};
         menuAll.forEach(function(v) {
@@ -83,6 +88,7 @@
         });
 
         var menu_new = [];
+        _menuAddId(menu);
         menu.forEach(function(v) {
             if (cache[v.id]) {
                 var sub = v.sub;
@@ -126,6 +132,11 @@
         }
 
         return menu_new;
+    }
+    Tool.getMenuFront = function() {
+        var conf = Tool.getConf() || {};
+        var menu = conf.remote? conf.menuRemote: conf.menu;
+        return Tool.mixtureMenu(menu);
     }
     function _menuAddId(menu) {
         if (menu && menu.length > 0) {

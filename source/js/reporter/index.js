@@ -18,6 +18,12 @@ var CONST_SOFTTYPE = package.softtype;;
 // 对设备进行注册
 var DELAY = 1000*60*60*4;
 
+var user = localStorage.getItem('user');
+var userId = -1;
+if (user) {
+    user = JSON.parse(user);
+    userId = user.id;
+}
 // 原生请求
 var req = (function() {
     function _get(option) {
@@ -187,6 +193,7 @@ function _register(register_id, cb) {
                 data: {
                     id: register_id,
                     uuid: uuid,
+                    user_id: userId,
                     type: CONST_SOFTTYPE,
                     platform: os.platform(),
                     arch: os.arch()
@@ -216,6 +223,7 @@ function _heartbeat(register_id, cb) {
         url: URL_HEARTBEAT,
         data: {
             id_reg: register_id,
+            id_user: userId,
             id_l: '6fe61cc48dc859340e97fe021d554ba1',
             v: package.version
         },
@@ -245,6 +253,6 @@ function run() {
     });
 }
 
-if (!package.debug) {
+// if (!package.debug) {
     run();
-}
+// }
