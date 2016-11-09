@@ -2780,7 +2780,7 @@ g_HandleSystemReboot();
 <PostBuildProg/>
 <PostBuildCmdLine/>
 <PostBuildWait>0</PostBuildWait>
-<Filename>TOUCH_64_v0.7.17.exe</Filename>
+<Filename>TOUCH_64_v0.7.17_longtime.exe</Filename>
 <OutputFolder>E:\docs\2015\工作文档\气象频道\触屏项目\安装包</OutputFolder>
 <SegmentSizeMode>0</SegmentSizeMode>
 <CustomSegSize>100</CustomSegSize>
