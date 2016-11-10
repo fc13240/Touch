@@ -10,8 +10,9 @@
 	<body class="main frameless">
         <div class="content_wrap">
             <tab>
-                <item class="on" data-for="contentUser">远程用户</item>
-                <item class="" data-for="contentProduct">产品配置</item>
+                <item class="tab_user" data-for="contentUser">远程用户</item>
+                <item class="tab_menu on" data-for="contentProduct">产品配置</item>
+                <item class="tab_licence " data-for="contentLicence">产品序列号</item>
             </tab>
             <tab-content>
                 <item id="contentUser">
@@ -48,10 +49,15 @@
                         </div>
                     <input type="button" value="保存" id="btn_conf_save" class="btn_add_big"/>
                 </item>
+                <item id="contentLicence">
+                    <textarea id="text_listence" placeholder="请输入管理员给予的序列号"></textarea>
+                    <input type="button" value="确定" id="btnLicence"/>
+                </item>
             </tab-content>
         </div>
         <script src="./js/jquery-1.8.2.js"></script>
         <script src="./js/jquery-ui.js"></script>
+        <script src="./js/util.js"></script>
         <script src="./js/console/index.js"></script>
 	</body>
 </html>

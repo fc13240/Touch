@@ -1,4 +1,5 @@
 $(function() {
+	var electron = require('electron');
 	var toolConsole = require('./js/console/tool');
 	if (IS_BIG_SCREEN) {
 		$('body').addClass('big_screen');
@@ -17,13 +18,20 @@ $(function() {
 	
 	(function() {
 		setTimeout(function() {
-			var conf = window.PACKAGE;
-			if (!conf || !conf.debug) {
-				if (new Date().getTime() > new Date('2017/12/30').getTime()) {
+			function _check() {
+				var result = Util.verification.get();
+				if (!result || !result.f) {
 					alert('软件试用已经结束，请联系相关管理员！');
-					return window.close();
+
+					return electron.ipcRenderer.send('open.console', {
+						tab: 'licence'
+					});
 				}
+
+				setTimeout(_check, 1000 * 60 * 60);
 			}
+
+			_check();
 		}, 1000);
 	})();
 	var Wind = (function() {
@@ -46,30 +54,6 @@ $(function() {
 			}
 		}
 	})();
-	// var conf = {
-	// 	'实况监测': {
-	// 		name: '实况监测',
-	// 		img: 'b_sk',
-	// 		sub: {
-	// 			'卫星云图': {
-	// 				name: '卫星云图',
-	// 				title: '中国区域卫星云图',
-	// 				img: 'cloud',
-	// 				click: function() {
-	// 					Imgs.init('cloud');
-	// 				}
-	// 			},
-	// 			'雷达图': {
-	// 				name: '雷达图',
-	// 				title: '全国雷达拼图',
-	// 				img: 'radar',
-	// 				click: function() {
-	// 					Imgs.init('radar');
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-	// }
 	var CONF_MENU = [{
 		name: '实况监测',
 		img: 'b_sk',
@@ -509,7 +493,6 @@ $(function() {
 	}();
 	!function(){
 		if(is_native){
-			var electron = require('electron');
 			$('#btn_close').bind('click', function(){
 				window.close();
 			});

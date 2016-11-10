@@ -8,13 +8,23 @@
     var URL_LOGIN = 'http://bpa.tianqi.cn/user/login';
     var URL_GET_MENU = 'http://bpa.tianqi.cn/user/touch/menu';
 
-    $('tab item').on('click', function() {
+    var hash = location.hash.substr(1);
+    var $tab = $('tab item').on('click', function() {
         var $this = $(this);
         $('#'+$this.data('for')).css({
             display: 'block'
         }).siblings().hide();
         $this.addClass('on').siblings().removeClass('on');
-    }).filter('.on').first().click();
+    });
+    $tab.filter('.on').first().click();
+
+    if (hash) {
+        hash = JSON.parse(hash);
+        var tabName = hash.tab;
+        if (tabName) {
+            $tab.filter('.tab_'+tabName).click();
+        }
+    }
 
     var _alert = function(msg) {
         dialog.showMessageBox(win, {
@@ -23,6 +33,18 @@
             title: '系统提示',
             message: msg,
             icon: null
+        });
+    }
+    var _confirm = function(msg, fnYes, fnNo) {
+        dialog.showMessageBox(win, {
+            type: 'info',
+            buttons: ['yes', 'no'],
+            title: '系统提示',
+            message: msg, 
+            icon: null
+        }, function(index) {
+            var fn = [fnYes, fnNo][index];
+            fn && fn();
         });
     }
     var Cache = {
@@ -152,16 +174,8 @@
             confUser.menu = data;
             tool.setConf(confUser);
 
-            dialog.showMessageBox(win, {
-                type: 'info',
-                buttons: ['yes', 'no'],
-                title: '系统提示',
-                message: '配置完成，是否打开主界面？',
-                icon: null
-            }, function(index) {
-                [function() {
-                    ipc.send('open.main');
-                }, function() {}][index]();
+            _confirm('配置完成，是否打开主界面？', function() {
+                ipc.send('open.main');
             });
         } else {
             _alert("请选中要添加的产品！");
@@ -264,6 +278,34 @@
         confUser.remote = isUseRemote;
 
         _initShow();
+    });
+
+    // 序列号相关
+    var verification = Util.verification;
+    var $text_listence = $('#text_listence');
+    $('#btnLicence').on('click', function() {
+        var val = $text_listence.val().trim();
+        if (val) {
+            var licence = verification.parse(val);
+            if (licence) {
+                if (licence.f) {
+                    var time_end = licence.e;
+                    if (time_end && time_end.format) {
+                        verification.set(val);
+
+                        _confirm('您可以正常使用，有效期到 "'+time_end.format('yyyy年MM月dd日')+'"，是否打开主界面？', function() {
+                            ipc.send('open.main');
+                        });
+                        return;
+                    }
+                }
+            }
+
+            _alert('序列号无效！');
+        } else {
+            $text_listence.val('');
+            _alert('序列号不能为空！')
+        }
     });
     win.show();
 }()

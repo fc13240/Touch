@@ -1,22 +1,31 @@
 !function(G) {
 	var _log = function(){}
-	try {
-		if (require('./conf').debug) {
-			_log = function() {
-				console.log.apply(console, arguments);
-			}
-		}
-	} catch(e){}
+	
+	var is_native = true;
 	if (is_native) {
-		var ext = require.extensions;
-		ext['.gts'] = ext['.js'];
 		var request = require('request');
 		var fs = require('fs');
 		var path = require('path');
 		var URL = require('url');
 		var os = require('os');
 		var crypto = require('crypto');
+		var electron = require('electron');
+		var remote = electron.remote;
 
+		var dialog = remote.require('electron').dialog;
+		var win_instance = remote.getCurrentWindow();
+		var PACKAGE = win_instance._PACKAGE;
+		try {
+			if (require(path.join(PACKAGE.PATH.BASE, './conf')).debug) {
+				_log = function() {
+					console.log.apply(console, arguments);
+				}
+			}
+		} catch(e){}
+		var ext = require.extensions;
+		ext['.gts'] = ext['.js'];
+
+		var DIR_USER = PACKAGE.PATH.USER;
 		var TMP_DIR = path.join(os.tmpDir(), 'cwtv');
 		function mkdirSync(mkPath) {
 			try{
@@ -54,11 +63,6 @@
 				})
 			}
 		}
-		var electron = require('electron');
-		var remote = electron.remote;
-
-		var dialog = remote.require('electron').dialog;
-		var win_instance = remote.getCurrentWindow();
 		alert = function(msg) {
 			dialog.showMessageBox(win_instance, {
 				type: 'info',
@@ -106,6 +110,9 @@
 		}
 
 		return format;
+	}
+	String.prototype.reverse = function(){
+		return this.split('').reverse().join('');
 	}
 	var PRIVATE_KEY = 'lanpai';
 	var APPID = 'fx8fj7ycj8fhbgdt';
@@ -468,6 +475,62 @@
 		img.src = src;
 		return src_return;
 	}
+	var DEFAULT_KEY = PACKAGE.softtype || 'TOUCH';
+    var METHOD_ALGORITHM = 'aes-256-cbc';
+    function _encode(str, key) {
+        var cip = crypto.createCipher(METHOD_ALGORITHM, key || DEFAULT_KEY);
+		return cip.update(str, 'utf8', 'hex') + cip.final('hex');
+    }
+    function _decode(str, key) {
+        var decipher = crypto.createDecipher(METHOD_ALGORITHM, key || DEFAULT_KEY);
+		try {
+			var result = decipher.update(str, 'hex', 'utf8') + decipher.final('utf8');
+			return result;
+		} catch(e){}
+    }
+	var verification = (function() {
+		var CACHE_NAME = 'licence';
+		var FILENAME = 'sys.conf';
+		var file_licence = path.join(DIR_USER, FILENAME);
+		function _parseLicence(licence) {
+			licence = _decode(licence.reverse())
+			if (licence) {
+				var arr = licence.split('|');
+				var time_start = new Date(parseInt(arr[0])),
+					time_end = new Date(parseInt(arr[1])),
+					time_now = new Date();
+
+				return {
+					id: arr[3],
+					type: arr[2],
+					s: time_start,
+					e: time_end,
+					n: time_now,
+					f: time_end > time_start && time_now > time_start && time_now < time_end
+				}	
+			}
+		}
+		function _get() {
+			var val = localStorage.getItem(CACHE_NAME);
+			if (!val) {
+				try{
+					val = fs.readFileSync(file_licence, 'utf8');
+				}catch(e){}
+			}
+			if (val) {
+				return _parseLicence(val);
+			}
+		}
+		function _set(licence) {
+			localStorage.setItem(CACHE_NAME, licence);
+			fs.writeFileSync(file_licence, licence);
+		}
+		return {
+			get: _get,
+			set: _set,
+			parse: _parseLicence
+		}
+	})();
 	// Loading();
 	module.exports = G.Util = {
 		download: _download,
@@ -489,6 +552,7 @@
 		getCachePath: _getCachePath,
 		file: {
 			mkdir: mkdirSync
-		}
+		},
+		verification: verification
 	}
 }(this);

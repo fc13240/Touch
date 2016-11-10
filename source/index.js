@@ -18,7 +18,8 @@
 	var conf = require('./conf') || {};
 	var path_user = path.join(require('os').homedir(), 'BPA', 'TOUCH');
 	conf.PATH = {
-		USER: path_user
+		USER: path_user,
+		BASE: __dirname
 	};
 
 	function _showWin(opt, pathName) {
@@ -26,11 +27,13 @@
 		var win = new BrowserWindow(opt);
 		var content = win.webContents;
 
-		content.on('dom-ready', function() {
-			content.executeJavaScript('var PACKAGE = '+(conf? JSON.stringify(conf):'null'));
-		});
+		// content.on('dom-ready', function() {
+			// content.executeJavaScript('var PACKAGE = '+(conf? JSON.stringify(conf):'null'));
+		// });
 
 		win.loadURL(path.join('file://' , __dirname, pathName));
+		win._PACKAGE = conf;
+		win.show();
 		return win;
 	}
 	function _showMain() {
@@ -50,13 +53,14 @@
 
 		return _showWin(opt, 'index.html');
 	}
-	function _showConsole() {
+	function _showConsole(data) {
 		var opt = {
 			width: 682,
 			height: 512,
 			show: false
 		}
-		return _showWin(opt, 'console.html');
+		data = JSON.stringify(data);
+		return _showWin(opt, 'console.html'+(data? '#'+data: ''));
 	}
 	function _closeAll() {
 		BrowserWindow.getAllWindows().forEach(function(win) {
@@ -67,9 +71,9 @@
 		_closeAll();
 		_showMain();
 	});
-	ipc.on('open.console', function() {
+	ipc.on('open.console', function(e, data) {
 		_closeAll();
-		_showConsole();
+		_showConsole(data);
 	});
 	app.on('ready', function() {
 		var toolConsole = require('./js/console/tool');

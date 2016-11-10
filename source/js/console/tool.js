@@ -164,6 +164,15 @@
     Tool.encode = _encode;
     Tool.decode = _decode;
 
+    var Cache = {
+        get: function(key) {
+            return JSON.parse(localStorage.getItem(key));
+        },
+        set: function(key, val) {
+            localStorage.setItem(key, JSON.stringify(val));
+        }
+    }
+
     // 进行初始化
     mkdirSync(userPath);
     module.exports = Tool; 

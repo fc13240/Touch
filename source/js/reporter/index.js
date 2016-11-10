@@ -224,7 +224,7 @@ function _heartbeat(register_id, cb) {
         data: {
             id_reg: register_id,
             id_user: userId,
-            id_l: '6fe61cc48dc859340e97fe021d554ba1',
+            id_l: licence_id,
             v: package.version
         },
         onfinish: cb
@@ -232,8 +232,13 @@ function _heartbeat(register_id, cb) {
 }
 
 var reg_id = -1;
+var licence_id = '6fe61cc48dc859340e97fe021d554ba1'
 
 function run() {
+    var licence = require('../util').verification.get();
+    if (licence) {
+        licence_id = licence.id;
+    }
     _register(reg_id, function(err, data) {
         if (!err && data) {
             reg_id = data.id_new;
@@ -253,6 +258,6 @@ function run() {
     });
 }
 
-// if (!package.debug) {
+if (!package.debug) {
     run();
-// }
+}
