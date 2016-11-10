@@ -58,6 +58,11 @@
         // _menuAddId(conf.menu);
         return conf;
     }
+    Tool.isHaveMenu = function() {
+        var conf = Tool.getConf();
+        var menu = conf.remote? conf.menuRemote: conf.menu;
+        return menu && menu.length > 0;
+    }
     function _write(p, content) {
         content = JSON.stringify(content);
         fs.writeFileSync(p, _encode(content));

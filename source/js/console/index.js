@@ -146,7 +146,7 @@
 
     $('#btn_conf_save').on('click', function() {
         var data = [];
-        $('.'+(confUser.remote? 'remote': 'local')+' .level1').each(function() {
+        $('.local .level1').each(function() {
             var $this = $(this);
             var $cb = $this.find('>.checkbox');
             if ($cb.find('[type=checkbox]').prop('checked')) {
@@ -167,13 +167,16 @@
                 }
                 data.push(obj);
             }
-            
         });
 
+        var isHaveData = confUser.remote && confUser.menuRemote && confUser.menuRemote.length > 0;
         if (data.length > 0) {
             confUser.menu = data;
+            isHaveData = true;
+        }
+        
+        if (isHaveData) {
             tool.setConf(confUser);
-
             _confirm('配置完成，是否打开主界面？', function() {
                 ipc.send('open.main');
             });
@@ -262,7 +265,6 @@
         if (!pwd) {
             errMsg.push('密码不可为空!');
         }
-
 
         if (errMsg.length > 0) {
             _alert(errMsg.join('\n'));

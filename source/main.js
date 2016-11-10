@@ -10,6 +10,7 @@
 	var BrowserWindow = electron.BrowserWindow;
     var globalShortcut = electron.globalShortcut;
 	var ipc = electron.ipcMain;
+	var toolConsole = require('./js/console/tool');
     
     app.on('window-all-closed', function () {
 		app.quit();
@@ -21,7 +22,6 @@
 		USER: path_user,
 		BASE: __dirname
 	};
-
 
 	var wins = [];
 	function _showWin(opt, pathName) {
@@ -38,21 +38,35 @@
 		return win;
 	}
 	function _showMain() {
-		var opt = {
-			// width: 682,
-			// height: 512,
-			width: 1024,
-			height: 768,
-			show: false,
-            fullscreen: true,
-            autoHideMenuBar: true
+		if (!toolConsole.isHaveMenu()) {
+			var win = _showConsole();
+			electron.dialog.showMessageBox(win, {
+				type: 'info',
+				buttons: ['yes'],
+				title: '系统提示',
+				message: '请先进行系统配置！',
+				icon: null
+			}, function(index) {
+				[function() {
+					win.show();
+				}][index]();
+			});
+		} else {
+			var opt = {
+				// width: 682,
+				// height: 512,
+				width: 1024,
+				height: 768,
+				show: false,
+				fullscreen: true,
+				autoHideMenuBar: true
+			}
+			if (conf.debug) {
+				delete opt.fullscreen;
+				delete opt.autoHideMenuBar;
+			}
+			_showWin(opt, 'index.html');
 		}
-		if (conf.debug) {
-			delete opt.fullscreen;
-			delete opt.autoHideMenuBar;
-		}
-
-		return _showWin(opt, 'index.html');
 	}
 	function _showConsole(data) {
 		var opt = {
@@ -71,26 +85,7 @@
 		_showConsole(data);
 	});
 	app.on('ready', function() {
-		var toolConsole = require('./js/console/tool');
-		if (!toolConsole.getConf()) {
-			var win = _showConsole();
-			electron.dialog.showMessageBox(win, {
-				type: 'info',
-				buttons: ['配置', '退出'],
-				title: '系统提示',
-				message: '请先进行系统配置！',
-				icon: null
-			}, function(index) {
-				[function() {
-					win.show();
-				},
-				function() {
-					app.quit();
-				}][index]();
-			});
-		} else {
-			_showMain();
-		}
+		_showMain();
 		globalShortcut.register('Alt+Shift+i', function() {
             var win = BrowserWindow.getFocusedWindow();
 			win && win.openDevTools();
