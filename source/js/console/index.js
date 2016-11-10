@@ -226,6 +226,7 @@
                 
                 $loginedInfo.prepend(html).show();
 
+                $cb_menu.show();
                 $.get(URL_GET_MENU, {
                     type: 'client'
                 }, function(result) {
@@ -273,7 +274,7 @@
     });
 
     var $cb_use_remote_menu = $('#cb_use_remote_menu');
-    $('.cb_menu').on('click', function() {
+    var $cb_menu = $('.cb_menu').on('click', function() {
         var isUseRemote = $cb_use_remote_menu.prop('checked');
         confUser.remote = isUseRemote;
 

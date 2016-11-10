@@ -13,7 +13,7 @@ var URL_BPA = 'http://bpa.tianqi.cn';
 var URL_UUID = URL_BPA+'/client/getuuid';
 var URL_REGISTER = URL_BPA+'/client/register';
 var URL_HEARTBEAT = URL_BPA+'/client/heartbeat';
-var package = require('../../conf');
+var package = require('../../package');
 var CONST_SOFTTYPE = package.softtype;;
 // 对设备进行注册
 var DELAY = 1000*60*60*4;

@@ -15,25 +15,26 @@
 		app.quit();
 	});
 	
-	var conf = require('./conf') || {};
+	var conf = require('./package') || {};
 	var path_user = path.join(require('os').homedir(), 'BPA', 'TOUCH');
 	conf.PATH = {
 		USER: path_user,
 		BASE: __dirname
 	};
 
+
+	var wins = [];
 	function _showWin(opt, pathName) {
 		opt.title = conf.title;
 		var win = new BrowserWindow(opt);
-		var content = win.webContents;
-
-		// content.on('dom-ready', function() {
-			// content.executeJavaScript('var PACKAGE = '+(conf? JSON.stringify(conf):'null'));
-		// });
-
 		win.loadURL(path.join('file://' , __dirname, pathName));
 		win._PACKAGE = conf;
-		win.show();
+		// win.show();
+		var temp;
+		while((temp = wins.shift())) {
+			temp.close();
+		}
+		wins.push(win);
 		return win;
 	}
 	function _showMain() {
@@ -57,22 +58,16 @@
 		var opt = {
 			width: 682,
 			height: 512,
-			show: false
+			show: false,
+			autoHideMenuBar: true
 		}
 		data = JSON.stringify(data);
 		return _showWin(opt, 'console.html'+(data? '#'+data: ''));
 	}
-	function _closeAll() {
-		BrowserWindow.getAllWindows().forEach(function(win) {
-			win.close();
-		});
-	}
 	ipc.on('open.main', function() {
-		_closeAll();
 		_showMain();
 	});
 	ipc.on('open.console', function(e, data) {
-		_closeAll();
 		_showConsole(data);
 	});
 	app.on('ready', function() {

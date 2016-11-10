@@ -83,10 +83,16 @@
     width: 100px;
     padding: 4px 5px;
 }
+#btnReLogin{
+    padding: 4px 10px;
+    display: block;
+    margin: 10px auto;
+}
 .cb_menu{
     position: absolute;
     bottom: 20px;
     left: 50px;
+    display: none;
 }
 .remote{
     display: none;
@@ -118,5 +124,5 @@
 #btnLicence{
     display: block;
     margin: 0 auto;
-    padding: 3px 5px;
+    padding: 3px 10px;
 }

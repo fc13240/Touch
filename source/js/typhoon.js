@@ -32,7 +32,7 @@ $(function(){
 	var cache_typhoon = {};
 	var is_debug = false;
 	try {
-		is_debug = !!require('./conf').debug;
+		is_debug = !!require('./package').debug;
 	} catch(e) {
 		console.log(e);
 	}

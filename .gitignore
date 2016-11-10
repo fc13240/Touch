@@ -3,3 +3,8 @@ shell/build/ia32/
 shell/build/x64/
 
 script/Autosave/
+node_modules/
+shell/build2/dest/
+shell/build2/dest32/
+shell/build2/dest64/
+shell/build2/release/

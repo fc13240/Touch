@@ -16,7 +16,7 @@
 		var win_instance = remote.getCurrentWindow();
 		var PACKAGE = win_instance._PACKAGE;
 		try {
-			if (require(path.join(PACKAGE.PATH.BASE, './conf')).debug) {
+			if (require(path.join(PACKAGE.PATH.BASE, './package')).debug) {
 				_log = function() {
 					console.log.apply(console, arguments);
 				}
