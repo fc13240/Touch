@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="generator" content="{{system.name}} {{system.version}}">
+    <meta name="theme" content="{{theme.name}} {{theme.version}}">
+    <title>{% block title%}{% endblock %}</title>
+    {%- if config.touchIcon %}
+    <link rel="apple-touch-icon" href="{{ config.touchIcon }}" />
+    {%- endif %}
+    <link rel="stylesheet" href="{{static_url('css/index.css')}}" />
+    {%- block afterstyle %}{% endblock %}
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <div class="brand">
+          <a class="home" href="{{content_url('index.html')}}">{{config.sitename}}</a>
+          {%- if config.tagline %}
+          - <span class="tagline">{{ config.tagline }}</span>
+          {%- endif %}
+        </div>
+        {%- if config.navigation %}
+        <div class="menu" role="navigation">
+          {%- for item in config.navigation %}
+          <a href="{{content_url(item.link)}}">{{item.title}}</a>
+          {%- endfor %}
+        </div>
+        {%- endif %}
+      </div>
+    </div>
+    <div class="document yue">
+      {%- block document %}
+      {%- endblock %}
+    </div>
+    <div class="footer">
+     {%- for item in pagination.items %}
+     <a itemprop="name" href="{{permalink_url(item)}}">{{item.title}}</a>
+     {%- endfor %}
+    </div>
+    <script src="{{ static_url('one.js') }}"></script>
+  </body>
+</html>

@@ -29,7 +29,7 @@
 		var win = new BrowserWindow(opt);
 		win.loadURL(path.join('file://' , __dirname, pathName));
 		win._PACKAGE = conf;
-		// win.show();
+		win.show();
 		var temp;
 		while((temp = wins.shift())) {
 			temp.close();

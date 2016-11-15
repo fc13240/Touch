@@ -1,0 +1,27 @@
+{
+    "source": "docs/content",
+    "output": "docs/_site",
+    "theme": "docs/_themes/bpa",
+    "permalink": "{{directory}}/{{filename}}.html",
+    "writers": [
+        "nico.PostWriter",
+        "nico.FileWriter",
+        "nico.StaticWriter"
+    ],
+    "docs": [{
+        "name": "整体介绍",
+        "sub": [{
+            "name": "蓝PI蚂蚁触屏展示系统介绍",
+            "link": "./index.html"
+        }, {
+            "name": "相关下载",
+            "link": "./download.html"
+        }, {
+            "name": "软件截图",
+            "link": "./screenshot.html"
+        }, {
+            "name": "其它",
+            "link": "./other.html"
+        }]
+    }]
+}

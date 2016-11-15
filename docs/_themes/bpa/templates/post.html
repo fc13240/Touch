@@ -1,0 +1,144 @@
+
+<!DOCTYPE html>
+<!--[if IE 7]> <html lang="en" class="ie7"> <![endif]-->
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+<head>
+    <title>蓝PI蚂蚁触屏展示系统 - API文档</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <meta property="og:type" content="webpage">
+    <meta property="og:url" content="http://www.tianqi.com">
+    <meta property="og:title" content="蓝PI蚂蚁">
+    <meta property="og:description" content="">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="蓝PI蚂蚁">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no minimal-ui">
+
+    <link rel="shortcut icon" href="{{static_url('img/favicon.ico')}}" />
+
+    <link rel="stylesheet" href="{{static_url('css/md.css')}}" />
+    <link rel="stylesheet" href="{{static_url('css/index.css')}}" />
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?93bbda496af7831c073544b1948a735d";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+    <script src="{{static_url('js/j.js')}}"></script>
+</head>
+
+<body>
+
+  <div class="topbar">
+  <!--=== Header ===-->
+  <div class="navbar navbar-default" role="navigation">
+    <div class="container">
+      <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="collapse navbar-collapse navbar-responsive-collapse">
+            <a class="pull-left logo">蓝PI蚂蚁触屏展示系统</a>
+            <ul class="no-list-style pull-right nav navbar-nav navbar-right">
+                <li class=""><a>首页</a></li>
+                <li class="active"><a href="{{content_url(index.html)}}">文档中心</a></li>
+            </ul>
+        </div>
+    <!--/navbar-collapse-->
+    </div>
+</div>
+</header>
+
+
+<!--=== Breadcrumbs ===-->
+<div class="row-fluid breadcrumbs margin-bottom-20">
+    <div class="container">
+        <h1 class="pull-left">{{post.meta.navOne}}</h1>
+        <ul class="pull-right breadcrumb no-list-style">
+            <li><a href="/">首页</a></li>
+            <li><a >{{post.meta.navOne}}</a></li>
+            <li>{{post.meta.navTwo}}</li>
+        </ul>
+    </div><!--/container-->
+</div><!--/breadcrumbs-->
+<!--=== End Breadcrumbs ===-->
+
+<!--=== Content Part ===-->
+<div class="container content">
+
+    <div class="row main">
+
+    <!-- Begin Sidebar Menu -->
+        <div class="nav-wrap col-md-3">
+            {%- if config.docs %}
+            <ul class="doc-nav list-group sidebar-nav-v1 no-list-style">
+                {%- for item in config.docs %}
+                <li class="list-group-item list-toggle sidebar-submenu {%- if item.name == post.meta.navOne %} active{%- endif %}">
+                    <a data-toggle="collapse" data-parent="#" href="#collapse-app">{{item.name}}</a>
+                    <ul id="collapse-app" class="collapse no-list-style" {%- if item.name == post.meta.navOne %} style="display:block"{%- endif %}>
+                        {%- for subItem in item.sub %}
+                        <li><a {%- if subItem.name == post.meta.navTwo %} class="on" {%- endif %} href="{{content_url(subItem.link)}}"><i class="fa fa-file-text-o"></i>{{subItem.name}}</a></li>
+                        {%- endfor %}
+                    </ul>
+                </li>
+                {%- endfor %}
+            </ul>
+            {%- endif %}
+        </div>
+    <!-- End Sidebar Menu -->
+
+        <div class="content-wrap">
+            <div class="content-wrap1 markdown">
+                <h1>{{post.title}}</h1>
+                <hr></hr>
+                <div class="content-main">{{post.html}}</div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<!--=== End Content Part ===-->
+
+<script>
+    $(function(){
+        $('.list-toggle').click(function() {
+            var $this = $(this);
+            var $ul = $this.find('ul');
+            if ($this.hasClass('active')) {
+                $this.removeClass('active');
+                $ul.slideUp();
+            } else {
+                $this.addClass('active');
+                $ul.slideDown();
+            }
+        }).find('>a').click(function(e) {
+            e.preventDefault();
+        });
+        $('.content-wrap img').wrap(function() {
+            var $img = $(this);
+            return '<a target="_blank" href="'+$img.attr('src')+'">';
+        });
+    })
+</script>
+<!-- FOOTER -->
+<footer class="back-2f2f2f">
+  <div class="container">
+
+    <p><span style="margin-top:5px; display:inline-block"></span>
+
+    </p>
+  </div>
+</footer>
+<!-- / FOOTER -->
+</body>
+</html>
