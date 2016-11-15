@@ -9,3 +9,10 @@
 1. 编辑 `shell/data/menu.js` 进行添加菜单项，并运行 `node shell/data/menu.js` 会自动生成 `source/data/menu.conf`
 2. 编辑 `source/js/index.js` 添加菜单选项具体配置及相关操作。
 3. 发布新版本
+
+
+## 在线文档
+1. 在程序根目录运行 `npm install` 安装依赖
+2. 在程序根目录运行 `npm run doc` 在 `docs/_site` 下生成相关静态文件
+    > 运行 `npm run docShow` 可在本地查看生成的静态文档
+3. 把 `docs/_site` 下的文档上传至文档服务器，目前地址为 [https://www.tianqi.cn/BPA/touch/docs/](https://www.tianqi.cn/BPA/touch/docs/)    
