@@ -29,7 +29,7 @@ a.download_on,
 }
 </style>
 <div class="info_alert">您当前系统不支持此安装包，请确保您的系统为window7及以上系统。</div>
-## 蓝PI制图最新安装包下载(<span id="version"></span>)
+## 软件最新安装包下载(<span id="version"></span>)
 <a id="download_32" class="download download_link">32位</a>
 <a id="download_64" class="download download_link">64位</a>
 
@@ -40,7 +40,7 @@ a.download_on,
 <table>
     <tr>
         <td>市场合作</td>
-        <td>李先生</td>
+        <td>李经理</td>
     </tr>
     <tr>
         <td>电话</td>
