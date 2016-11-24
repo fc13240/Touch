@@ -59,6 +59,8 @@ var data = [{
     name: '外来产品',
     sub: [{
         name: '3d效果展示'
+    }, {
+        name: '图片集'
     }]
 }];
 

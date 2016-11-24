@@ -16,25 +16,23 @@
 		app.quit();
 	});
 	
-	var conf = require('./package') || {};
-	var path_user = path.join(require('os').homedir(), 'BPA', 'TOUCH');
-	conf.PATH = {
-		USER: path_user,
-		BASE: __dirname
-	};
+	var conf = require('./common/tool').CONF;
+	process._PACKAGE = conf;
 
-	var wins = [];
+	var win_main;
+	var win_console;
+	// var wins = [];
 	function _showWin(opt, pathName) {
 		opt.title = conf.title;
 		var win = new BrowserWindow(opt);
 		win.loadURL(path.join('file://' , __dirname, pathName));
 		win._PACKAGE = conf;
 		win.show();
-		var temp;
-		while((temp = wins.shift())) {
-			temp.close();
-		}
-		wins.push(win);
+		// var temp;
+		// while((temp = wins.shift())) {
+		// 	temp.close();
+		// }
+		// wins.push(win);
 		return win;
 	}
 	function _showMain() {
@@ -61,11 +59,11 @@
 				fullscreen: true,
 				autoHideMenuBar: true
 			}
-			if (conf.debug) {
-				delete opt.fullscreen;
-				delete opt.autoHideMenuBar;
-			}
-			_showWin(opt, 'index.html');
+			// if (conf.debug) {
+			// 	delete opt.fullscreen;
+			// 	delete opt.autoHideMenuBar;
+			// }
+			win_main = _showWin(opt, 'index.html');
 		}
 	}
 	function _showConsole(data) {
@@ -73,16 +71,62 @@
 			width: 682,
 			height: 512,
 			show: false,
-			autoHideMenuBar: true
+			autoHideMenuBar: true,
+			alwaysOnTop: true
 		}
 		data = JSON.stringify(data);
-		return _showWin(opt, 'console.html'+(data? '#'+data: ''));
+		win_console = _showWin(opt, 'console.html'+(data? '#'+data: ''));
+		if (win_main) {
+			function _rmListener() {
+				win_main.removeListener('focus', _fn_focus);
+			}
+			function _fn_focus() {
+				try {
+					// win_main.blur();
+					
+					win_console.setAlwaysOnTop(true);
+					win_console.restore();
+					win_console.focus();
+					win_console.setAlwaysOnTop(false);
+					_shake(win_console);
+				} catch(e) {
+					console.log(e);
+					_rmListener();
+				}
+			}
+			win_main.on('focus', _fn_focus);
+			win_console.on('close', _rmListener);
+		}
 	}
-	ipc.on('open.main', function() {
-		_showMain();
-	});
+	// 晃动窗口
+	function _shake(win) {
+		if (win.___shake) {
+			return;
+		}
+		var t = 0,
+			z = 3;
+		var pos = win.getPosition();
+		var left = pos[0],
+			top = pos[1];
+		win.___shake = setInterval(function() {
+			var i = t / 180 * Math.PI,
+				x = Math.sin(i) * z,
+				y = Math.cos(i) * z;
+			win.setPosition(left + x, top + y);
+			if ((t += 90) > 1080) {
+				clearInterval(win.___shake);
+				delete win.___shake;
+			}
+		}, 30);
+	}
+	// ipc.on('open.main', function() {
+	// 	_showMain();
+	// });
 	ipc.on('open.console', function(e, data) {
 		_showConsole(data);
+	});
+	ipc.on('console.save', function() {
+		win_main && win_main.send('console.save');
 	});
 	app.on('ready', function() {
 		_showMain();

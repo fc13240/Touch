@@ -11,7 +11,8 @@
         <div class="content_wrap">
             <tab>
                 <item class="tab_user" data-for="contentUser">远程用户</item>
-                <item class="tab_menu on" data-for="contentProduct">产品配置</item>
+                <item class="tab_menu" data-for="contentProduct">产品配置</item>
+                <item class="tab_menu on" data-for="contentGallery">图片集</item>
                 <item class="tab_licence " data-for="contentLicence">产品序列号</item>
             </tab>
             <tab-content>
@@ -45,6 +46,13 @@
                 <item id="contentLicence">
                     <textarea id="text_listence" placeholder="请输入管理员给予的序列号"></textarea>
                     <input type="button" value="确定" id="btnLicence"/>
+                </item>
+                <item id="contentGallery">
+                    <div class="ui-file file_dir_gallery"></div>
+                    <div class="wrap_gallery">
+                        <ul class="gallery"></ul>
+                    </div>
+                    <input type="button" value="保存" id="btnSaveGallery" class="btn_add_big"/>
                 </item>
             </tab-content>
         </div>

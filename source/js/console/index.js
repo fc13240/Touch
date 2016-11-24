@@ -1,13 +1,35 @@
 !function() {
+    var path = require('path');
     var electron = require('electron');
     var shell = electron.shell;
     var remote = electron.remote;
-    var dialog = remote.require('electron').dialog;
     var win = remote.getCurrentWindow();
     var ipc = electron.ipcRenderer;
     var URL_LOGIN = 'http://bpa.tianqi.cn/user/login';
     var URL_GET_MENU = 'http://bpa.tianqi.cn/user/touch/menu';
 
+    var currentDir = path.dirname(document.currentScript.src).replace(/file:\/+/, '');
+    function _req(name) {
+        return require(path.join(currentDir, name));
+    }
+    if ('ontouchend' in document) {
+        // 引入 jquery-ui 支持 touch 事件的类库 
+        _req('../libs/jquery-ui-touch-punch');
+    }
+
+    function _consoleSave(isClose) {
+        ipc.send('console.save');
+        if (isClose) {
+            window.close();
+        }
+    }
+    var $doc = $(document).on('save', function() {
+        console.log('save', new Date().getTime());
+        _consoleSave();
+    });
+    var Dialog = _req('./dialog');
+    var _alert = Dialog.alert;
+    var _confirm = Dialog.confirm;
     var hash = location.hash.substr(1);
     var $tab = $('tab item').on('click', function() {
         var $this = $(this);
@@ -25,28 +47,6 @@
             $tab.filter('.tab_'+tabName).click();
         }
     }
-
-    var _alert = function(msg) {
-        dialog.showMessageBox(win, {
-            type: 'info',
-            buttons: ['yes'],
-            title: '系统提示',
-            message: msg,
-            icon: null
-        });
-    }
-    var _confirm = function(msg, fnYes, fnNo) {
-        dialog.showMessageBox(win, {
-            type: 'info',
-            buttons: ['yes', 'no'],
-            title: '系统提示',
-            message: msg, 
-            icon: null
-        }, function(index) {
-            var fn = [fnYes, fnNo][index];
-            fn && fn();
-        });
-    }
     var Cache = {
         get: function(key) {
             return JSON.parse(localStorage.getItem(key));
@@ -56,7 +56,8 @@
         }
     }
     
-    var tool = require('./js/console/tool');
+    // var tool = require('./js/console/tool');
+    var tool = _req('./tool');
     var confUser = tool.getConf() || {};
     var menuMixtureLocal = tool.mixtureMenu(confUser.menu, true);
     var menuMixtureRemote = tool.mixtureMenu(confUser.menuRemote, true);
@@ -177,9 +178,8 @@
         
         if (isHaveData) {
             tool.setConf(confUser);
-            _confirm('配置完成，是否打开主界面？', function() {
-                ipc.send('open.main');
-            });
+            _consoleSave();
+            _alert('保存成功，请关闭此窗口在主界面进行操作！');
         } else {
             _alert("请选中要添加的产品！");
         }
@@ -295,10 +295,8 @@
                     var time_end = licence.e;
                     if (time_end && time_end.format) {
                         verification.set(val);
-
-                        _confirm('您可以正常使用，有效期到 "'+time_end.format('yyyy年MM月dd日')+'"，是否打开主界面？', function() {
-                            ipc.send('open.main');
-                        });
+                        _consoleSave(true);
+                        _alert('您可以正常使用，有效期到 "'+time_end.format('yyyy年MM月dd日'));
                         return;
                     }
                 }
@@ -310,5 +308,8 @@
             _alert('序列号不能为空！')
         }
     });
+
+    // require('./js/console/');
+    _req('./gallery');
     win.show();
 }()

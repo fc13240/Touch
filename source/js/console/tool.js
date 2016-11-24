@@ -2,6 +2,11 @@
     var fs = require('fs');
     var path = require('path');
     var crypto = require('crypto');
+    var Tiff = require('../libs/tiff');
+
+    Tiff.initialize({TOTAL_MEMORY: 16777216 * 100 })
+    var Util = require('../util');
+    var md5 = Util.md5;
 
     var userPath = path.join(require('os').homedir(), 'BPA', 'TOUCH');
     var confPath = path.join(userPath, 'user.conf');
@@ -21,6 +26,7 @@
         var result = decipher.update(str, 'hex', 'utf8') + decipher.final('utf8');
         return result;
     }
+    
     function _exists(p) {
         return fs.existsSync(p);
     }
@@ -143,6 +149,38 @@
         var menu = conf.remote? conf.menuRemote: conf.menu;
         return Tool.mixtureMenu(menu);
     }
+    /**
+     * 得到主界面中使用的图集列表
+     */
+    Tool.getGallery = function(isFilter) {
+        var conf = Tool.getConf() || {};
+        var gallery = conf.gallery || {};
+        var list = gallery.list || [];
+        list.forEach(function(v) {
+            var file_source = v.file_source;
+            if (file_source) {
+                var file = _converTiff(file_source);
+                v.file = file;
+            }            
+        });
+
+        if (isFilter) {
+            var list = gallery.list || [];
+            list = list.filter(function(v) {
+                return v.flag;
+            });
+            gallery.list = list;
+        }
+
+        return gallery;
+    }
+    Tool.setGallery = function(gallery) {
+        if (gallery) {
+            var conf = Tool.getConf() || {};
+            conf.gallery = gallery;
+            Tool.setConf(conf);
+        }        
+    }
     function _menuAddId(menu) {
         if (menu && menu.length > 0) {
             menu.forEach(function(v) {
@@ -178,7 +216,72 @@
         }
     }
 
+    function _getType(file) {
+        if (fs.statSync(file).isFile()) {
+            var ext = path.extname(file).substr(1).toLowerCase();
+            if (/^(gif|jpg|png|bmp|tif|tiff)$/.test(ext)) {
+                return 'img';
+            } else if (/^(mp4|mov)$/.test(ext)) {
+                return 'video';
+            }
+        }
+    }
+    function _converTiff(file) {
+        var ext = path.extname(file).substr(1).toLowerCase();
+        if (/^(tif|tiff)$/.test(ext)) {
+            var stat = fs.statSync(file);
+            var mtime = new Date(stat.mtime).getTime();
+            var cache_name = md5(file+'_'+mtime);
+            var cache_path = path.join(userPath, 'cache/img');
+            var cache_file = path.join(cache_path, cache_name);
+
+            if (!fs.existsSync(cache_file)) {
+                mkdirSync(cache_path);
+                var bf = fs.readFileSync(file);
+                var tiff = new Tiff({
+                    buffer: bf
+                });
+
+                var data = tiff.toDataURL();
+                Util.file.saveBase64(cache_file, data);
+                console.log('cache tiff: ', cache_file, file);
+            }
+
+            return cache_file;
+        }
+        return file;
+    }
+    function _readSource(dir, cb) {
+        fs.readdir(dir, function(err, files) {
+            if (err) {
+                cb && cb(err);
+            } else {
+                var arr = [];
+                files.forEach(function(file) {
+                    file = path.join(dir, file);
+                    var type = _getType(file);
+                    if (type) {
+                        var file_new = _converTiff(file);
+                        var obj = {
+                            file: file,
+                            type: type,
+                            flag: true
+                        }
+                        if (file_new) {
+                            obj.file = file_new;
+                            obj.file_source = file;
+                        }
+                        arr.push(obj);
+                    }
+                });
+                cb && cb(null, arr);
+            }
+        });
+    }
+
+    Tool.readSource = _readSource;
+
     // 进行初始化
     mkdirSync(userPath);
-    module.exports = Tool; 
+    module.exports = Tool;
 }()

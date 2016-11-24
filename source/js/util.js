@@ -10,11 +10,20 @@
 		var os = require('os');
 		var crypto = require('crypto');
 		var electron = require('electron');
-		var remote = electron.remote;
+		
+		if (process.type == 'renderer') {
+			var remote = electron.remote;
 
-		var dialog = remote.require('electron').dialog;
-		var win_instance = remote.getCurrentWindow();
-		var PACKAGE = win_instance._PACKAGE;
+			var dialog = remote.dialog;
+			var win_instance = remote.getCurrentWindow();
+			var PACKAGE = win_instance._PACKAGE;
+		} else {
+			var dialog = electron.dialog;
+			var b = electron.BrowserWindow;
+			var win_instance = b.getFocusedWindow();
+			var PACKAGE = require('../common/tool').CONF;
+		}
+
 		try {
 			if (require(path.join(PACKAGE.PATH.BASE, './package')).debug) {
 				_log = function() {
@@ -193,7 +202,6 @@
 		return fn;
 	})();
 	
-
 	var PI = Math.PI;
 	var R_START = -PI/2;
 	function Ring(option) {
@@ -404,24 +412,22 @@
 
 		return img_data;
 	}
-	var _saveImg = (function() {
+	var _saveImg = function(savepath, img, cb, is_return_data) {
 		var canvas = document.createElement("canvas");
 		var cxt = canvas.getContext('2d');
-		return function(savepath, img, cb, is_return_data) {
-			if (({}).toString.call(img) != '[object HTMLImageElement]') {
-				var _data = img;
-				img = new Image();
-				img.src = _data;
-			}
-			canvas.width = img.width;
-			canvas.height = img.height;
-			cxt.drawImage(img, 0, 0);
-			var dataURL = canvas.toDataURL('image/png');
-
-			_saveBase64(savepath, dataURL);
-			cb && cb (dataURL);
+		if (({}).toString.call(img) != '[object HTMLImageElement]') {
+			var _data = img;
+			img = new Image();
+			img.src = _data;
 		}
-	})();
+		canvas.width = img.width;
+		canvas.height = img.height;
+		cxt.drawImage(img, 0, 0);
+		var dataURL = canvas.toDataURL('image/png');
+
+		_saveBase64(savepath, dataURL);
+		cb && cb (dataURL);
+	};
 	function _getCachePath() {
 		var arv = [].slice.call(arguments);
 		arv.unshift(os.tmpDir(), 'cwtv');
@@ -531,6 +537,16 @@
 			parse: _parseLicence
 		}
 	})();
+	/**
+	 * 动态引入外部样式文件
+	 */
+	function addCSS(href) {
+		var link = document.createElement('link');
+		link.type = 'text/css';
+		link.rel = 'stylesheet';
+		link.href = href;
+		document.getElementsByTagName("head")[0].appendChild(link);
+	}
 	// Loading();
 	module.exports = G.Util = {
 		download: _download,
@@ -551,8 +567,10 @@
 		},
 		getCachePath: _getCachePath,
 		file: {
-			mkdir: mkdirSync
+			mkdir: mkdirSync,
+			saveBase64: _saveBase64
 		},
-		verification: verification
+		verification: verification,
+		addCSS: addCSS
 	}
 }(this);
