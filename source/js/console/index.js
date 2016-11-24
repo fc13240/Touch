@@ -8,7 +8,7 @@
     var URL_LOGIN = 'http://bpa.tianqi.cn/user/login';
     var URL_GET_MENU = 'http://bpa.tianqi.cn/user/touch/menu';
 
-    var currentDir = path.dirname(document.currentScript.src).replace(/file:\/+/, '');
+    var currentDir = decodeURIComponent(path.dirname(document.currentScript.src).replace(/file:\/+/, ''));
     function _req(name) {
         return require(path.join(currentDir, name));
     }

@@ -1,6 +1,8 @@
 var gulp = require('gulp');
 var electron = require('gulp-atom-electron');
 var path = require('path');
+var fs = require('fs');
+var crypto = require('crypto');
 var package = require(path.join(__dirname, '../../source/package'));
 var pathIcon = path.join(__dirname, './resource/BPA.ico');
 var version = package.version;
@@ -11,6 +13,31 @@ var symdest = require('gulp-symdest');
 
 var EXE_NAME = 'BPA.exe';
 
+var tmpdir = path.join(__dirname, 'tmp');
+var packagejs_file = path.join(tmpdir, 'package.js');
+function mkdirSync(mkPath) {
+    try{
+        var parentPath = path.dirname(mkPath);
+        if(!fs.existsSync(parentPath)){
+            mkdirSync(parentPath);
+        }
+        if(!fs.existsSync(mkPath)){
+            fs.mkdirSync(mkPath);
+        }
+        return true;
+    }catch(e){}
+}
+var DEFAULT_KEY = 'TOUCH';
+var METHOD_ALGORITHM = 'aes-256-cbc';
+function _encode(str, key) {
+    var cip = crypto.createCipher(METHOD_ALGORITHM, key || DEFAULT_KEY);
+    return cip.update(str, 'utf8', 'hex') + cip.final('hex');
+}
+function _decode(str, key) {
+    var decipher = crypto.createDecipher(METHOD_ALGORITHM, key || DEFAULT_KEY);
+    var result = decipher.update(str, 'hex', 'utf8') + decipher.final('utf8');
+    return result;
+}
 function _electron(arch, pathDest, pathDestArch) {
     arch = arch || 'ia32';
     var opts = {
@@ -33,6 +60,7 @@ function _electron(arch, pathDest, pathDestArch) {
 
 //替换文件内容
 function _replace(pathDest) {
+    var url_download = 'https://download.tianqi.cn/BPA/TOUCH/';
     return through.obj(function(file, encoding, cb) {
         var fs = require('fs'),
             path = require('path');
@@ -43,7 +71,22 @@ function _replace(pathDest) {
         delete data.debug;
         delete data.DEBUG;
 
-        fs.writeFileSync(pathPackage, JSON.stringify(data), 'utf8');
+        var result = JSON.stringify(data);
+        fs.writeFileSync(pathPackage, result, 'utf8');
+
+        mkdirSync(tmpdir);
+        var content = 'bpa_touch_package('+JSON.stringify({
+            version: version,
+            packages: {
+                win32: {
+                    url: url_download + _getExeName('ia32', '.exe')
+                },
+                win64: {
+                    url: url_download + _getExeName('x64', '.exe')
+                }
+            }
+        })+')';
+        fs.writeFileSync(packagejs_file, content, 'utf8');
 
         cb(null, file);
     });
@@ -59,7 +102,7 @@ function _setup(arch, pathSource) {
             "MyAppPublisherURL": "http://www.tianqi.com",
             "MyDefaultDirName": "BPA/TOUCH",
             "MyOutputDir": path.join(__dirname, 'release'),
-            "MyOutputBaseFilename": "BPA-TOUCH-v"+(version.replace('^v', ''))+"-win32-"+ arch,
+            "MyOutputBaseFilename": _getExeName(arch),
             "MySetupIconFile": path.join(__dirname, 'resource/BPA.ico'),
             "MyAppURL": "http://www.tianqi.com/",
             "MyAppExeName": EXE_NAME,
@@ -90,6 +133,83 @@ function _rename() {
         var p = file.path;
     })
 }
+function _getExeName(arch, suffix) {
+    return "BPA-TOUCH-v"+(version.replace('^v', ''))+"-win32-"+ arch + (suffix || '');
+}
+var UploadConf = (function() {
+    var pathDev = path.join(require('os').homedir(), 'BPA', 'TOUCH', '.dev');
+    var fileUpload = path.join(pathDev, 'upload.conf');
+
+    mkdirSync(pathDev);
+
+    return {
+        set: function(username, pwd, port) {
+            // 将用户名、密码及端口号加密写入文件
+            fs.writeFileSync(fileUpload, _encode(JSON.stringify({
+                username: username,
+                pwd: pwd,
+                port: port
+            })));
+        },
+        get: function() {
+            // 对相关信息进行解密
+            try {
+                return JSON.parse(_decode(fs.readFileSync(fileUpload, 'utf8')));
+            } catch(e) {}
+        }
+    }
+})();
+/**
+ * 对 download.tianqi.cn 上传进行配置
+ */
+function _confUserPwd() {
+    return through.obj(function(file, encoding, cb) {
+        var prompt = '用户名: ';
+        process.stdin.setEncoding('utf-8');
+        process.stdout.write(prompt);
+        process.stdin.resume();
+        var name, pwd, port;
+        process.stdin.on('data', function(chunk) {
+            chunk = chunk.trim();
+            if (!chunk) {
+                process.stdout.write(prompt);
+            } else {
+                if (!name) {
+                    name = chunk;
+                    prompt = '密码: ';
+                    process.stdout.write(prompt);
+                } else {
+                    if (!pwd) {
+                        pwd = chunk;
+                        prompt = '端口: ';
+                        process.stdout.write(prompt);
+                    } else {
+                        port = chunk;
+                        UploadConf.set(name, pwd, port);
+                        cb(null, file);
+
+                        process.stdin.pause();
+                    }
+                }
+            }
+        })
+    })
+}
+function _console() {
+    var args = [].slice.call(arguments);
+    return through.obj(function(file, encoding, cb) {
+        console.log.apply(console, args);
+        cb(null, file);
+    })
+}
+
 exports.replace = _replace;
 exports.electron = _electron;
 exports.setup = _setup;
+exports.getExeName = _getExeName;
+exports.confUserPwd = _confUserPwd;
+exports.UploadConf = UploadConf;
+exports.console = _console;
+exports.getPackageJs = function() {
+    return packagejs_file;
+}
