@@ -6,6 +6,7 @@ var clean = require('gulp-clean');
 var symdest = require('gulp-symdest');
 var replace = require('gulp-replace');
 var gulpUtil = require('gulp-util');
+var sftp = require('gulp-sftp');
 var libs = require('./libs');
 var electron = libs.electron;
 var runSequence = require('run-sequence');
@@ -84,6 +85,34 @@ gulp.task('setup-64', function() {
 gulp.task('setup', ['setup-32', 'setup-64'], function() {
 });
 
+gulp.task('upload', function() {
+    var conf = libs.UploadConf.get();
+    var fnPipe;
+    var files = [];
+    if (conf && conf.username && conf.pwd && conf.port) {
+        var opt = {
+            user: conf.username,
+            pass: conf.pwd,
+            port: conf.port,
+            host: 'download.tianqi.cn',
+            remotePath: '/home/downloadstation/www/BPA/TOUCH/'
+        }
+        files.push(path.join(pathRealse, libs.getExeName('ia32', '.exe')));
+        files.push(path.join(pathRealse, libs.getExeName('x64', '.exe')));
+        files.push(path.join(pathDest, 'package.json'));
+        files.push(libs.getPackageJs());
+        fnPipe = sftp(opt)
+    } else {
+        files = '';
+        fnPipe = libs.console(gulpUtil.colors.red('请使用 "gulp confUpload" 进行配置！'));
+    }
+    return gulp.src(files)
+            .pipe(fnPipe);
+});
+gulp.task('confUpload', function() {
+    return gulp.src('')
+        .pipe(libs.confUserPwd())
+});
 // gulp.task('_package', ['mini-code'])
 // gulp.task('_setup', ['_package'])
 gulp.task('default', function() {

@@ -68,22 +68,20 @@ $(function(){
 			}
 		});
 	}
-	var conf = {
-		soft: {
-			version: 'v0.8.0',
-			32: 'http://download.tianqi.cn/BPA/TOUCH/BPA-TOUCH-v0.8.0-win32-ia32.exe',
-			64: 'http://download.tianqi.cn/BPA/TOUCH/BPA-TOUCH-v0.8.0-win32-x64.exe'
-		}
-	};
 	var is64 = false;
 	var agent = ua.toLowerCase();
 	if(agent.indexOf("win64") >= 0 || agent.indexOf("wow64") >= 0){
 		is64 = true;
 	}
 	$('#download_'+(is64? 64: 32)).addClass('download_on');
-	$('#download_32').attr('href', conf.soft['32']);
-	$('#download_64').attr('href', conf.soft['64']);
-	$('#version').text(conf.soft.version);
 	$('.download').attr('target', '_blank');
+	window.bpa_touch_package = function(data) {
+		$('#download_32').attr('href', data.packages.win32.url);
+		$('#download_64').attr('href', data.packages.win64.url);
+		$('#version').text(data.version);
+		window.bpa_gt_package = null;
+	}
+
+	$.getScript('//download.tianqi.cn/BPA/TOUCH/package.js');
 })
 </script>

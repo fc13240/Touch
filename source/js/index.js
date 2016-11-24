@@ -1,6 +1,6 @@
 !function() {
 	var path = require('path');
-	var currentDir = path.dirname(document.currentScript.src).replace(/file:\/+/, '');
+	var currentDir = decodeURIComponent(path.dirname(document.currentScript.src).replace(/file:\/+/, ''));
 	$(function() {
 		var electron = require('electron');
 		var ipcRenderer = electron.ipcRenderer;
