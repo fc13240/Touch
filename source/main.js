@@ -12,6 +12,17 @@
 	var ipc = electron.ipcMain;
 	var toolConsole = require('./js/console/tool');
     
+	var shouldQuit = app.makeSingleInstance(function() {
+		// 让全部窗口都得到焦点
+		var wins = BrowserWindow.getAllWindows();
+		wins.forEach(function(w) {
+			w.focus();
+		});
+	});
+	if (shouldQuit) {
+		app.quit();
+		return;
+	}
     app.on('window-all-closed', function () {
 		app.quit();
 	});
@@ -59,10 +70,10 @@
 				fullscreen: true,
 				autoHideMenuBar: true
 			}
-			// if (conf.debug) {
-			// 	delete opt.fullscreen;
-			// 	delete opt.autoHideMenuBar;
-			// }
+			if (conf.debug) {
+				delete opt.fullscreen;
+				delete opt.autoHideMenuBar;
+			}
 			win_main = _showWin(opt, 'index.html');
 		}
 	}
