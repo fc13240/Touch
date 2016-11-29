@@ -14,14 +14,26 @@
             tool.formatSource(source, function(err, list) {
                 if (!err && list && list.length > 0) {
                     var html = _getListHtml(list);
-                    $gallery.find('.item:last').after(html);
+                    $gallery.find('.btn_add_img').before(html);
                     
                     _initSortableGallery();
                 }
             });
         });
     });
-
+    $gallery.delegate('li.item', 'click', function() {
+        // 防止拖动影响
+        if (!$(this).data('_sortable')) {
+            $(this).toggleClass('on');
+        }
+    });
+    $gallery.delegate('.btn_close', 'click', function(e) {
+        e.stopPropagation();
+        var $item = $(this).closest('li');
+        $item.fadeOut(function() {
+            $item.remove();
+        });
+    })
     var galleryData = tool.getGallery() || {};
     var galleryList = galleryData.list || [];
 
@@ -75,18 +87,7 @@
         html += '<li class="btn_add_img">+</li>';
         $gallery.html(html);
         
-        $gallery.find('li.item').on('click', function() {
-            // 防止拖动影响
-            if (!$(this).data('_sortable')) {
-                $(this).toggleClass('on');
-            }
-        }).find('.btn_close').on('click', function(e) {
-            e.stopPropagation();
-            var $item = $(this).closest('li');
-            $item.fadeOut(function() {
-                $item.remove();
-            });
-        });
+        
         _initSortableGallery();
     }
 
