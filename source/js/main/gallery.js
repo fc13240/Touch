@@ -58,20 +58,6 @@
             // effect: 'fade',
             // fade: { crossFade: true }
         });
-        // $wrap_gallery.swiper();
-        // $wrap_gallery.swiper({
-        //     initialSlide: 0,
-        //     onSlideChangeStart: function() {
-        //         $.each(videos, function(i, v) {
-        //             v.pause();
-        //         });
-        //     },
-        //     freeMode: true,
-        //     freeModeMomentum: false,
-        //     // effect: 'coverflow',
-        //     // effect: 'fade',
-        //     // fade: { crossFade: true }
-        // });
         $wrap_gallery.find('video').each(function() {
             var $this = $(this);
             var $p = $this.parent();
@@ -87,7 +73,9 @@
         });
     }
     var $doc = $(document).on('reload', function() {
-        Gallery.init();
+        if ($wrap_gallery.is(':visible')) {
+            Gallery.init();
+        }
     });
 
     window.Gallery = {
