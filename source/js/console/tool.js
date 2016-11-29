@@ -251,34 +251,42 @@
         }
         return file;
     }
+    function _formatSource(files, cb) {
+        var arr = [];
+        if (files && files.length > 0) {
+            files.forEach(function(file) {
+                var type = _getType(file);
+                if (type) {
+                    var file_new = _converTiff(file);
+                    var obj = {
+                        file: file,
+                        type: type,
+                        flag: true
+                    }
+                    if (file_new) {
+                        obj.file = file_new;
+                        obj.file_source = file;
+                    }
+                    arr.push(obj);
+                }
+            });
+        }
+        cb && cb(null, arr);
+    }
     function _readSource(dir, cb) {
         fs.readdir(dir, function(err, files) {
             if (err) {
                 cb && cb(err);
             } else {
-                var arr = [];
-                files.forEach(function(file) {
-                    file = path.join(dir, file);
-                    var type = _getType(file);
-                    if (type) {
-                        var file_new = _converTiff(file);
-                        var obj = {
-                            file: file,
-                            type: type,
-                            flag: true
-                        }
-                        if (file_new) {
-                            obj.file = file_new;
-                            obj.file_source = file;
-                        }
-                        arr.push(obj);
-                    }
+                files.forEach(function(file, i) {
+                    files[i] = path.join(dir, file);
                 });
-                cb && cb(null, arr);
+                _formatSource(files, cb);
             }
         });
     }
 
+    Tool.formatSource = _formatSource;
     Tool.readSource = _readSource;
 
     // 进行初始化
