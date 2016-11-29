@@ -139,7 +139,6 @@
     margin: 5px;
     width: 200px;
     height: 150px;
-    cursor: move;
     box-sizing: border-box;
     display: -webkit-box;
     -webkit-box-pack: center;
@@ -147,6 +146,9 @@
     overflow: hidden;
     background: url(../img/bg_color.png);
     position: relative;
+}
+.gallery li.item{
+    cursor: move;
 }
 .gallery li.on:after{
     position: absolute;
@@ -207,4 +209,12 @@
     background-size: 32px 32px;
     left: 10px;
     top: 10px;
+}
+.gallery li.btn_add_img{
+    color: white;
+    text-align: center;
+    line-height: 150px;
+    font-size: 60px;
+    background: #ccc;
+    cursor: pointer;
 }

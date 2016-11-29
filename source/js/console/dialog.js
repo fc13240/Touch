@@ -10,6 +10,10 @@
         "name": "图片",
         "extensions": ["png", "jpg", "gif"]
     }];
+	var CONST_FILTER_SOURCE = [{
+		"name": "图片或视频",
+		"extensions": ["gif", "jpg", "png", "bmp", "tif", "tiff", "mp4", "mov"]
+	}];
 
 	/*
 	confirm1({
@@ -97,6 +101,12 @@
 					callback && callback(file_path);
 				}
 			});
+		},
+		sourceOpen: function(callback) {
+			this.open({
+				filters: CONST_FILTER_SOURCE,
+				properties: ['multiSelections']
+			}, callback);
 		}
 	};
 	module.exports = Dialog;
