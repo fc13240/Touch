@@ -8,4 +8,5 @@ shell/build2/dest/
 shell/build2/dest32/
 shell/build2/dest64/
 shell/build2/release/
+shell/build2/tmp/
 docs/_site/

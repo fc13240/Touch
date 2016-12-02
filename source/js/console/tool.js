@@ -5,7 +5,7 @@
     var Tiff = require('../libs/tiff');
 
     // !!在 32 位电脑上会出现内存溢出问题
-    // Tiff.initialize({TOTAL_MEMORY: 16777216 * 10 })
+    Tiff.initialize({TOTAL_MEMORY: 16777216 * 5 })
     var Util = require('../util');
     var md5 = Util.md5;
 
