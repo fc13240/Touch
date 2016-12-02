@@ -32,50 +32,37 @@
 
 	var win_main;
 	var win_console;
-	// var wins = [];
 	function _showWin(opt, pathName) {
 		opt.title = conf.title;
 		var win = new BrowserWindow(opt);
 		win.loadURL(path.join('file://' , __dirname, pathName));
 		win._PACKAGE = conf;
-		win.show();
-		// win && win.openDevTools();
-		// var temp;
-		// while((temp = wins.shift())) {
-		// 	temp.close();
-		// }
-		// wins.push(win);
+		// win.show();
 		return win;
 	}
 	function _showMain() {
+		var opt = {
+			// width: 682,
+			// height: 512,
+			width: 1024,
+			height: 768,
+			show: false,
+			fullscreen: true,
+			autoHideMenuBar: true
+		}
+		if (conf.debug) {
+			delete opt.fullscreen;
+			delete opt.autoHideMenuBar;
+		}
+		win_main = _showWin(opt, 'index.html');
 		if (!toolConsole.isHaveMenu()) {
-			var win = _showConsole();
-			// electron.dialog.showMessageBox(win, {
-			// 	type: 'info',
-			// 	buttons: ['yes'],
-			// 	title: '系统提示',
-			// 	message: '请先进行系统配置！',
-			// 	icon: null
-			// }, function(index) {
-			// 	[function() {
-			// 		win.show();
-			// 	}][index]();
-			// });
+			win_main.hide();
+			var win = _showConsole({
+				tab: 'menu',
+				alert: '请先进行系统配置！'
+			});
 		} else {
-			var opt = {
-				// width: 682,
-				// height: 512,
-				width: 1024,
-				height: 768,
-				show: false,
-				fullscreen: true,
-				autoHideMenuBar: true
-			}
-			if (conf.debug) {
-				delete opt.fullscreen;
-				delete opt.autoHideMenuBar;
-			}
-			win_main = _showWin(opt, 'index.html');
+			win_main.show();
 		}
 	}
 	function _showConsole(data) {
@@ -131,14 +118,18 @@
 			}
 		}, 30);
 	}
-	// ipc.on('open.main', function() {
-	// 	_showMain();
-	// });
+	function _visibleMain() {
+		if (win_main && !win_main.isVisible() && toolConsole.isHaveMenu()) {
+			win_main.show();
+		}
+	}
+	ipc.on('show.main', _visibleMain);
 	ipc.on('open.console', function(e, data) {
 		_showConsole(data);
 	});
 	ipc.on('console.save', function() {
 		win_main && win_main.send('console.save');
+		_visibleMain();
 	});
 	app.on('ready', function() {
 		_showMain();

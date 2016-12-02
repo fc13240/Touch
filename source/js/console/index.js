@@ -46,6 +46,12 @@
         if (tabName) {
             $tab.filter('.tab_'+tabName).click();
         }
+        var _alertInfo = hash.alert;
+        if (_alertInfo) {
+            setTimeout(function() {
+                _alert(_alertInfo);
+            }, 0);
+        }
     }
     var Cache = {
         get: function(key) {

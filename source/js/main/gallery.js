@@ -1,5 +1,7 @@
 !function() {
     // 此文件要求必须 require 进来，才进准确使用 require 相对路径
+    var electron = require('electron');
+	var ipcRenderer = electron.ipcRenderer;
     var path = require('path');
     var tool = require('../console/tool');
     // require('../libs/jquery.touch');
@@ -26,6 +28,13 @@
         var gallery = tool.getGallery(true);
         $wrap_gallery.addClass('full');
         var list = gallery.list || [];
+        if (list.length == 0) {
+            ipcRenderer.send('open.console', {
+                tab: 'gallery',
+                alert: '请先配置图片集内容！'
+            });
+            return;
+        }
         var html = '';
         list.forEach(function(v) {
             var type = v.type;

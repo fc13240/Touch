@@ -526,9 +526,7 @@
 					electron.ipcRenderer.send('open.console');
 				});
 				require(require('path').join(__dirname, './js/reporter'));
-				setTimeout(function() {
-					electron.remote.getCurrentWindow().show();
-				}, 1000);
+				electron.ipcRenderer.send('show.main');
 			}
 		}();
 
