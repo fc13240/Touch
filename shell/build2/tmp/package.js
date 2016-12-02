@@ -1,1 +1,1 @@
-bpa_touch_package({"version":"0.8.2","packages":{"win32":{"url":"https://download.tianqi.cn/BPA/TOUCH/BPA-TOUCH-v0.8.2-win32-ia32.exe"},"win64":{"url":"https://download.tianqi.cn/BPA/TOUCH/BPA-TOUCH-v0.8.2-win32-x64.exe"}}})
+bpa_touch_package({"version":"0.8.4","packages":{"win32":{"url":"https://download.tianqi.cn/BPA/TOUCH/BPA-TOUCH-v0.8.4-win32-ia32.exe"},"win64":{"url":"https://download.tianqi.cn/BPA/TOUCH/BPA-TOUCH-v0.8.4-win32-x64.exe"}}})

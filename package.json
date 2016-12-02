@@ -18,6 +18,8 @@
     "through2": "^2.0.1"
   },
   "scripts": {
+    "build": "gulp --gulpfile=shell/build2/gulpfile.js",
+    "upload": "gulp --gulpfile=shell/build2/gulpfile.js upload",
     "doc": "nico build -C docs/nico.json",
     "docShow": "nico server -C docs/nico.json"
   }

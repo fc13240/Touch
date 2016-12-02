@@ -39,6 +39,7 @@
 		win.loadURL(path.join('file://' , __dirname, pathName));
 		win._PACKAGE = conf;
 		win.show();
+		// win && win.openDevTools();
 		// var temp;
 		// while((temp = wins.shift())) {
 		// 	temp.close();
@@ -49,17 +50,17 @@
 	function _showMain() {
 		if (!toolConsole.isHaveMenu()) {
 			var win = _showConsole();
-			electron.dialog.showMessageBox(win, {
-				type: 'info',
-				buttons: ['yes'],
-				title: '系统提示',
-				message: '请先进行系统配置！',
-				icon: null
-			}, function(index) {
-				[function() {
-					win.show();
-				}][index]();
-			});
+			// electron.dialog.showMessageBox(win, {
+			// 	type: 'info',
+			// 	buttons: ['yes'],
+			// 	title: '系统提示',
+			// 	message: '请先进行系统配置！',
+			// 	icon: null
+			// }, function(index) {
+			// 	[function() {
+			// 		win.show();
+			// 	}][index]();
+			// });
 		} else {
 			var opt = {
 				// width: 682,
@@ -81,7 +82,7 @@
 		var opt = {
 			width: 682,
 			height: 512,
-			show: false,
+			show: true,
 			autoHideMenuBar: true,
 			alwaysOnTop: true
 		}
