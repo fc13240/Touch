@@ -4,7 +4,8 @@
     var crypto = require('crypto');
     var Tiff = require('../libs/tiff');
 
-    Tiff.initialize({TOTAL_MEMORY: 16777216 * 100 })
+    // !!在 32 位电脑上会出现内存溢出问题
+    // Tiff.initialize({TOTAL_MEMORY: 16777216 * 10 })
     var Util = require('../util');
     var md5 = Util.md5;
 
