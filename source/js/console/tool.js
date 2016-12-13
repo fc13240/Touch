@@ -175,12 +175,50 @@
 
         return gallery;
     }
+    /**
+     * 设置图片集
+     */
     Tool.setGallery = function(gallery) {
         if (gallery) {
             var conf = Tool.getConf() || {};
             conf.gallery = gallery;
             Tool.setConf(conf);
         }        
+    }
+
+    /**
+     * 得到浮动窗口的配置
+     */
+    Tool.getSuspended = function(isFilter) {
+        var conf = Tool.getConf() || {};
+        var suspended = conf.suspended || {};
+        var list = suspended.list || [];
+        list.forEach(function(v) {
+            var file_source = v.file_source;
+            if (file_source) {
+                var file = _converTiff(file_source);
+                v.file = file;
+            }            
+        });
+        if (isFilter) {
+            var list = gallery.list || [];
+            list = list.filter(function(v) {
+                return v.flag;
+            });
+            gallery.list = list;
+        }
+
+        return suspended;
+    }
+    /**
+     * 设置浮动窗口
+     */
+    Tool.setSuspended = function(suspended) {
+        if (suspended) {
+            var conf = Tool.getConf() || {};
+            conf.suspended = suspended;
+            Tool.setConf(conf);
+        }
     }
     function _menuAddId(menu) {
         if (menu && menu.length > 0) {

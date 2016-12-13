@@ -1,5 +1,14 @@
+@-webkit-keyframes rotate{
+    from {
+        -webkit-transform: rotate(360deg);
+    }
+    to {
+        -webkit-transform: rotate(180deg);
+    }
+}
+
 .wrap_product,
-.wrap_gallery{
+.wrap_wall{
     font-size: 16px;
     position: absolute;
     top: 20px;
@@ -131,10 +140,10 @@
     padding: 3px 10px;
 }
 
-.gallery{
+.wall{
     overflow: hidden;
 }
-.gallery li{
+.wall li{
     float: left;
     margin: 5px;
     width: 200px;
@@ -147,10 +156,10 @@
     background: url(../img/bg_color.png);
     position: relative;
 }
-.gallery li.item{
+.wall li.item{
     cursor: move;
 }
-.gallery li.on:after{
+.wall li.on:after{
     position: absolute;
     content: '';
     width: 100%;
@@ -160,23 +169,15 @@
     top: 0;
     border: 4px solid darkorange;
 }
-.gallery .ui-state-highlight{
+.wall .ui-state-highlight{
     background: none;
 }
-.gallery li img{
+.wall li img{
     max-width: 100%;
     max-height: 100%;
 }
-@-webkit-keyframes rotate{
-    from {
-        -webkit-transform: rotate(360deg);
-    }
-    to {
-        -webkit-transform: rotate(180deg);
-    }
-}
 
-.gallery li .btn_close{
+.wall li .btn_close{
     position: absolute;
     right: 3px;
     top: 3px;
@@ -188,7 +189,7 @@
     background-size: contain;
     z-index: 2;
 }
-.gallery li .btn_close:hover{
+.wall li .btn_close:hover{
     -webkit-animation-name: 'rotate';
     animation-duration: .3s;
     animation-timing-function: linear;
@@ -210,11 +211,48 @@
     left: 10px;
     top: 10px;
 }
-.gallery li.btn_add_img{
+.wall li.btn_add_img{
     color: white;
     text-align: center;
     line-height: 150px;
     font-size: 60px;
     background: #ccc;
     cursor: pointer;
+}
+
+.suspended li{
+    overflow: visible;
+    margin-bottom: 50px;
+}
+.suspended li .handle{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+.suspended .time_show{
+    position: absolute;
+    bottom: -32px;
+    left: 0;
+}
+.suspended .time_show input{
+    width: 80px;
+    margin: 0 4px;
+}
+.wrap_suspended{
+    top: 70px;
+}
+.size_wrap{
+    width: 90%;
+    margin: 10px auto;
+}
+.item_suspended{
+    float: left;
+    width: 50%;
+}
+.item_suspended label{
+    display: inline-block;
+    width: 80px;
 }

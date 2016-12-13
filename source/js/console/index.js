@@ -317,5 +317,6 @@
 
     // require('./js/console/');
     _req('./gallery');
+    _req('./suspended');
     win.show();
 }()

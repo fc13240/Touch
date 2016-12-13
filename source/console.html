@@ -12,7 +12,8 @@
             <tab>
                 <item class="tab_user" data-for="contentUser">远程用户</item>
                 <item class="tab_menu" data-for="contentProduct">产品配置</item>
-                <item class="tab_gallery on" data-for="contentGallery">图片集</item>
+                <item class="tab_gallery" data-for="contentGallery">图片集</item>
+                <item class="tab_suspended on" data-for="contentSuspended">浮动窗口</item>
                 <item class="tab_licence " data-for="contentLicence">产品序列号</item>
             </tab>
             <tab-content>
@@ -38,9 +39,9 @@
                         
                     </div>
                     <div class="checkbox cb_menu">
-                            <input type="checkbox" id="cb_use_remote_menu"/>
-                            <label for="cb_use_remote_menu">加载并使用远程配置</label>
-                        </div>
+                        <input type="checkbox" id="cb_use_remote_menu"/>
+                        <label for="cb_use_remote_menu">加载并使用远程配置</label>
+                    </div>
                     <input type="button" value="保存" id="btn_conf_save" class="btn_add_big"/>
                 </item>
                 <item id="contentLicence">
@@ -49,10 +50,38 @@
                 </item>
                 <item id="contentGallery">
                     <div class="ui-file file_dir_gallery"></div>
-                    <div class="wrap_gallery">
-                        <ul class="gallery"></ul>
+                    <div class="wrap_wall wrap_gallery">
+                        <ul class="wall gallery"></ul>
                     </div>
                     <input type="button" value="保存" id="btnSaveGallery" class="btn_add_big"/>
+                </item>
+                <item id="contentSuspended">
+                    <div class="checkbox cb_menu">
+                        <input type="checkbox" id="cb_use_suspended"/>
+                        <label for="cb_use_suspended">是否使用浮动窗口</label>
+                    </div>
+                    <div class="row clear size_wrap">
+                        <div class="item_suspended">
+                            <label>距右侧距离</label>
+                            <input type="number" class="x_suspended" value=0 step=1/>
+                        </div>
+                        <div class="item_suspended">
+                            <label>距顶部距离</label>
+                            <input type="number" class="y_suspended" value="0"/>
+                        </div>
+                        <div class="item_suspended">
+                            <label>宽度</label>
+                            <input type="number" class="width_suspended" value="400"/>
+                        </div>
+                        <div class="item_suspended">
+                            <label>高度</label>
+                            <input type="number" class="height_suspended" value="400"/>
+                        </div>
+                    </div>
+                    <div class="wrap_wall wrap_suspended">
+                        <ul class="wall suspended"></ul>
+                    </div>
+                    <input type="button" value="保存" id="btnSaveSuspended" class="btn_add_big"/>
                 </item>
             </tab-content>
         </div>

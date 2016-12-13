@@ -531,5 +531,6 @@
 		}();
 
 		_req('./main/gallery');
+		_req('./main/suspended');
 	});
 }()
