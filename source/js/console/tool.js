@@ -157,6 +157,12 @@
         var conf = Tool.getConf() || {};
         var gallery = conf.gallery || {};
         var list = gallery.list || [];
+        list = list.filter(function(v) {
+            var file_source = v.file_source;
+            if (file_source && fs.existsSync(file_source)) {
+                return true;
+            }
+        });
         list.forEach(function(v) {
             var file_source = v.file_source;
             if (file_source) {
@@ -282,6 +288,7 @@
                 });
 
                 var data = tiff.toDataURL();
+                tiff.close();
                 Util.file.saveBase64(cache_file, data);
                 console.log('cache tiff: ', cache_file, file);
             }
@@ -294,19 +301,21 @@
         var arr = [];
         if (files && files.length > 0) {
             files.forEach(function(file) {
-                var type = _getType(file);
-                if (type) {
-                    var file_new = _converTiff(file);
-                    var obj = {
-                        file: file,
-                        type: type,
-                        flag: true
+                if (fs.existsSync(file)) {
+                    var type = _getType(file);
+                    if (type) {
+                        var file_new = _converTiff(file);
+                        var obj = {
+                            file: file,
+                            type: type,
+                            flag: true
+                        }
+                        if (file_new) {
+                            obj.file = file_new;
+                            obj.file_source = file;
+                        }
+                        arr.push(obj);
                     }
-                    if (file_new) {
-                        obj.file = file_new;
-                        obj.file_source = file;
-                    }
-                    arr.push(obj);
                 }
             });
         }
