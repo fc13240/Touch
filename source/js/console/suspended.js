@@ -82,12 +82,12 @@
         return html;
     }
 
-    var suspendedData = tool.getSuspended() || {
+    var suspendedData = Object.assign(tool.getSuspended() || {}, {
         x: 0,
         y: 0,
         width: 400,
         height: 400
-    };
+    });
     var suspendedList = suspendedData.list || [];
     function initList(list) {
         var html = _getListHtml(list);

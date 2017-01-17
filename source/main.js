@@ -125,6 +125,9 @@
 	}
 	ipc.on('show.main', _visibleMain);
 	ipc.on('open.console', function(e, data) {
+		if (data) {
+			win_main.hide();
+		}
 		_showConsole(data);
 	});
 	ipc.on('console.save', function() {
