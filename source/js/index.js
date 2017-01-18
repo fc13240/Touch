@@ -256,10 +256,10 @@
 				html += '<ul>';
 				var sub = v.sub;
 				$.each(sub, function(i_sub, v_sub) {
-					html += '<li><img src="./img/product/'+v_sub.img+'.png"/></li>';
+					html += '<li title="'+v_sub.name+'"><img src="./img/product/'+v_sub.img+'.png"/></li>';
 				});
 				html += '</ul>';
-				html_product_list += '<li data-tip="'+v.name+'" class="p_big">'+html+'</li>';
+				html_product_list += '<li title="'+v.name+'" class="p_big">'+html+'</li>';
 			});
 			$tool_product_list.html(html_product_list);
 

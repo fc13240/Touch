@@ -107,6 +107,9 @@
     left: 50px;
     display: none;
 }
+#contentSuspended .cb_menu{
+    display: block;
+}
 .remote{
     display: none;
 }
