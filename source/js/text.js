@@ -2,7 +2,7 @@ $(function() {
 	/**
 	 * 省名添加
 	 */
-	W.require.bind(null, ['maps'], function(maps) {
+	W._getMaps(function(maps) {
 		var LNGLAT_PROVINCE = {
 			"新疆": [87.606117,43.790939],
 			"西藏": [91.13205,29.657589],
@@ -60,5 +60,5 @@ $(function() {
 		maps.on('zoomend', function(e){
 			addProvinceName();
 		});
-	})();
+	});
 })

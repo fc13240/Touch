@@ -64,9 +64,13 @@ $(function() {
 	});
 	// var map;
     var _overlays = [];
-    W.require.bind(null, ['maps'], function(a) {
-        map = a;
-    })();
+    // W.require.bind(null, ['maps'], function(a) {
+    //     map = a;
+    // })();
+
+	W._getMaps(function(a) {
+		map = a;
+	});
 
     function _each(arr, cb) {
     	if (arr && arr.length > 0) {

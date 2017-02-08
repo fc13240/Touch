@@ -1,0 +1,13 @@
+#detail-rhpane-wrapper{
+    display: none;
+}
+.particles-layer,
+canvas.leaflet-tile{
+    display: none;
+    z-index: 101;
+}
+
+.show_wind canvas.leaflet-tile,
+.show_wind .particles-layer{
+    display: block;
+}

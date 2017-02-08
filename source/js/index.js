@@ -5,20 +5,12 @@
 		var electron = require('electron');
 		var ipcRenderer = electron.ipcRenderer;
 		var toolConsole = require('./js/console/tool');
+		var $body = $('body');
 		if (IS_BIG_SCREEN) {
-			$('body').addClass('big_screen');
+			$body.addClass('big_screen');
 		}
 		var WIN_HEIGHT = $(window).height();
 		var $doc = $(document);
-		var _getCanvasWind = (function() {
-			var $canvasWind;
-			return function() {
-				if (!$canvasWind || $canvasWind.length == 0) {
-					$canvasWind = $('.leaflet-canvas1, .leaflet-canvas2, .leaflet-canvas3');
-				}
-				return $canvasWind;
-			}
-		})();
 		
 		(function() {
 			setTimeout(function() {
@@ -48,20 +40,23 @@
 		}
 		var Wind = (function() {
 			var windAnimation;
-			W.require.bind(null, ['animation'], function(animation) {
-				windAnimation = animation;
-				windAnimation && windAnimation.stop();
-			})();
+			
+			W.require({
+				dependencies: ['animation'], 
+				callback: function(animation) {
+					windAnimation = animation;
+					windAnimation && windAnimation.stop();
+				}
+			});
 			return {
 				show: function() {
 					IS_SHOW_WIND = true;
-					_getCanvasWind().show();
+					$body.addClass('show_wind');
 					windAnimation && windAnimation.run();
 				},
 				hide: function() {
 					IS_SHOW_WIND = false;
-					_getCanvasWind().hide();
-
+					$body.removeClass('show_wind');
 					windAnimation && windAnimation.stop();
 				}
 			}

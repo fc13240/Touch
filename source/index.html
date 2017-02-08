@@ -8,6 +8,7 @@
     <meta name="geoip" content="114.247.188.89,39.9289,116.3883,CN,Beijing">
     <link href="./css/embed.css?timestamp=1950" rel="stylesheet" type="text/css">
     <link href="./css/index.css" rel="stylesheet" type="text/css">
+    <link href="./css/wind/fix.css" rel="stylesheet" type="text/css">
     <script>
     var W = {
         version: '5.3.4'
@@ -16,12 +17,12 @@
     <script src="./js/jquery-1.8.2.js"></script> 
     <script src="./js/def.js"></script>
     <script src="./js/util.js"></script>
-    <script src="./js/libs/minifest.js"></script>
+    <!--<script src="./js/libs/minifest.js"></script>-->
     <script src="./js/echarts.js"></script>
-    <script src="./js/leaflet3D.v0.js"></script>
+    <script src="./js/wind/leaflet077_tileLayer.js"></script>
     <script src="./js/tileLayerCache.js"></script>
     <script src="./js/WE_v2/api.js"></script>
-    <script src="./js/embed.js"></script>
+    <script src="./js/wind/embed.js"></script>
     <script src="./js/text.js"></script>
     <script src="./js/typhoon.js"></script>
     <script src="./js/imgs.js"></script>
@@ -41,175 +42,193 @@
     <script src="./js/index.js"></script>
 </head>
 
-<body id="body" class="blur">
+<body id="body" class="focus">
     <div id="map_container"></div>
-    <div id="globe_container" class="full-screen" style="opacity: 0">
-        <canvas id="globeCanvas4" class="full-screen"></canvas>
-        <canvas id="globeCanvas0" class="full-screen nomouse"></canvas>
-        <canvas id="globeCanvas1" class="full-screen nomouse"></canvas>
-        <canvas id="globeCanvas2" class="full-screen nomouse"></canvas>
-        <canvas id="globeCanvas3" class="full-screen nomouse"></canvas>
-        <div class="leaflet-control-container leaflet-top leaflet-right shy">
-            <div class="leaflet-control-zoom leaflet-bar leaflet-control"><a id="globe_plus" class="leaflet-control-zoom-in" title="Zoom in">+</a> <a id="globe_minus" class="leaflet-control-zoom-out" title="Zoom out">-</a></div>
+    <div id="globe_container" class="mobilehide"></div>
+    <div id="bottom" class="shy left-border right-border">
+        <div id="historical" class="mobilehide clickable" data-do="initCalendar" data-t="SHOW_ACTUAL"></div>
+        <div id="progress-bar">
+            <div class="progress-line">
+                <div class="played"></div>
+                <div class="avbl"></div><i></i></div>
+            <div id="ghost-timecode" class="timecode ghost-timecode">
+                <div id="ghost-box" class="box"></div>
+            </div>
+            <div id="timecode" data-title="D_LT2" class="timecode">
+                <div id="timecode-box" class="box"></div><img class="loader loader-path" width="19" height="8"></div>
+            <div id="playpause" class="play" data-do="playPauseClicked"></div>
+            <div id="calendar"></div><a id="note-message" href="https://www.windytv.com/" target="_top" data-afterbegin="E_MESSAGE"><span>&nbsp;www.windytv.com</span></a>            <a id="embed-fullscreen" data-tooltipsrc="MENU_FULLSCREEN" href="https://www.windytv.com/" target="_top">-</a></div>
+        <div id="accumulations"><span id="acc-title-rain" data-t="RAINACCU" class="capitalize"></span>
+            <span id="acc-title-snow" data-t="SNOWACCU" class="capitalize"></span>
+            <img class="loader loader-acTime" width="19" height="8">
+            <br>
+            <div class="white-switch">
+                <div data-do="set,next12h" data-t="ACC_NEXT_HOURS|num:12"></div>
+                <div data-do="set,next24h" data-t="ACC_NEXT_HOURS|num:24"></div>
+                <div data-do="set,next3d" data-t="ACC_NEXT_DAYS|num:3"></div>
+                <div data-do="set,next6d" data-t="ACC_NEXT_DAYS|num:6"></div>
+                <div data-do="set,next10d" data-t="ACC_NEXT_DAYS|num:10"></div>
+            </div>
         </div>
-        <div class="popup-wrapper" style="position: absolute; display: none"><a class="popup-close-button shy" style="right: 0">×</a>
-            <div class="popup">
-                <div class="popup-draggable-square">
-                    <div class="popup-ball"></div>
+        <div id="sst">
+            <div id="sst-sstanom"><span data-t="SST" class="capitalize"></span>
+                <div class="white-switch">
+                    <div data-do="set,sst" data-t="ACTUAL_TEMP"></div>
+                    <div data-do="set,sstanom" data-t="SSTA2"></div>
                 </div>
             </div>
-            <div class="popup-content"></div>
-            <a class="popup-link shy" data-t="DETAILED"></a>
-            <div class="popup-drag-me" data-t="DRAG_ME"></div>
+            <div id="sstavg"><span data-t="SSTAVG" class="capitalize"></span>
+                <div class="white-switch">
+                    <div data-do="set,2015/01" data-t="SMON01"></div>
+                    <div data-do="set,2015/02" data-t="SMON02"></div>
+                    <div data-do="set,2015/03" data-t="SMON03"></div>
+                    <div data-do="set,2015/04" data-t="SMON04"></div>
+                    <div data-do="set,2015/05" data-t="SMON05"></div>
+                    <div data-do="set,2015/06" data-t="SMON06"></div>
+                    <div data-do="set,2015/07" data-t="SMON07"></div>
+                    <div data-do="set,2015/08" data-t="SMON08"></div>
+                    <div data-do="set,2015/09" data-t="SMON09"></div>
+                    <div data-do="set,2015/10" data-t="SMON10"></div>
+                    <div data-do="set,2015/11" data-t="SMON11"></div>
+                    <div data-do="set,2015/12" data-t="SMON12"></div>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-calendar" class="mobileonly">
+            <div id="timecode-mobile" data-title="D_LT2" class="timecode">
+                <div id="mobile_box" class="box"></div><img class="loader loader-path" width="19" height="8"></div>
+            <div id="days"></div>
+            <div id="playpause-mobile" class="play" data-do="playPauseClicked"></div>
+        </div>
+        <div class="navmenu mobileonly clickable" data-do="navmenu" data-title="MENU">}</div>
+    </div>
+    <div id="bottom-credits" class="not-shy mobilehide" data-t="DEVELOPED"></div>
+    <div id="detail-rhpane-wrapper" class="right-border">
+        <div id="rhpane">
+            <div id="zoom" class="noselect rh-item">
+                <div data-do="zoomIn" class="clickable zoom-ctrl" title="Zoom in">+</div>
+                <div data-do="zoomOut" class="clickable zoom-ctrl" title="Zoom out">-</div>
+                <div data-do="rqstClose,globe" class="clickable globe-switch">2D</div>
+            </div>
+            <div id="overlay" class="noselect rh-item rh-bg-color"><span></span>
+                <div class="timecode ghost-timecode noselect" style="opacity:0">
+                    <div class="box"></div>
+                </div>
+                <div class="timecode main-timecode noselect">
+                    <div class="box"></div><img class="loader loader-overlay" width="19" height="8"></div>
+            </div>
+            <div id="ovr-menu" data-do="toggle,overlays" class="rh-item" data-tooltipsrc="S_ADD_OVERLAYS">
+                <div class="side-icons"></div>
+            </div>
+            <div id="clouds" class="noselect rh-item rh-bg-color"><span></span>
+                <div class="timecode ghost-timecode noselect" style="opacity:0">
+                    <div class="box"></div>
+                </div>
+                <div class="timecode main-timecode noselect">
+                    <div class="box"></div>
+                </div>
+            </div>
+            <div id="waves" class="noselect rh-item rh-bg-color"><span></span>
+                <div class="timecode ghost-timecode noselect" style="opacity:0">
+                    <div class="box"></div>
+                </div>
+                <div class="timecode main-timecode noselect">
+                    <div class="box"></div>
+                </div>
+            </div>
+            <div id="level" class="noselect rh-item rh-bg-color"><span><div class="side-icons" style="top:-3px; margin-top: 0">Q</div><div class="side-icons" style="bottom: -5px; margin-top: 0">n</div></span>
+                <div class="timecode ghost-timecode noselect" style="opacity:0">
+                    <div class="box"></div>
+                </div>
+                <div class="timecode main-timecode noselect">
+                    <div class="box"></div><img class="loader loader-level" width="19" height="8"></div>
+            </div>
+        </div>
+        <div id="poismodel" class="shy">
+            <div class="white-switch pois-switch noselect"><span class="title" data-t="SHOW_ON_MAP"></span>
+                <div data-do="set,favs" data-t="POI_FAVS"></div>
+                <div data-do="set,wind" data-t="POI_WIND"></div>
+                <div data-do="set,temp" data-t="POI_TEMP"></div>
+                <div data-do="set,cities" data-t="POI_FCST"></div>
+                <div data-do="set,metars" data-t="POI_AD"></div>
+                <div data-do="set,pgspots" data-t="POI_PG"></div>
+                <div data-do="set,cams" data-t="POI_CAMS"></div>
+            </div>
+            <div class="white-switch model-switch noselect"><span class="title" data-t="MODEL"></span>
+                <div data-do="set,ecmwf"><span class="landitem">ECMWF 9km</span><span class="seaitem">ECMWF WAM</span></div>
+                <div class="iconed" data-do="set,gfs"><span class="landitem">GFS 22km</span><span class="seaitem disabled" style="pointer-events: none">Wavewatch 3 (comming soon)</span></div>
+                <div class="local" data-do="set,mbeurope">NEMS 4km</div>
+                <div class="local" data-do="set,namConus">NAM 5km</div>
+                <div class="local" data-do="set,namHawaii">NAM 3km</div>
+                <div class="local" data-do="set,namAlaska">NAM 6km</div>
+                <div class="seaitem disabled" data-do="set,sea">NESDIS</div>
+            </div>
+        </div>
+        <div id="rh-bottom" class="shy"><span class="rh-text" data-tooltipsrc="TOOLBOX_START"><span id="particles" data-do="particles" data-t="TOOLBOX_ANIMATION"></span></span><span
+                id="model-info" class="rh-text"><span class="inn-txt"></span></span>
+            <div id="legend" class="metric-legend" data-tooltipsrc="CLICK_ON_LEGEND"></div>
+            <div class="navmenu mobileonly clickable" data-do="navmenuClose" data-title="MENU" class="shy">\</div>
+        </div>
+        <div id="detail" style="display:none" class="detail">
+            <div class="timecode ghost-timecode noselect" style="opacity:0">
+                <div class="box"></div>
+            </div>
+            <div class="timecode main-timecode noselect">
+                <div class="box"></div><img class="loader loader-path" width="19" height="8"></div>
+            <div class="slider-wrapper">
+                <table></table>
+                <div class="slider">
+                    <div class="handle grab"></div>
+                </div>
+            </div>
+            <div class="table-wrapper bluranimation show noselect">
+                <div class="legend"></div>
+                <div class="data-table noselect bluranimation">
+                    <div class="forecast-table">
+                        <div class="progress-line mobilehide">
+                            <div class="played"></div><i></i></div>
+                        <table class="grab"></table><b></b>
+                        <div class="info" data-afterbegin="ND_MODEL">
+                            <div class="white-switch">
+                                <div data-do="set,ecmwf">ECMWF</div>
+                                <div data-do="set,gfs">GFS</div>
+                                <div data-do="set,nems">NEMS</div>
+                                <div data-do="set,waves" data-t="D_WAVE_FCST2"></div>
+                            </div>
+                            <div class="my-button mobilehide" data-do="compare" data-t="ND_COMPARE"></div>
+                            <div class="my-button meteogram-button" data-do="meteogram">Meteograms</div><span class="model-info"></span></div>
+                        <a id="embed-info-link" target="_top">
+                            <!--<img src="/img/logo-windytv-wide-red.svg">-->
+                            </a>
+                    </div>
+                    <div class="stations detail-content-box">
+                        <div class="title" data-t="D_STATIONS"></div>
+                        <div class="stations-container content-container"></div>
+                    </div>
+                    <div class="webcams detail-content-box">
+                        <div class="title" data-t="D_WEBCAMS" style="float:left"></div>
+                        <canvas></canvas>
+                        <div class="webcams-container content-container"></div>
+                        <div class="webcams-bottom">
+                            <input type="checkbox" id="webcam-daylight" checked="checked">
+                            <label for="webcam-daylight" data-t="D_DAYLIGHT"></label><a href="//webcams.travel" class="webcams-credits">webcams.travel</a></div>
+                    </div>
+                </div>
+                <!--<img src="img/ajax-loader.gif" class="myloader animation">-->
+                </div>
+            <div class="detail-closing-nipple" data-do="close">&#xe013;</div>
         </div>
     </div>
-    <div id="navmenu" class="hide" style="display:none">d</div>
-    <div id="bottom">
-        <form id="windyty-ui">
-            <a id="mb-info" href="https://www.meteoblue.com/" class="hide"></a>
-            <div id="progress-bar-wrapper" class="hide">
-                <div class="play" id="playpause" data-name="play"></div>
-                <div id="progress-bar">
-                    <div id="progress">
-                        <div id="progress-inset">
-                            <div id="progress-line" class="played"></div>
-                            <div id="ghost-timecode">
-                                <div id="ghost-box" class="box"></div>
-                            </div>
-                            <div id="timecode" class="timecode">
-                                <div id="timecode-box" class="box"></div><img id="loader-path" class="loader" width="19" height="8"></div>
-                        </div>
-                    </div>
-                    <div id="calendar"></div>
-                </div>
-            </div>
-            <div id="historical" style="visibility:hidden"></div>
-            <div id="accumulations"><span id="acc-title-rain"></span> <span id="acc-title-snow"></span> <img id="loader-acTime" class="loader" width="19" height="8">
-                <div id="acc-div">
-                    <div data-name="acTime" data-value="past3d"></div>
-                    <div data-name="acTime" data-value="past24h"></div>
-                    <div data-name="acTime" data-value="next24h"></div>
-                    <div data-name="acTime" data-value="next3d"></div>
-                    <div data-name="acTime" data-value="next"></div>
-                </div>
-                <div class="snowcover-btn" id="snowcover-btn" data-name="snowcover"></div>
-            </div>
-            <div id="settings">
-                <div id="messages">
-                    <div id="message-nems"></div>
-                </div>
-                <div id="productinfo"></div>
-                <div id="small-toolbox" class="hide"><span id="particles" data-name="particles"></span> <span id="model-info"></span></div>
-                <div id="datetime" class="item" style="display: block">
-                    <t data-t="DATE_AND_TIME"></t><img id="loader-path2" class="loader" width="19" height="8">
-                    <br>
-                    <select class="calendar-select" name="path"></select>
-                    <select id="acc-select" class="actime-select" name="acTime">
-                        <option value="past3d" data-t="ACC_LAST_DAYS|num:3"></option>
-                        <option value="past24h" data-t="ACC_LAST_HOURS|num:24"></option>
-                        <option value="next24h" data-t="ACC_NEXT_HOURS|num:24"></option>
-                        <option value="next3d" data-t="ACC_NEXT_DAYS|num:3"></option>
-                        <option value="next" data-t="ACC_NEXT_DAYS|num:10"></option>
-                    </select>
-                    <div class="text"></div>
-                </div>
-                <div id="overlays" class="item"><span id="overlaytxt" data-t="OVERLAY"></span> <img id="loader-overlay" class="loader" width="19" height="8">
-                    <br>
-                    <select id="overlay-select" name="overlay">
-                        <option value="wind" data-t="WIND"></option>
-                        <option value="gust" data-t="GUST"></option>
-                        <option value="temp" data-t="TEMP"></option>
-                        <option value="clouds" data-t="CLOUDS"></option>
-                        <option value="waves" data-t="WAVES"></option>
-                        <option value="wwaves" data-t="WWAVES"></option>
-                        <option value="swell" data-t="SWELL"></option>
-                        <option value="swellperiod" data-t="SWELLPER"></option>
-                        <option value="snow" data-t="SNOW"></option>
-                        <option value="pressure" data-t="PRESS"></option>
-                        <option value="rh" data-t="RH"></option>
-                    </select>
-                    <div id="radios" class="hide">
-                        <div>
-                            <input type="radio" name="overlay" value="wind"><span id="overlayGroupSpan1" data-name="overlayGroup" data-value="1"></span></div>
-                        <div class="radio-inset" id="overlayGroup1">
-                            <div>
-                                <input type="radio" name="overlay" value="gust">
-                            </div>
-                        </div>
-                        <div>
-                            <input type="radio" name="overlay" value="temp">
-                        </div>
-                        <div>
-                            <input type="radio" name="overlay" value="clouds"><span id="overlayGroupSpan2" data-name="overlayGroup" data-value="2"></span></div>
-                        <div class="radio-inset" id="overlayGroup2">
-                            <div>
-                                <input type="radio" name="overlay" value="rh">
-                            </div>
-                            <div>
-                                <input type="radio" name="overlay" value="lclouds">
-                            </div>
-                            <div>
-                                <input type="radio" name="overlay" value="rain">
-                            </div>
-                        </div>
-                        <div>
-                            <input type="radio" name="overlay" value="waves"><span id="overlayGroupSpan3" data-name="overlayGroup" data-value="3"></span></div>
-                        <div class="radio-inset" id="overlayGroup3">
-                            <div>
-                                <input type="radio" name="overlay" value="wwaves">
-                            </div>
-                            <div>
-                                <input type="radio" name="overlay" value="swell">
-                            </div>
-                            <div>
-                                <input type="radio" name="overlay" value="swellperiod">
-                            </div>
-                        </div>
-                        <div>
-                            <input type="radio" name="overlay" value="snow">
-                        </div>
-                        <div>
-                            <input type="radio" name="overlay" value="pressure">
-                        </div>
-                    </div>
-                </div>
-                <div class="item">
-                    <t data-t="ALTITUDE"></t><img id="loader-level" class="loader" width="19" height="8">
-                    <br>
-                    <select id="level-select" name="level">
-                        <option value="surface" data-t="SFC"></option>
-                        <option value="975h">300m, 1000ft</option>
-                        <option value="950h">600m, 2000ft</option>
-                        <option value="925h">750m, 2500ft</option>
-                        <option value="900h">900m, 3000ft</option>
-                        <option value="850h">1500m, 5000ft</option>
-                        <option value="750h">2400m, 8000ft</option>
-                        <option value="700h">3000m, FL100</option>
-                        <option value="550h">4800m, FL160</option>
-                        <option value="450h">6000m, FL200</option>
-                        <option value="350h">8000m, FL260</option>
-                        <option value="300h">9000m, FL300</option>
-                        <option value="250h">10km, FL340</option>
-                        <option value="200h">11.7km, FL390</option>
-                        <option value="150h">13.5km, FL450</option>
-                    </select>
-                </div>
-                <div id="mbselector" class="hide" style="display: none">
-                    <div data-name="model" data-value="gfs">GFS 12km</div>
-                    <div data-name="model" data-value="mbeurope">NEMS 4km</div>
-                </div>
-            </div>
-        </form>
+    <div id="logo-wrapper" class="top-border left-border right-border">
+        <a id="logo" target="_top" class="clickable" data-do="title">
+            <div class="w-sprite"></div>
+            <!--<img class="text" src="img/logo-windytv.svg">-->
+            </a>
     </div>
-    <div id="legend" class="shy"></div>
-    <div id="embed-header-container">
-        <a href="https://www.windyty.com/" target="wind" id="embed-title" title="Windyty, wind forecast"></a>
-        <div id="title" style="display:none"></div>
-    </div>
-    <div id="note" class="shy"><span id="note-message" data-t="E_MESSAGE"></span>&nbsp;<a href="https://www.windyty.com/" target="wind">www.windyty.com</a></div>
-    <div id="bottom-credits" class="not-shy" data-t="DEVELOPED"></div>
-    <canvas id="jpg_decoder" style="display: none"></canvas>
-    <div id="intent" style="display: none"></div>
+    <div id="plugins" class="shy"></div>
+    <div id="user" class="top-border right-border shy mobilehide"></div>
+    <div id="menu-burger" class="right-border top-border shy mobilehide" data-do="burgerClicked"><span></span> <span></span> <span></span></div>
+    <div id="menu-mobile" class="shy mobileonly left-border top-border"><a data-do="locationRqstd">j</a> <a data-do="rqstOpen,settings">1</a></div>
 
 
     <div class="other full_wrap">

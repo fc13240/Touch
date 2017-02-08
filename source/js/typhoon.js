@@ -758,8 +758,8 @@ $(function(){
 	});	
 
 	var map;
-	W.require.bind(null, ['maps'], function(maps) {
-    	map = maps;
+	W._getMaps(function(a) {
+		map = a;
 		map.on('zoomstart', function(){
 			if(_prev_marker){
 				var option = _prev_marker.options.icon.options;
@@ -767,7 +767,7 @@ $(function(){
 				_prev_marker.setIcon(L.divIcon(option));
 			}
 		});
-    })();
+	});
     var GuardLine = (function() {
     	var _overlays = [];
     	var _group;

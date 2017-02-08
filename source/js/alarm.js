@@ -2,9 +2,9 @@ $(function() {
 	var req = Util.req;
 	var Loading = Util.Loading;
 	var map;
-	W.require.bind(null, ['maps'], function(a) {
-        map = a;
-    })();
+	W._getMaps(function(a) {
+		map = a;
+	});
     var _getAlarmInfo = (function(){
         var yjlb = ['台风', '暴雨', '暴雪', '寒潮', '大风', '沙尘暴', '高温', '干旱', '雷电', '冰雹', '霜冻', '大雾', '霾', '道路结冰'];
         var gdlb = ['寒冷', '灰霾', '雷雨大风', '森林火险', '降温', '道路冰雪','干热风','低温','冰冻'];

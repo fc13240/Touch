@@ -1,9 +1,9 @@
 $(function() {
 	var map;
 	var _overlays = [];
-    W.require.bind(null, ['maps'], function(a) {
-        map = a;
-    })();
+    W._getMaps(function(a) {
+		map = a;
+	});
 	var confUrl = 'http://61.4.184.171:8080/weather/rgwst/JsonCatalogue?map=china';
 
 	var conf = {

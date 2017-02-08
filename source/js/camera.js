@@ -3,9 +3,9 @@ $(function() {
     
     var map;
     var _overlays = [];
-    W.require.bind(null, ['maps'], function(a) {
-        map = a;
-    })();
+    W._getMaps(function(a) {
+		map = a;
+	});
     
     var $video_player = $('#video_player');
     var $btn_close_video = $('.btn_close_video').click(function() {

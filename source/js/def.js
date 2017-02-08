@@ -169,6 +169,15 @@ function(a) {
 	a.W || (a.W = {}), d.modules = e, a.W.require = d, a.W.define = b
 }(window) /*! */
 
+// 得到地图模块
+W._getMaps = function(cb) {
+	W.require({
+		dependencies:['maps'], 
+		callback: function(map) {
+			cb && cb(map);
+		}
+	});
+}
 // 是否是本地应用
 var is_native = typeof global !== 'undefined' && typeof global.process !== 'undefined';
 // 是否是大屏设备
