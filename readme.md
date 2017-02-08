@@ -16,3 +16,9 @@
 2. 在程序根目录运行 `npm run doc` 在 `docs/_site` 下生成相关静态文件
     > 运行 `npm run docShow` 可在本地查看生成的静态文档
 3. 把 `docs/_site` 下的文档上传至文档服务器，目前地址为 [https://www.tianqi.cn/BPA/touch/docs/](https://www.tianqi.cn/BPA/touch/docs/)    
+
+
+## 应用打包
+1. `shell/build2/init.sh` 初始化工作空间(只需初始化一次)
+1. `npm run build` 打包应用
+1. `npm run upload` 上传安装包
