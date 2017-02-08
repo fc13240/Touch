@@ -6,6 +6,7 @@
 		var ipcRenderer = electron.ipcRenderer;
 		var toolConsole = require('./js/console/tool');
 		var $body = $('body');
+		var _maps;
 		if (IS_BIG_SCREEN) {
 			$body.addClass('big_screen');
 		}
@@ -42,8 +43,9 @@
 			var windAnimation;
 			
 			W.require({
-				dependencies: ['animation'], 
-				callback: function(animation) {
+				dependencies: ['animation', 'maps'], 
+				callback: function(animation, maps) {
+					_maps = maps;
 					windAnimation = animation;
 					windAnimation && windAnimation.stop();
 				}
@@ -478,6 +480,10 @@
 		var $tool_hand = $('.tool_hand').click(function() {
 			if (show_mask) {
 				$mask.hide();
+				if (_maps) {
+					_maps.scrollWheelZoom.enable();
+					console.log('handle interaction');
+				}
 			} else {
 				$mask.show();
 			}
