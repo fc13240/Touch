@@ -178,6 +178,9 @@ W._getMaps = function(cb) {
 		}
 	});
 }
+function ga() {
+	console.log.apply(console, arguments);
+}
 // 是否是本地应用
 var is_native = typeof global !== 'undefined' && typeof global.process !== 'undefined';
 // 是否是大屏设备

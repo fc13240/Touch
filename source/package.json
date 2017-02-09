@@ -1,6 +1,6 @@
 {
     "name": "BPA",
-    "version": "0.9.4",
+    "version": "0.9.5",
     "title": "蓝PI蚂蚁互动触控展示系统",
     "softtype": "TOUCH",
     "debug": true,

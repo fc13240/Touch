@@ -9,9 +9,6 @@ function parseNewParams() {
 	}
 	return a
 }
-function ga() {
-	console.log.apply(console, arguments);
-}
 function parseOldParams() {
 	for (var a = window.location.search.substring(1), b = a.split(","), c = {}, d = {
 			levels: ["surface", "100m", "975h", "950h", "925h", "900h", "850h", "800h", "700h", "600h", "500h", "400h", "300h", "250h", "200h", "150h"],
@@ -2785,6 +2782,7 @@ document.addEventListener("DOMContentLoaded", W.require.bind(null, "forecast" ==
 				return "{server}ecmwf-hres/{acTime}/<tiles>" + a.overlay.replace("Accu", "accumulation") + "-surface.png"
 			},
 			refTime: function() {
+				console.log('test');
 				return "?" + d
 			},
 			betterFcst: null,
@@ -2876,7 +2874,9 @@ document.addEventListener("DOMContentLoaded", W.require.bind(null, "forecast" ==
 				productReady: !1,
 				highLevelOverlays: ["wind", "temp", "rh", "dewpoint"],
 				refTime: function() {
-					return this.calendar && this.calendar.refTime && "?" + this.calendar.refTime || ""
+					// return this.calendar && this.calendar.refTime && "?" + this.calendar.refTime || ""
+					// NOTE: 紧急修复风场数据得不到问题
+					return '';
 				},
 				getUpdateTimes: function() {
 					return this.calendar ? {
